@@ -1,0 +1,3610 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NexusAdmin — Control Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<style>
+/* ═══════════════════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════════════════ */
+:root {
+  --font-sans: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-serif: 'DM Serif Display', serif;
+
+  /* Sidebar */
+  --sidebar-w: 256px;
+  --sidebar-collapsed: 60px;
+  --topbar-h: 58px;
+
+  /* Light palette */
+  --bg-base:      #f4f5f7;
+  --bg-surface:   #ffffff;
+  --bg-elevated:  #ffffff;
+  --bg-sunken:    #eef0f4;
+
+  --sidebar-bg:   #0f1621;
+  --sidebar-hover: rgba(255,255,255,0.06);
+  --sidebar-active: rgba(251,191,36,0.15);
+  --sidebar-accent: #fbbf24;
+  --sidebar-text: #94a3b8;
+  --sidebar-text-active: #f8fafc;
+
+  --text-primary:   #0f172a;
+  --text-secondary: #475569;
+  --text-muted:     #94a3b8;
+
+  --accent:         #fbbf24;
+  --accent-hover:   #f59e0b;
+  --accent-soft:    #fef3c7;
+  --accent-text:    #92400e;
+
+  --blue:           #3b82f6;
+  --blue-soft:      #eff6ff;
+  --green:          #10b981;
+  --green-soft:     #ecfdf5;
+  --red:            #ef4444;
+  --red-soft:       #fef2f2;
+  --purple:         #8b5cf6;
+  --purple-soft:    #f5f3ff;
+  --orange:         #f97316;
+  --orange-soft:    #fff7ed;
+
+  --border:         #e2e8f0;
+  --border-strong:  #cbd5e1;
+
+  --shadow-sm:  0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:  0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
+  --shadow-lg:  0 10px 30px rgba(0,0,0,.1), 0 4px 10px rgba(0,0,0,.05);
+  --shadow-xl:  0 20px 50px rgba(0,0,0,.15);
+
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  14px;
+  --radius-xl:  20px;
+
+  --transition: 0.22s cubic-bezier(0.4,0,0.2,1);
+}
+
+[data-theme="dark"] {
+  --bg-base:      #0a0e17;
+  --bg-surface:   #111827;
+  --bg-elevated:  #1a2234;
+  --bg-sunken:    #070b12;
+
+  --text-primary:   #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted:     #475569;
+
+  --accent-soft:    rgba(251,191,36,0.12);
+  --accent-text:    #fbbf24;
+
+  --blue-soft:    rgba(59,130,246,0.12);
+  --green-soft:   rgba(16,185,129,0.12);
+  --red-soft:     rgba(239,68,68,0.12);
+  --purple-soft:  rgba(139,92,246,0.12);
+  --orange-soft:  rgba(249,115,22,0.12);
+
+  --border:       #1e2d45;
+  --border-strong:#2d4060;
+
+  --shadow-sm:  0 1px 3px rgba(0,0,0,.3);
+  --shadow-md:  0 4px 12px rgba(0,0,0,.4);
+  --shadow-lg:  0 10px 30px rgba(0,0,0,.5);
+  --shadow-xl:  0 20px 50px rgba(0,0,0,.6);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.6;
+  transition: background var(--transition), color var(--transition);
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
+
+/* ═══════════════════════════════════════════════════════════
+   LAYOUT SHELL
+═══════════════════════════════════════════════════════════ */
+#app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════════════════════ */
+#sidebar {
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  width: var(--sidebar-w);
+  background: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  transition: width var(--transition);
+  overflow: hidden;
+  will-change: width;
+}
+
+#sidebar.collapsed { width: var(--sidebar-collapsed); }
+
+.sidebar-brand {
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 10px;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.brand-mark {
+  width: 32px; height: 32px;
+  background: var(--sidebar-accent);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-weight: 700;
+  font-size: 13px;
+  color: #0f1621;
+  letter-spacing: -0.5px;
+}
+
+.brand-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #f8fafc;
+  letter-spacing: -0.3px;
+  opacity: 1;
+  transition: opacity var(--transition);
+  white-space: nowrap;
+}
+
+.brand-sub {
+  font-size: 9px;
+  font-family: var(--font-mono);
+  color: var(--sidebar-text);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: block;
+  margin-top: -2px;
+}
+
+#sidebar.collapsed .brand-name,
+#sidebar.collapsed .brand-sub { opacity: 0; pointer-events: none; }
+
+/* ─── Nav ─── */
+.sidebar-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px 8px;
+}
+.sidebar-scroll::-webkit-scrollbar { display: none; }
+
+.nav-section-label {
+  font-size: 9px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #334155;
+  padding: 10px 8px 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity var(--transition);
+}
+#sidebar.collapsed .nav-section-label { opacity: 0; }
+
+/* Nav item */
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--sidebar-text);
+  font-size: 13.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: background var(--transition), color var(--transition);
+  user-select: none;
+}
+.nav-item:hover { background: var(--sidebar-hover); color: #f8fafc; }
+.nav-item.active { background: var(--sidebar-active); color: var(--sidebar-text-active); }
+.nav-item.active .nav-item-icon { color: var(--sidebar-accent); }
+
+.nav-item-icon {
+  width: 18px;
+  text-align: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  transition: color var(--transition);
+}
+
+.nav-item-label { flex: 1; transition: opacity var(--transition); }
+#sidebar.collapsed .nav-item-label { opacity: 0; pointer-events: none; }
+
+.nav-item-badge {
+  background: var(--red);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 99px;
+  line-height: 1.4;
+  transition: opacity var(--transition);
+}
+#sidebar.collapsed .nav-item-badge { opacity: 0; }
+
+.nav-item-arrow {
+  font-size: 10px;
+  transition: transform 0.2s ease, opacity var(--transition);
+  color: #475569;
+  flex-shrink: 0;
+}
+#sidebar.collapsed .nav-item-arrow { opacity: 0; }
+.nav-item.submenu-open .nav-item-arrow { transform: rotate(90deg); }
+
+/* Submenu */
+.submenu-wrap {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.submenu-wrap.open { max-height: 300px; }
+#sidebar.collapsed .submenu-wrap { display: none; }
+
+.submenu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px 7px 36px;
+  border-radius: 7px;
+  cursor: pointer;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 450;
+  white-space: nowrap;
+  transition: background var(--transition), color var(--transition);
+}
+.submenu-item:hover { background: var(--sidebar-hover); color: #94a3b8; }
+.submenu-item.active { color: var(--sidebar-accent); font-weight: 500; }
+.submenu-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+.submenu-item.active .submenu-dot { opacity: 1; }
+
+/* ─── Collapsed floating popup submenu ─── */
+.nav-item-wrapper {
+  position: relative;
+}
+
+.nav-popup {
+  position: fixed;
+  left: calc(var(--sidebar-collapsed) + 6px);
+  background: #1a2234;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 6px;
+  min-width: 180px;
+  z-index: 200;
+  box-shadow: var(--shadow-xl);
+  opacity: 0;
+  transform: translateX(-6px);
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.nav-popup.visible {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: all;
+}
+.nav-popup-title {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: #475569;
+  padding: 4px 8px 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 4px;
+}
+.nav-popup-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 450;
+  transition: background 0.15s, color 0.15s;
+}
+.nav-popup-item:hover { background: rgba(255,255,255,0.08); color: #f8fafc; }
+.nav-popup-item.active { color: var(--sidebar-accent); }
+
+/* ─── Collapsed tooltip ─── */
+.nav-tooltip {
+  position: fixed;
+  left: calc(var(--sidebar-collapsed) + 6px);
+  background: #1a2234;
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #f8fafc;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 7px;
+  pointer-events: none;
+  z-index: 200;
+  white-space: nowrap;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.nav-tooltip.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ─── Sidebar Footer ─── */
+.sidebar-footer {
+  padding: 10px 8px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TOPBAR
+═══════════════════════════════════════════════════════════ */
+#topbar {
+  position: fixed;
+  top: 0; right: 0;
+  left: var(--sidebar-w);
+  height: var(--topbar-h);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 12px;
+  transition: left var(--transition), background var(--transition), border-color var(--transition);
+}
+#sidebar.collapsed ~ #topbar { left: var(--sidebar-collapsed); }
+
+.topbar-toggle {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  background: transparent;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+  flex-shrink: 0;
+}
+.topbar-toggle:hover { background: var(--bg-sunken); color: var(--text-primary); }
+
+.topbar-breadcrumb {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--text-muted);
+}
+.breadcrumb-sep { font-size: 10px; }
+.breadcrumb-current { color: var(--text-primary); font-weight: 500; }
+
+.topbar-search {
+  flex: 1; max-width: 320px;
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg-sunken);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0 12px;
+  height: 34px;
+  margin-left: 8px;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.topbar-search:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(251,191,36,0.12);
+}
+.topbar-search i { color: var(--text-muted); font-size: 12px; }
+.topbar-search input {
+  background: transparent; border: none; outline: none;
+  font-size: 13px; color: var(--text-primary);
+  font-family: var(--font-sans);
+  width: 100%;
+}
+.topbar-search input::placeholder { color: var(--text-muted); }
+
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+
+.icon-btn {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  background: transparent;
+  position: relative;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+.icon-btn:hover { background: var(--bg-sunken); color: var(--text-primary); }
+
+.notif-badge {
+  position: absolute; top: 4px; right: 4px;
+  width: 8px; height: 8px;
+  background: var(--red);
+  border-radius: 50%;
+  border: 2px solid var(--bg-surface);
+}
+
+.topbar-avatar {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent), #f97316);
+  display: flex; align-items: center; justify-content: center;
+  color: #0f1621;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 2px solid var(--border);
+  transition: border-color var(--transition);
+}
+.topbar-avatar:hover { border-color: var(--accent); }
+
+/* ═══════════════════════════════════════════════════════════
+   MAIN CONTENT
+═══════════════════════════════════════════════════════════ */
+#main-content {
+  flex: 1;
+  margin-left: var(--sidebar-w);
+  margin-top: var(--topbar-h);
+  padding: 24px;
+  transition: margin-left var(--transition);
+  min-height: calc(100vh - var(--topbar-h));
+}
+#sidebar.collapsed ~ #topbar ~ #main-content,
+#sidebar.collapsed ~ * #main-content { margin-left: var(--sidebar-collapsed); }
+
+/* ═══════════════════════════════════════════════════════════
+   PAGES
+═══════════════════════════════════════════════════════════ */
+.page { display: none; animation: pageFadeIn 0.25s ease; }
+.page.active { display: block; }
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS: CARDS
+═══════════════════════════════════════════════════════════ */
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  transition: background var(--transition), border-color var(--transition);
+}
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+}
+.card-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS: STAT CARDS
+═══════════════════════════════════════════════════════════ */
+.stat-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: background var(--transition), border-color var(--transition), transform 0.2s, box-shadow 0.2s;
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 80px; height: 80px;
+  border-radius: 0 14px 0 80px;
+  opacity: 0.08;
+}
+.stat-card.amber::before { background: var(--accent); }
+.stat-card.blue::before { background: var(--blue); }
+.stat-card.green::before { background: var(--green); }
+.stat-card.red::before { background: var(--red); }
+.stat-card.purple::before { background: var(--purple); }
+
+.stat-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  margin-bottom: 14px;
+}
+.stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-bottom: 4px; }
+.stat-value {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: var(--text-primary);
+  line-height: 1;
+  font-family: var(--font-sans);
+}
+.stat-delta {
+  font-size: 12px;
+  font-weight: 500;
+  display: flex; align-items: center; gap: 4px;
+  margin-top: 6px;
+}
+.delta-up { color: var(--green); }
+.delta-down { color: var(--red); }
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS: BADGES
+═══════════════════════════════════════════════════════════ */
+.badge {
+  display: inline-flex; align-items: center;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+.badge-green  { background: var(--green-soft); color: #065f46; }
+.badge-red    { background: var(--red-soft); color: #991b1b; }
+.badge-blue   { background: var(--blue-soft); color: #1e40af; }
+.badge-amber  { background: var(--accent-soft); color: var(--accent-text); }
+.badge-purple { background: var(--purple-soft); color: #5b21b6; }
+.badge-gray   { background: var(--bg-sunken); color: var(--text-secondary); }
+.badge-orange { background: var(--orange-soft); color: #9a3412; }
+
+[data-theme="dark"] .badge-green  { color: #6ee7b7; }
+[data-theme="dark"] .badge-red    { color: #fca5a5; }
+[data-theme="dark"] .badge-blue   { color: #93c5fd; }
+[data-theme="dark"] .badge-amber  { color: var(--accent); }
+[data-theme="dark"] .badge-purple { color: #c4b5fd; }
+[data-theme="dark"] .badge-gray   { color: var(--text-secondary); }
+[data-theme="dark"] .badge-orange { color: #fdba74; }
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS: BUTTONS
+═══════════════════════════════════════════════════════════ */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all var(--transition);
+  white-space: nowrap;
+  outline: none;
+}
+.btn:active { transform: scale(0.97); }
+
+.btn-primary {
+  background: var(--accent);
+  color: #0f1621;
+  border-color: var(--accent);
+}
+.btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+
+.btn-secondary {
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  border-color: var(--border);
+}
+.btn-secondary:hover { background: var(--bg-sunken); color: var(--text-primary); }
+
+.btn-danger {
+  background: var(--red-soft);
+  color: #991b1b;
+  border-color: transparent;
+}
+.btn-danger:hover { background: var(--red); color: #fff; }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border-color: transparent;
+}
+.btn-ghost:hover { background: var(--bg-sunken); color: var(--text-primary); }
+
+.btn-sm { padding: 5px 11px; font-size: 12px; border-radius: 6px; }
+.btn-xs { padding: 3px 8px; font-size: 11px; border-radius: 5px; }
+
+[data-theme="dark"] .btn-danger { color: #fca5a5; }
+[data-theme="dark"] .btn-danger:hover { color: #fff; }
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS: FORM ELEMENTS
+═══════════════════════════════════════════════════════════ */
+.form-group { margin-bottom: 16px; }
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.form-label-req::after {
+  content: ' *';
+  color: var(--red);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 9px 12px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+}
+.form-input::placeholder { color: var(--text-muted); }
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(251,191,36,0.12);
+}
+.form-input.is-error { border-color: var(--red) !important; box-shadow: 0 0 0 3px rgba(239,68,68,0.1) !important; }
+.form-input.is-success { border-color: var(--green) !important; }
+
+.form-error-msg {
+  font-size: 12px;
+  color: var(--red);
+  margin-top: 4px;
+  display: none;
+}
+.form-group.has-error .form-error-msg { display: block; }
+.form-group.has-error .form-input,
+.form-group.has-error .form-select { border-color: var(--red); box-shadow: 0 0 0 3px rgba(239,68,68,0.1); }
+
+.form-help {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2394a3b8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+  cursor: pointer;
+}
+
+.form-textarea { resize: vertical; min-height: 90px; }
+
+.form-checkbox-wrap {
+  display: flex; align-items: flex-start; gap: 10px;
+  cursor: pointer;
+}
+.form-checkbox {
+  width: 16px; height: 16px;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 1px;
+  cursor: pointer;
+}
+.form-checkbox-label { font-size: 13px; color: var(--text-secondary); cursor: pointer; }
+
+/* ─── Toggle switch ─── */
+.toggle-switch { position: relative; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+.toggle-input { position: absolute; opacity: 0; width: 0; height: 0; }
+.toggle-track {
+  width: 36px; height: 20px;
+  background: var(--border-strong);
+  border-radius: 99px;
+  transition: background var(--transition);
+  position: relative;
+}
+.toggle-input:checked + .toggle-track { background: var(--accent); }
+.toggle-thumb {
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 16px; height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform var(--transition);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.toggle-input:checked ~ .toggle-thumb,
+.toggle-input:checked + .toggle-track + .toggle-thumb { transform: translateX(16px); }
+
+/* Inline toggle alternative */
+.toggle-inline {
+  display: flex; align-items: center; gap: 8px;
+}
+.toggle-inline input[type="checkbox"] {
+  width: 36px; height: 20px;
+  appearance: none;
+  background: var(--border-strong);
+  border-radius: 99px;
+  position: relative;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.toggle-inline input[type="checkbox"]::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 16px; height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform var(--transition);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.toggle-inline input[type="checkbox"]:checked { background: var(--accent); }
+.toggle-inline input[type="checkbox"]:checked::after { transform: translateX(16px); }
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS: TABLES
+═══════════════════════════════════════════════════════════ */
+.table-wrapper { overflow-x: auto; }
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+.data-table thead th {
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--bg-sunken);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition: color var(--transition), background var(--transition);
+}
+.data-table thead th:hover { color: var(--text-primary); }
+.data-table thead th.sort-asc::after { content: ' ↑'; color: var(--accent); }
+.data-table thead th.sort-desc::after { content: ' ↓'; color: var(--accent); }
+
+.data-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.12s; }
+.data-table tbody tr:last-child { border-bottom: none; }
+.data-table tbody tr:hover td { background: var(--bg-sunken); }
+.data-table td { padding: 12px 14px; color: var(--text-primary); vertical-align: middle; }
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS: TABS
+═══════════════════════════════════════════════════════════ */
+.tabs-bar {
+  display: flex;
+  gap: 2px;
+  background: var(--bg-sunken);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 3px;
+}
+.tab-btn {
+  padding: 7px 16px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all var(--transition);
+  border: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  white-space: nowrap;
+}
+.tab-btn.active {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS: STEPPER
+═══════════════════════════════════════════════════════════ */
+.stepper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 28px;
+}
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  flex: 1;
+}
+.step-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: calc(50% + 15px);
+  right: calc(-50% + 15px);
+  height: 2px;
+  background: var(--border);
+  transition: background var(--transition);
+}
+.step-item.completed::after { background: var(--accent); }
+.step-circle {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  border: 2px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  transition: all var(--transition);
+  z-index: 1;
+}
+.step-item.active .step-circle {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #0f1621;
+}
+.step-item.completed .step-circle {
+  border-color: var(--green);
+  background: var(--green);
+  color: #fff;
+}
+.step-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.step-item.active .step-label { color: var(--accent); }
+.step-item.completed .step-label { color: var(--green); }
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS: MODAL
+═══════════════════════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(4px);
+  z-index: 500;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+
+.modal-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  width: 90%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 24px;
+  transform: scale(0.92) translateY(16px);
+  transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: var(--shadow-xl);
+}
+.modal-overlay.open .modal-box { transform: scale(1) translateY(0); }
+
+.modal-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.modal-title { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
+.modal-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+.modal-close {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text-muted);
+  transition: background var(--transition), color var(--transition);
+  flex-shrink: 0; margin-left: 10px;
+  border: none; background: transparent; font-size: 14px;
+}
+.modal-close:hover { background: var(--bg-sunken); color: var(--text-primary); }
+.modal-footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS: TOAST
+═══════════════════════════════════════════════════════════ */
+#toast-container {
+  position: fixed;
+  top: 16px; right: 16px;
+  z-index: 600;
+  display: flex; flex-direction: column; gap: 8px;
+  pointer-events: none;
+}
+.toast {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  box-shadow: var(--shadow-lg);
+  min-width: 280px;
+  max-width: 360px;
+  pointer-events: all;
+  transform: translateX(110%);
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
+  opacity: 0;
+}
+.toast.show { transform: translateX(0); opacity: 1; }
+.toast.hide { transform: translateX(110%); opacity: 0; }
+.toast-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+.toast-body { flex: 1; }
+.toast-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.toast-msg { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+.toast-dismiss { font-size: 13px; color: var(--text-muted); cursor: pointer; background: none; border: none; flex-shrink: 0; }
+.toast-dismiss:hover { color: var(--text-primary); }
+.toast.success .toast-icon { color: var(--green); }
+.toast.error   .toast-icon { color: var(--red); }
+.toast.warning .toast-icon { color: var(--accent); }
+.toast.info    .toast-icon { color: var(--blue); }
+.toast-progress {
+  position: absolute; bottom: 0; left: 0;
+  height: 3px; border-radius: 0 0 10px 10px;
+  transition: width linear;
+}
+.toast.success .toast-progress { background: var(--green); }
+.toast.error   .toast-progress { background: var(--red); }
+.toast.warning .toast-progress { background: var(--accent); }
+.toast.info    .toast-progress { background: var(--blue); }
+.toast { position: relative; overflow: hidden; }
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS: ALERT
+═══════════════════════════════════════════════════════════ */
+.alert {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font-size: 13px;
+}
+.alert-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+.alert-title { font-weight: 600; margin-bottom: 2px; }
+.alert-text { color: inherit; opacity: 0.8; }
+.alert-info    { background: var(--blue-soft); color: #1e40af; border-color: rgba(59,130,246,0.2); }
+.alert-success { background: var(--green-soft); color: #065f46; border-color: rgba(16,185,129,0.2); }
+.alert-warning { background: var(--accent-soft); color: var(--accent-text); border-color: rgba(251,191,36,0.3); }
+.alert-danger  { background: var(--red-soft); color: #991b1b; border-color: rgba(239,68,68,0.2); }
+[data-theme="dark"] .alert-info { color: #93c5fd; }
+[data-theme="dark"] .alert-success { color: #6ee7b7; }
+[data-theme="dark"] .alert-warning { color: var(--accent); }
+[data-theme="dark"] .alert-danger { color: #fca5a5; }
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS: DROPDOWN MENU
+═══════════════════════════════════════════════════════════ */
+.dropdown { position: relative; }
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  min-width: 180px;
+  box-shadow: var(--shadow-lg);
+  z-index: 300;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-6px) scale(0.97);
+  transform-origin: top right;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.dropdown-menu.open { opacity: 1; transform: none; pointer-events: all; }
+.dropdown-menu-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 14px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s;
+}
+.dropdown-menu-item:hover { background: var(--bg-sunken); color: var(--text-primary); }
+.dropdown-menu-item i { width: 14px; text-align: center; font-size: 13px; }
+.dropdown-divider { height: 1px; background: var(--border); margin: 4px 0; }
+.dropdown-header {
+  padding: 10px 14px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS: LOADER
+═══════════════════════════════════════════════════════════ */
+.spinner {
+  width: 20px; height: 20px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-sunken) 25%, var(--border) 50%, var(--bg-sunken) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shine 1.4s infinite;
+  border-radius: 6px;
+}
+@keyframes skeleton-shine {
+  from { background-position: 200% center; }
+  to { background-position: -200% center; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS: TOOLTIP
+═══════════════════════════════════════════════════════════ */
+[data-tooltip] {
+  position: relative;
+  cursor: help;
+}
+[data-tooltip]::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--sidebar-bg);
+  color: #f8fafc;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 100;
+}
+[data-tooltip]:hover::before { opacity: 1; }
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS: PAGINATION
+═══════════════════════════════════════════════════════════ */
+.pagination { display: flex; align-items: center; gap: 4px; }
+.page-btn {
+  width: 30px; height: 30px;
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+  background: transparent;
+  font-family: var(--font-sans);
+  transition: all var(--transition);
+}
+.page-btn:hover { background: var(--bg-sunken); color: var(--text-primary); }
+.page-btn.active { background: var(--accent); color: #0f1621; border-color: var(--accent); font-weight: 600; }
+.page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS: PROGRESS BAR
+═══════════════════════════════════════════════════════════ */
+.progress-bar {
+  height: 6px;
+  background: var(--bg-sunken);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.6s ease;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TOUR GUIDE
+═══════════════════════════════════════════════════════════ */
+.tour-backdrop {
+  position: fixed; inset: 0;
+  z-index: 800;
+  pointer-events: none;
+}
+.tour-highlight {
+  position: absolute;
+  border-radius: 10px;
+  box-shadow: 0 0 0 9999px rgba(0,0,0,0.65);
+  transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+  pointer-events: none;
+}
+.tour-popover {
+  position: fixed;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  width: 280px;
+  box-shadow: var(--shadow-xl);
+  z-index: 900;
+  transition: all 0.3s ease;
+}
+.tour-step-count {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.tour-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.tour-body { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px; }
+.tour-actions { display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+.tour-dots { display: flex; gap: 4px; align-items: center; }
+.tour-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  transition: all var(--transition);
+}
+.tour-dot.active { background: var(--accent); width: 18px; border-radius: 3px; }
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS: ACTIVITY FEED
+═══════════════════════════════════════════════════════════ */
+.activity-item {
+  display: flex; gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.activity-item:last-child { border-bottom: none; }
+.activity-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.activity-text { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+.activity-text strong { color: var(--text-primary); font-weight: 500; }
+.activity-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-family: var(--font-mono); }
+
+/* ═══════════════════════════════════════════════════════════
+   PAGE HEADER
+═══════════════════════════════════════════════════════════ */
+.page-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 22px;
+  flex-wrap: wrap; gap: 12px;
+}
+.page-header-left .page-title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+.page-header-left .page-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.page-header-right { display: flex; gap: 8px; align-items: center; }
+
+/* ═══════════════════════════════════════════════════════════
+   GRID HELPERS
+═══════════════════════════════════════════════════════════ */
+.grid-cols-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.grid-cols-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-cols-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+@media (max-width: 1200px) { .grid-cols-4 { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 900px)  {
+  .grid-cols-3 { grid-template-columns: repeat(2, 1fr); }
+  .grid-cols-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px)  {
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4 { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MOBILE SIDEBAR
+═══════════════════════════════════════════════════════════ */
+#sidebar-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 99;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+@media (max-width: 768px) {
+  #sidebar-overlay { display: block; pointer-events: none; }
+  #sidebar-overlay.show { opacity: 1; pointer-events: all; }
+  #topbar { left: 0 !important; }
+  #main-content { margin-left: 0 !important; }
+  #sidebar { transform: translateX(-100%); transition: transform var(--transition), width var(--transition); }
+  #sidebar.mobile-open { transform: translateX(0); }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MISC UTILITIES
+═══════════════════════════════════════════════════════════ */
+.divider { height: 1px; background: var(--border); margin: 16px 0; }
+.text-mono { font-family: var(--font-mono); }
+.avatar-circle {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.profile-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+}
+.space-y-3 > * + * { margin-top: 12px; }
+.space-y-4 > * + * { margin-top: 16px; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.gap-2 { gap: 8px; }
+.gap-3 { gap: 12px; }
+
+/* Chart container */
+.chart-container { position: relative; width: 100%; }
+
+/* Security item */
+.security-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.security-row:last-child { border-bottom: none; }
+.security-row-info .security-label { font-size: 13.5px; font-weight: 500; }
+.security-row-info .security-desc { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+
+/* Key chip */
+.key-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--bg-sunken);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+</style>
+</head>
+
+<body>
+
+<!-- ═══════ SIDEBAR OVERLAY (mobile) ═══════ -->
+<div id="sidebar-overlay"></div>
+
+<!-- ═══════ SIDEBAR ═══════ -->
+<aside id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-mark">NX</div>
+    <div>
+      <div class="brand-name">NexusAdmin</div>
+      <span class="brand-sub">Control Panel</span>
+    </div>
+  </div>
+
+  <div class="sidebar-scroll" id="sidebarScroll">
+    <!-- Main section -->
+    <div class="nav-section-label">Main</div>
+
+    <div class="nav-item-wrapper" id="tour-step-2">
+      <div class="nav-item" data-route="#/dashboard" data-label="Dashboard">
+        <i class="fa-solid fa-gauge-high nav-item-icon"></i>
+        <span class="nav-item-label">Dashboard</span>
+      </div>
+    </div>
+
+    <!-- Users (with submenu) -->
+    <div class="nav-item-wrapper">
+      <div class="nav-item has-sub" id="toggle-users" data-label="Users" data-popup="popup-users">
+        <i class="fa-solid fa-users nav-item-icon"></i>
+        <span class="nav-item-label">Users</span>
+        <span class="nav-item-badge">12</span>
+        <i class="fa-solid fa-chevron-right nav-item-arrow"></i>
+      </div>
+      <div class="nav-popup" id="popup-users">
+        <div class="nav-popup-title">Users</div>
+        <div class="nav-popup-item" data-route="#/users"><i class="fa-solid fa-list fa-xs"></i> All Users</div>
+        <div class="nav-popup-item" data-route="#/users/add"><i class="fa-solid fa-user-plus fa-xs"></i> Add User</div>
+      </div>
+    </div>
+    <div class="submenu-wrap" id="sub-users">
+      <div class="submenu-item" data-route="#/users"><span class="submenu-dot"></span>All Users</div>
+      <div class="submenu-item" data-route="#/users/add"><span class="submenu-dot"></span>Add User</div>
+    </div>
+
+    <!-- Jobs (with submenu) -->
+    <div class="nav-item-wrapper">
+      <div class="nav-item has-sub" id="toggle-jobs" data-label="Jobs" data-popup="popup-jobs">
+        <i class="fa-solid fa-briefcase nav-item-icon"></i>
+        <span class="nav-item-label">Jobs</span>
+        <i class="fa-solid fa-chevron-right nav-item-arrow"></i>
+      </div>
+      <div class="nav-popup" id="popup-jobs">
+        <div class="nav-popup-title">Jobs</div>
+        <div class="nav-popup-item" data-route="#/jobs"><i class="fa-solid fa-list-check fa-xs"></i> Job List</div>
+        <div class="nav-popup-item" data-route="#/jobs/create"><i class="fa-solid fa-plus fa-xs"></i> Create Job</div>
+      </div>
+    </div>
+    <div class="submenu-wrap" id="sub-jobs">
+      <div class="submenu-item" data-route="#/jobs"><span class="submenu-dot"></span>Job List</div>
+      <div class="submenu-item" data-route="#/jobs/create"><span class="submenu-dot"></span>Create Job</div>
+    </div>
+
+    <!-- Analytics -->
+    <div class="nav-item-wrapper">
+      <div class="nav-item" data-route="#/analytics" data-label="Analytics">
+        <i class="fa-solid fa-chart-line nav-item-icon"></i>
+        <span class="nav-item-label">Analytics</span>
+      </div>
+    </div>
+
+    <!-- System section -->
+    <div class="nav-section-label" style="margin-top:6px;">System</div>
+
+    <!-- Settings (with submenu) -->
+    <div class="nav-item-wrapper">
+      <div class="nav-item has-sub" id="toggle-settings" data-label="Settings" data-popup="popup-settings">
+        <i class="fa-solid fa-gear nav-item-icon"></i>
+        <span class="nav-item-label">Settings</span>
+        <i class="fa-solid fa-chevron-right nav-item-arrow"></i>
+      </div>
+      <div class="nav-popup" id="popup-settings">
+        <div class="nav-popup-title">Settings</div>
+        <div class="nav-popup-item" data-route="#/settings"><i class="fa-solid fa-sliders fa-xs"></i> General</div>
+        <div class="nav-popup-item" data-route="#/settings/preferences"><i class="fa-solid fa-palette fa-xs"></i> Preferences</div>
+      </div>
+    </div>
+    <div class="submenu-wrap" id="sub-settings">
+      <div class="submenu-item" data-route="#/settings"><span class="submenu-dot"></span>General</div>
+      <div class="submenu-item" data-route="#/settings/preferences"><span class="submenu-dot"></span>Preferences</div>
+    </div>
+
+    <!-- Account section -->
+    <div class="nav-section-label" style="margin-top:6px;">Account</div>
+
+    <div class="nav-item-wrapper">
+      <div class="nav-item" data-route="#/profile" data-label="Profile">
+        <i class="fa-solid fa-circle-user nav-item-icon"></i>
+        <span class="nav-item-label">Profile</span>
+      </div>
+    </div>
+
+    <div class="nav-item-wrapper">
+      <div class="nav-item" data-route="#/security" data-label="Security">
+        <i class="fa-solid fa-shield-halved nav-item-icon"></i>
+        <span class="nav-item-label">Security</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar Footer -->
+  <div class="sidebar-footer">
+    <div class="nav-item" id="logoutNavItem" data-label="Logout" style="color:#ef4444;">
+      <i class="fa-solid fa-arrow-right-from-bracket nav-item-icon" style="color:#ef4444;"></i>
+      <span class="nav-item-label">Logout</span>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══════ TOPBAR ═══════ -->
+<header id="topbar">
+  <button class="topbar-toggle" id="sidebarToggle" id="tour-step-1">
+    <i class="fa-solid fa-bars fa-sm"></i>
+  </button>
+
+  <div class="topbar-breadcrumb" id="breadcrumb">
+    <span>NexusAdmin</span>
+    <span class="breadcrumb-sep"><i class="fa-solid fa-chevron-right fa-xs"></i></span>
+    <span class="breadcrumb-current" id="breadcrumb-current">Dashboard</span>
+  </div>
+
+  <div class="topbar-search">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" placeholder="Search anything..." id="globalSearch" autocomplete="off">
+  </div>
+
+  <div class="topbar-right">
+    <!-- Theme toggle -->
+    <button class="icon-btn" id="themeToggle" title="Toggle theme">
+      <i class="fa-solid fa-moon" id="themeIcon"></i>
+    </button>
+
+    <!-- Tour button -->
+    <button class="icon-btn" id="startTourBtn" title="Start tour">
+      <i class="fa-solid fa-circle-question"></i>
+    </button>
+
+    <!-- Notifications -->
+    <div class="dropdown">
+      <button class="icon-btn" id="notifTrigger">
+        <i class="fa-solid fa-bell"></i>
+        <span class="notif-badge"></span>
+      </button>
+      <div class="dropdown-menu" id="notifMenu">
+        <div class="dropdown-header">Notifications</div>
+        <div class="dropdown-menu-item"><i class="fa-solid fa-user-plus" style="color:var(--blue)"></i>New user registered</div>
+        <div class="dropdown-menu-item"><i class="fa-solid fa-check-circle" style="color:var(--green)"></i>Job #1024 completed</div>
+        <div class="dropdown-menu-item"><i class="fa-solid fa-exclamation-triangle" style="color:var(--accent)"></i>CPU usage at 87%</div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-menu-item" style="justify-content:center; color:var(--accent); font-weight:500;">View all notifications</div>
+      </div>
+    </div>
+
+    <!-- Avatar / User menu -->
+    <div class="dropdown">
+      <div class="topbar-avatar" id="userMenuTrigger">AD</div>
+      <div class="dropdown-menu" id="userMenu">
+        <div class="profile-card">
+          <div class="avatar-circle" style="background:linear-gradient(135deg,var(--accent),#f97316); color:#0f1621; font-size:12px; width:36px; height:36px;">AD</div>
+          <div>
+            <div style="font-size:13px; font-weight:600;">Admin User</div>
+            <div style="font-size:12px; color:var(--text-muted);">admin@nexus.dev</div>
+          </div>
+        </div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-menu-item" data-goto="#/profile"><i class="fa-solid fa-user"></i>My Profile</div>
+        <div class="dropdown-menu-item" data-goto="#/settings"><i class="fa-solid fa-gear"></i>Settings</div>
+        <div class="dropdown-menu-item" data-goto="#/security"><i class="fa-solid fa-shield-halved"></i>Security</div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-menu-item" id="logoutMenuBtn" style="color:var(--red)"><i class="fa-solid fa-arrow-right-from-bracket" style="color:var(--red)"></i>Sign Out</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════ MAIN CONTENT ═══════ -->
+<main id="main-content">
+
+<!-- ████████ DASHBOARD PAGE ████████ -->
+<section class="page" id="page-dashboard">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-title">Dashboard</div>
+      <div class="page-desc">Welcome back, Admin. Here's what's happening today.</div>
+    </div>
+    <div class="page-header-right">
+      <button class="btn btn-secondary btn-sm" onclick="showToast('Report exported!','success','Export Complete','Your report has been downloaded.')"><i class="fa-solid fa-download"></i>Export</button>
+      <button class="btn btn-primary btn-sm" onclick="openModal('modal-newItem')"><i class="fa-solid fa-plus"></i>New Item</button>
+    </div>
+  </div>
+
+  <!-- Stat cards -->
+  <div class="grid-cols-4" style="margin-bottom:20px;" id="tour-step-3">
+    <div class="stat-card amber">
+      <div class="stat-icon" style="background:var(--accent-soft); color:var(--accent);"><i class="fa-solid fa-users"></i></div>
+      <div class="stat-label">Total Users</div>
+      <div class="stat-value">12,481</div>
+      <div class="stat-delta delta-up"><i class="fa-solid fa-arrow-trend-up"></i>+14.2% vs last month</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="stat-icon" style="background:var(--blue-soft); color:var(--blue);"><i class="fa-solid fa-briefcase"></i></div>
+      <div class="stat-label">Active Jobs</div>
+      <div class="stat-value">2,847</div>
+      <div class="stat-delta delta-up"><i class="fa-solid fa-arrow-trend-up"></i>+8.1% vs last month</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-icon" style="background:var(--green-soft); color:var(--green);"><i class="fa-solid fa-dollar-sign"></i></div>
+      <div class="stat-label">Revenue</div>
+      <div class="stat-value">$48.2K</div>
+      <div class="stat-delta delta-up"><i class="fa-solid fa-arrow-trend-up"></i>+22.4% vs last month</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-icon" style="background:var(--red-soft); color:var(--red);"><i class="fa-solid fa-ticket"></i></div>
+      <div class="stat-label">Open Tickets</div>
+      <div class="stat-value">38</div>
+      <div class="stat-delta delta-down"><i class="fa-solid fa-arrow-trend-down"></i>+5 since yesterday</div>
+    </div>
+  </div>
+
+  <!-- Charts row -->
+  <div class="grid-cols-3" style="margin-bottom:20px;">
+    <div class="card" style="grid-column: span 2;">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Revenue Overview</div>
+          <div class="card-subtitle">Monthly performance — 2024</div>
+        </div>
+        <div class="tabs-bar">
+          <button class="tab-btn active" onclick="switchChartType(this,'bar')">Bar</button>
+          <button class="tab-btn" onclick="switchChartType(this,'line')">Line</button>
+        </div>
+      </div>
+      <div class="chart-container" style="height:240px;">
+        <canvas id="revenueChart"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Traffic Sources</div>
+      </div>
+      <div class="chart-container" style="height:200px; margin-bottom:16px;">
+        <canvas id="donutChart"></canvas>
+      </div>
+      <div id="donutLegend" style="display:flex; flex-direction:column; gap:6px;"></div>
+    </div>
+  </div>
+
+  <!-- Activity + Progress -->
+  <div class="grid-cols-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Recent Activity</div>
+        <button class="btn btn-ghost btn-sm" style="font-size:12px;">View all</button>
+      </div>
+      <div id="activityFeed"></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Project Progress</div>
+        <span class="badge badge-amber">Q4 2024</span>
+      </div>
+      <div class="space-y-4" id="projectProgress"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ████████ USERS PAGE ████████ -->
+<section class="page" id="page-users">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-title">User Management</div>
+      <div class="page-desc">Manage system users, roles, and permissions</div>
+    </div>
+    <div class="page-header-right">
+      <button class="btn btn-secondary btn-sm"><i class="fa-solid fa-file-export"></i>Export CSV</button>
+      <button class="btn btn-primary btn-sm" data-goto="#/users/add"><i class="fa-solid fa-user-plus"></i>Add User</button>
+    </div>
+  </div>
+
+  <div class="card" style="padding:0; overflow:hidden;">
+    <div style="display:flex; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px solid var(--border); flex-wrap:wrap;">
+      <div class="topbar-search" style="flex:1; max-width:280px; margin:0;">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Search users..." id="usersSearch">
+      </div>
+      <select class="form-select" id="roleFilter" style="width:auto; padding:7px 32px 7px 10px; height:34px; font-size:13px;">
+        <option value="">All Roles</option>
+        <option>Admin</option><option>Editor</option><option>Viewer</option>
+      </select>
+      <select class="form-select" id="statusFilter" style="width:auto; padding:7px 32px 7px 10px; height:34px; font-size:13px;">
+        <option value="">All Status</option>
+        <option>Active</option><option>Inactive</option><option>Pending</option>
+      </select>
+      <span style="font-size:12px; color:var(--text-muted); margin-left:auto;" id="usersCount">0 users</span>
+    </div>
+    <div class="table-wrapper">
+      <table class="data-table" id="usersTable">
+        <thead>
+          <tr>
+            <th><input type="checkbox" id="selectAllUsers" style="accent-color:var(--accent);"></th>
+            <th data-col="name">Name</th>
+            <th data-col="email">Email</th>
+            <th data-col="role">Role</th>
+            <th data-col="status">Status</th>
+            <th data-col="joined">Joined</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="usersTableBody"></tbody>
+      </table>
+    </div>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 16px; border-top:1px solid var(--border); flex-wrap:wrap; gap:8px;">
+      <div style="font-size:12px; color:var(--text-muted);" id="usersPageInfo">Page 1 of 1</div>
+      <div class="pagination" id="usersPagination"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ████████ ADD USER PAGE ████████ -->
+<section class="page" id="page-users-add">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-title">Add New User</div>
+      <div class="page-desc">Fill in the details to create a new account</div>
+    </div>
+    <button class="btn btn-secondary btn-sm" data-goto="#/users"><i class="fa-solid fa-arrow-left"></i>Back</button>
+  </div>
+
+  <!-- Multi-tab form -->
+  <div class="card" style="max-width:680px;">
+    <div class="tabs-bar" style="margin-bottom:20px;" id="addUserTabs">
+      <button class="tab-btn active" data-tab="tab-basic">Basic Info</button>
+      <button class="tab-btn" data-tab="tab-role">Role & Access</button>
+      <button class="tab-btn" data-tab="tab-notify">Notifications</button>
+    </div>
+
+    <form id="addUserForm" novalidate>
+      <!-- Tab: Basic Info -->
+      <div class="tab-content active" id="tab-basic">
+        <div class="grid-cols-2">
+          <div class="form-group" id="fg-firstName">
+            <label class="form-label form-label-req">First Name</label>
+            <input class="form-input" type="text" id="firstName" placeholder="John">
+            <div class="form-error-msg">First name is required.</div>
+          </div>
+          <div class="form-group" id="fg-lastName">
+            <label class="form-label form-label-req">Last Name</label>
+            <input class="form-input" type="text" id="lastName" placeholder="Doe">
+            <div class="form-error-msg">Last name is required.</div>
+          </div>
+        </div>
+        <div class="form-group" id="fg-email">
+          <label class="form-label form-label-req">Email Address</label>
+          <input class="form-input" type="email" id="emailInput" placeholder="john@company.com">
+          <div class="form-error-msg">Please enter a valid email address.</div>
+        </div>
+        <div class="form-group" id="fg-phone">
+          <label class="form-label">Phone Number</label>
+          <input class="form-input" type="tel" id="phoneInput" placeholder="+1 (555) 000-0000">
+          <div class="form-help">Optional — used for SMS alerts</div>
+        </div>
+        <div class="form-group" id="fg-password">
+          <label class="form-label form-label-req">Password</label>
+          <div style="position:relative;">
+            <input class="form-input" type="password" id="passwordInput" placeholder="Min. 8 characters" style="padding-right:40px;">
+            <button type="button" id="togglePwd" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);"><i class="fa-solid fa-eye fa-sm"></i></button>
+          </div>
+          <div class="form-error-msg">Password must be at least 8 characters.</div>
+          <div id="passwordStrength" style="margin-top:6px;"></div>
+        </div>
+      </div>
+
+      <!-- Tab: Role & Access -->
+      <div class="tab-content" id="tab-role">
+        <div class="form-group" id="fg-role">
+          <label class="form-label form-label-req">Assign Role</label>
+          <select class="form-select" id="roleSelect">
+            <option value="">Select a role…</option>
+            <option value="admin">Administrator — Full access</option>
+            <option value="editor">Editor — Content management</option>
+            <option value="viewer">Viewer — Read-only access</option>
+          </select>
+          <div class="form-error-msg">Please select a role.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Department</label>
+          <select class="form-select" id="deptSelect">
+            <option value="">Select department…</option>
+            <option>Engineering</option><option>Design</option><option>Marketing</option><option>Finance</option><option>HR</option>
+          </select>
+        </div>
+        <div style="margin-top:16px;">
+          <div class="form-label" style="margin-bottom:10px;">Permissions</div>
+          <div class="space-y-3">
+            <label class="form-checkbox-wrap"><input type="checkbox" class="form-checkbox" checked><span class="form-checkbox-label">Can view reports</span></label>
+            <label class="form-checkbox-wrap"><input type="checkbox" class="form-checkbox"><span class="form-checkbox-label">Can export data</span></label>
+            <label class="form-checkbox-wrap"><input type="checkbox" class="form-checkbox"><span class="form-checkbox-label">Can manage users</span></label>
+            <label class="form-checkbox-wrap"><input type="checkbox" class="form-checkbox"><span class="form-checkbox-label">Can access billing</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Notifications -->
+      <div class="tab-content" id="tab-notify">
+        <div class="alert alert-info" style="margin-bottom:16px;">
+          <i class="fa-solid fa-info-circle alert-icon"></i>
+          <div><div class="alert-title">Notification Settings</div><div class="alert-text">Choose how this user will receive system notifications.</div></div>
+        </div>
+        <div class="space-y-4">
+          <div class="security-row">
+            <div class="security-row-info"><div class="security-label">Email Notifications</div><div class="security-desc">Receive alerts via email</div></div>
+            <label class="toggle-inline"><input type="checkbox" checked></label>
+          </div>
+          <div class="security-row">
+            <div class="security-row-info"><div class="security-label">Push Notifications</div><div class="security-desc">Browser push alerts</div></div>
+            <label class="toggle-inline"><input type="checkbox"></label>
+          </div>
+          <div class="security-row">
+            <div class="security-row-info"><div class="security-label">Weekly Digest</div><div class="security-desc">Summary every Monday</div></div>
+            <label class="toggle-inline"><input type="checkbox" checked></label>
+          </div>
+          <div class="security-row">
+            <div class="security-row-info"><div class="security-label">Security Alerts</div><div class="security-desc">Suspicious login notifications</div></div>
+            <label class="toggle-inline"><input type="checkbox" checked></label>
+          </div>
+        </div>
+        <div class="form-group" style="margin-top:16px;">
+          <label class="form-label">Welcome Message</label>
+          <textarea class="form-textarea" placeholder="Optional welcome note to include in the invitation email…"></textarea>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-user-plus"></i>Create User</button>
+        <button type="button" class="btn btn-secondary" data-goto="#/users">Cancel</button>
+        <div style="margin-left:auto; display:flex; gap:8px;">
+          <button type="button" class="btn btn-ghost btn-sm" id="prevTabBtn" style="display:none;"><i class="fa-solid fa-arrow-left"></i>Back</button>
+          <button type="button" class="btn btn-secondary btn-sm" id="nextTabBtn"><i class="fa-solid fa-arrow-right"></i>Next</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- ████████ JOBS PAGE ████████ -->
+<section class="page" id="page-jobs">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-title">Jobs</div>
+      <div class="page-desc">Monitor and manage system jobs</div>
+    </div>
+    <button class="btn btn-primary btn-sm" data-goto="#/jobs/create"><i class="fa-solid fa-plus"></i>Create Job</button>
+  </div>
+
+  <!-- Stats strip -->
+  <div class="grid-cols-4" style="margin-bottom:20px;">
+    <div class="card" style="padding:14px 16px;">
+      <div style="font-size:12px; color:var(--text-muted);">Total</div>
+      <div style="font-size:22px; font-weight:700; color:var(--text-primary);" id="jobs-total">0</div>
+    </div>
+    <div class="card" style="padding:14px 16px;">
+      <div style="font-size:12px; color:var(--blue);">Running</div>
+      <div style="font-size:22px; font-weight:700; color:var(--blue);" id="jobs-running">0</div>
+    </div>
+    <div class="card" style="padding:14px 16px;">
+      <div style="font-size:12px; color:var(--green);">Completed</div>
+      <div style="font-size:22px; font-weight:700; color:var(--green);" id="jobs-completed">0</div>
+    </div>
+    <div class="card" style="padding:14px 16px;">
+      <div style="font-size:12px; color:var(--red);">Failed</div>
+      <div style="font-size:22px; font-weight:700; color:var(--red);" id="jobs-failed">0</div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:0; overflow:hidden;">
+    <div style="display:flex; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px solid var(--border); flex-wrap:wrap;">
+      <div class="topbar-search" style="flex:1; max-width:280px; margin:0;">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Search jobs..." id="jobsSearch">
+      </div>
+      <select class="form-select" id="jobStatusFilter" style="width:auto; padding:7px 32px 7px 10px; height:34px; font-size:13px;">
+        <option value="">All Status</option>
+        <option>Running</option><option>Completed</option><option>Failed</option><option>Pending</option>
+      </select>
+    </div>
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Job ID</th>
+            <th data-col="name">Name</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Progress</th>
+            <th data-col="created">Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="jobsTableBody"></tbody>
+      </table>
+    </div>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 16px; border-top:1px solid var(--border);">
+      <div style="font-size:12px; color:var(--text-muted);" id="jobsPageInfo"></div>
+      <div class="pagination" id="jobsPagination"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ████████ CREATE JOB (Stepper) ████████ -->
+<section class="page" id="page-jobs-create">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-title">Create New Job</div>
+      <div class="page-desc">Configure and schedule a new job</div>
+    </div>
+    <button class="btn btn-secondary btn-sm" data-goto="#/jobs"><i class="fa-solid fa-arrow-left"></i>Back</button>
+  </div>
+
+  <div class="card" style="max-width:680px;">
+    <!-- Stepper -->
+    <div class="stepper" id="jobStepper">
+      <div class="step-item active" data-step="0">
+        <div class="step-circle">1</div>
+        <div class="step-label">Basic Info</div>
+      </div>
+      <div class="step-item" data-step="1">
+        <div class="step-circle">2</div>
+        <div class="step-label">Schedule</div>
+      </div>
+      <div class="step-item" data-step="2">
+        <div class="step-circle">3</div>
+        <div class="step-label">Notifications</div>
+      </div>
+      <div class="step-item" data-step="3">
+        <div class="step-circle">4</div>
+        <div class="step-label">Review</div>
+      </div>
+    </div>
+
+    <form id="createJobForm" novalidate>
+      <!-- Step 0: Basic Info -->
+      <div class="step-panel" id="job-step-0">
+        <div class="form-group" id="fg-jobName">
+          <label class="form-label form-label-req">Job Name</label>
+          <input class="form-input" type="text" id="jobName" placeholder="e.g. Daily Backup">
+          <div class="form-error-msg">Job name is required.</div>
+        </div>
+        <div class="form-group" id="fg-jobType">
+          <label class="form-label form-label-req">Job Type</label>
+          <select class="form-select" id="jobType">
+            <option value="">Select type…</option>
+            <option value="backup">Backup</option>
+            <option value="report">Report Generation</option>
+            <option value="sync">Data Sync</option>
+            <option value="cleanup">Cleanup</option>
+            <option value="import">Import</option>
+          </select>
+          <div class="form-error-msg">Please select a job type.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-textarea" id="jobDesc" placeholder="Describe what this job does…"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Priority</label>
+          <select class="form-select" id="jobPriority">
+            <option>Normal</option><option>High</option><option>Critical</option><option>Low</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Step 1: Schedule -->
+      <div class="step-panel" id="job-step-1" style="display:none;">
+        <div class="form-group" id="fg-jobSchedule">
+          <label class="form-label form-label-req">Schedule Type</label>
+          <select class="form-select" id="jobSchedule">
+            <option value="">Select schedule…</option>
+            <option value="once">Run Once</option>
+            <option value="hourly">Hourly</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+            <option value="cron">Custom Cron</option>
+          </select>
+          <div class="form-error-msg">Please select a schedule.</div>
+        </div>
+        <div class="form-group" id="fg-jobStart">
+          <label class="form-label form-label-req">Start Date & Time</label>
+          <input class="form-input" type="datetime-local" id="jobStart">
+          <div class="form-error-msg">Start date is required.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Timeout (minutes)</label>
+          <input class="form-input" type="number" id="jobTimeout" placeholder="60" min="1">
+          <div class="form-help">Leave blank for no timeout</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Max Retries on Failure</label>
+          <select class="form-select">
+            <option value="0">No retries</option>
+            <option value="1">1 retry</option>
+            <option value="3" selected>3 retries</option>
+            <option value="5">5 retries</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Step 2: Notifications -->
+      <div class="step-panel" id="job-step-2" style="display:none;">
+        <div class="space-y-4">
+          <div class="security-row">
+            <div class="security-row-info"><div class="security-label">Notify on Start</div><div class="security-desc">Alert when job begins</div></div>
+            <label class="toggle-inline"><input type="checkbox"></label>
+          </div>
+          <div class="security-row">
+            <div class="security-row-info"><div class="security-label">Notify on Success</div><div class="security-desc">Alert when job completes</div></div>
+            <label class="toggle-inline"><input type="checkbox" checked></label>
+          </div>
+          <div class="security-row">
+            <div class="security-row-info"><div class="security-label">Notify on Failure</div><div class="security-desc">Alert on errors or timeout</div></div>
+            <label class="toggle-inline"><input type="checkbox" checked></label>
+          </div>
+        </div>
+        <div class="form-group" style="margin-top:16px;">
+          <label class="form-label">Alert Email</label>
+          <input class="form-input" type="email" placeholder="team@company.com">
+          <div class="form-help">Separate multiple addresses with commas</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Slack Webhook URL</label>
+          <input class="form-input" type="url" placeholder="https://hooks.slack.com/services/...">
+        </div>
+      </div>
+
+      <!-- Step 3: Review -->
+      <div class="step-panel" id="job-step-3" style="display:none;">
+        <div class="alert alert-success" style="margin-bottom:16px;">
+          <i class="fa-solid fa-check-circle alert-icon"></i>
+          <div><div class="alert-title">Ready to create!</div><div class="alert-text">Review your settings below before creating this job.</div></div>
+        </div>
+        <div id="jobReviewContent" style="display:flex; flex-direction:column; gap:10px;"></div>
+      </div>
+
+      <div class="divider"></div>
+      <div style="display:flex; gap:8px;">
+        <button type="button" class="btn btn-secondary" id="jobPrevBtn" style="display:none;"><i class="fa-solid fa-arrow-left"></i>Back</button>
+        <button type="button" class="btn btn-primary" id="jobNextBtn">Next Step<i class="fa-solid fa-arrow-right"></i></button>
+        <button type="submit" class="btn btn-primary" id="jobSubmitBtn" style="display:none;"><i class="fa-solid fa-rocket"></i>Create Job</button>
+        <button type="button" class="btn btn-ghost" data-goto="#/jobs">Cancel</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- ████████ ANALYTICS PAGE ████████ -->
+<section class="page" id="page-analytics">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-title">Analytics</div>
+      <div class="page-desc">Detailed metrics and performance data</div>
+    </div>
+    <select class="form-select" style="width:auto; padding:7px 32px 7px 10px; height:34px; font-size:13px;">
+      <option>Last 30 days</option><option>Last 90 days</option><option>Last year</option>
+    </select>
+  </div>
+
+  <div class="grid-cols-2" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-header"><div class="card-title">User Growth</div></div>
+      <div class="chart-container" style="height:220px;"><canvas id="growthChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Job Success Rate</div></div>
+      <div class="chart-container" style="height:220px;"><canvas id="successChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title">Performance Metrics</div></div>
+    <div class="grid-cols-4" style="gap:12px; margin-top:4px;">
+      <div style="text-align:center; padding:12px 0;">
+        <div style="font-size:28px; font-weight:700; color:var(--blue); letter-spacing:-1px;">99.8%</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Uptime</div>
+      </div>
+      <div style="text-align:center; padding:12px 0;">
+        <div style="font-size:28px; font-weight:700; color:var(--green); letter-spacing:-1px;">142ms</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Avg Response</div>
+      </div>
+      <div style="text-align:center; padding:12px 0;">
+        <div style="font-size:28px; font-weight:700; color:var(--accent); letter-spacing:-1px;">4.2K</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Req / min</div>
+      </div>
+      <div style="text-align:center; padding:12px 0;">
+        <div style="font-size:28px; font-weight:700; color:var(--purple); letter-spacing:-1px;">0.02%</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Error Rate</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ████████ SETTINGS PAGE ████████ -->
+<section class="page" id="page-settings">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-title">Settings</div>
+      <div class="page-desc">Manage application configuration</div>
+    </div>
+  </div>
+
+  <div class="grid-cols-2" style="align-items:start;">
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <div class="card">
+        <div class="card-header"><div class="card-title"><i class="fa-solid fa-building" style="color:var(--accent); margin-right:6px;"></i>Organization</div></div>
+        <div class="form-group">
+          <label class="form-label">Organization Name</label>
+          <input class="form-input" type="text" value="Nexus Corp">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Domain</label>
+          <input class="form-input" type="text" value="nexus.dev">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Timezone</label>
+          <select class="form-select">
+            <option>UTC (Universal)</option>
+            <option selected>UTC+6 (Dhaka)</option>
+            <option>UTC-5 (New York)</option>
+            <option>UTC+1 (London)</option>
+          </select>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="showToast('success','Settings saved!','Organization settings have been updated.')">Save Changes</button>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title"><i class="fa-solid fa-envelope" style="color:var(--blue); margin-right:6px;"></i>Email Config</div></div>
+        <div class="form-group">
+          <label class="form-label">SMTP Host</label>
+          <input class="form-input" type="text" value="smtp.mailgun.org">
+        </div>
+        <div class="grid-cols-2">
+          <div class="form-group">
+            <label class="form-label">Port</label>
+            <input class="form-input" type="text" value="587">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Security</label>
+            <select class="form-select"><option>TLS</option><option>SSL</option><option>None</option></select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">From Address</label>
+          <input class="form-input" type="email" value="noreply@nexus.dev">
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="showToast('info','Testing…','Sending a test email now.')">Test Connection</button>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <div class="card">
+        <div class="card-header"><div class="card-title"><i class="fa-solid fa-database" style="color:var(--green); margin-right:6px;"></i>System</div></div>
+        <div class="space-y-4">
+          <div class="security-row">
+            <div class="security-row-info"><div class="security-label">Maintenance Mode</div><div class="security-desc">Show maintenance page</div></div>
+            <label class="toggle-inline"><input type="checkbox"></label>
+          </div>
+          <div class="security-row">
+            <div class="security-row-info"><div class="security-label">Debug Logging</div><div class="security-desc">Enable verbose logs</div></div>
+            <label class="toggle-inline"><input type="checkbox"></label>
+          </div>
+          <div class="security-row">
+            <div class="security-row-info"><div class="security-label">API Access</div><div class="security-desc">Allow external API calls</div></div>
+            <label class="toggle-inline"><input type="checkbox" checked></label>
+          </div>
+          <div class="security-row">
+            <div class="security-row-info"><div class="security-label">Rate Limiting</div><div class="security-desc">100 req/min per IP</div></div>
+            <label class="toggle-inline"><input type="checkbox" checked></label>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><i class="fa-solid fa-plug" style="color:var(--purple); margin-right:6px;"></i>Integrations</div></div>
+        <div class="space-y-3">
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:32px; height:32px; border-radius:8px; background:var(--bg-sunken); display:flex; align-items:center; justify-content:center; font-size:15px;">🔔</div>
+              <div><div style="font-size:13px; font-weight:500;">Slack</div><div style="font-size:12px; color:var(--text-muted);">Connected</div></div>
+            </div>
+            <span class="badge badge-green">Active</span>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:32px; height:32px; border-radius:8px; background:var(--bg-sunken); display:flex; align-items:center; justify-content:center; font-size:15px;">📊</div>
+              <div><div style="font-size:13px; font-weight:500;">Google Analytics</div><div style="font-size:12px; color:var(--text-muted);">Not connected</div></div>
+            </div>
+            <button class="btn btn-secondary btn-xs">Connect</button>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:32px; height:32px; border-radius:8px; background:var(--bg-sunken); display:flex; align-items:center; justify-content:center; font-size:15px;">💳</div>
+              <div><div style="font-size:13px; font-weight:500;">Stripe</div><div style="font-size:12px; color:var(--text-muted);">Connected</div></div>
+            </div>
+            <span class="badge badge-green">Active</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ████████ PREFERENCES PAGE ████████ -->
+<section class="page" id="page-settings-preferences">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-title">Preferences</div>
+      <div class="page-desc">Customize your panel experience</div>
+    </div>
+  </div>
+  <div class="card" style="max-width:560px;">
+    <div class="space-y-4">
+      <div class="security-row">
+        <div class="security-row-info"><div class="security-label">Dark Mode</div><div class="security-desc">Switch to dark color scheme</div></div>
+        <label class="toggle-inline"><input type="checkbox" id="prefDarkToggle"></label>
+      </div>
+      <div class="security-row">
+        <div class="security-row-info"><div class="security-label">Compact Sidebar</div><div class="security-desc">Collapse sidebar by default</div></div>
+        <label class="toggle-inline"><input type="checkbox" id="prefCompact"></label>
+      </div>
+      <div class="security-row">
+        <div class="security-row-info"><div class="security-label">Animations</div><div class="security-desc">Enable UI transitions</div></div>
+        <label class="toggle-inline"><input type="checkbox" checked></label>
+      </div>
+      <div class="security-row">
+        <div class="security-row-info"><div class="security-label">Sound Effects</div><div class="security-desc">Play sounds on actions</div></div>
+        <label class="toggle-inline"><input type="checkbox"></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="form-group">
+      <label class="form-label">Language</label>
+      <select class="form-select"><option selected>English (US)</option><option>Bengali</option><option>French</option><option>German</option><option>Spanish</option></select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Date Format</label>
+      <select class="form-select"><option selected>MM/DD/YYYY</option><option>DD/MM/YYYY</option><option>YYYY-MM-DD</option></select>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="showToast('success','Preferences saved!','Your preferences have been updated.')">Save Preferences</button>
+  </div>
+</section>
+
+<!-- ████████ PROFILE PAGE ████████ -->
+<section class="page" id="page-profile">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-title">My Profile</div>
+      <div class="page-desc">Manage your personal information</div>
+    </div>
+  </div>
+
+  <div class="grid-cols-3" style="align-items:start;">
+    <!-- Avatar card -->
+    <div class="card" style="text-align:center; grid-column:1;">
+      <div style="width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg, var(--accent), #f97316); display:flex; align-items:center; justify-content:center; margin:0 auto 12px; font-size:28px; font-weight:800; color:#0f1621;">AD</div>
+      <div style="font-size:16px; font-weight:700;">Admin User</div>
+      <div style="font-size:13px; color:var(--text-muted); margin-top:2px;">admin@nexus.dev</div>
+      <div style="margin:10px 0;"><span class="badge badge-amber">Super Admin</span></div>
+      <div style="font-size:12px; color:var(--text-muted);">Member since Jan 2024</div>
+      <div class="divider"></div>
+      <button class="btn btn-secondary btn-sm" style="width:100%; justify-content:center;" onclick="openModal('modal-uploadPhoto')"><i class="fa-solid fa-camera"></i>Change Photo</button>
+    </div>
+
+    <!-- Edit form -->
+    <div class="card" style="grid-column: span 2;">
+      <div class="tabs-bar" style="margin-bottom:20px;">
+        <button class="tab-btn active" data-tab-profile="tab-pinfo">Personal Info</button>
+        <button class="tab-btn" data-tab-profile="tab-psecurity">Change Password</button>
+      </div>
+      <div id="tab-pinfo">
+        <div class="grid-cols-2">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input class="form-input" type="text" value="Admin">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input class="form-input" type="text" value="User">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" type="email" value="admin@nexus.dev">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone</label>
+          <input class="form-input" type="tel" value="+1 (555) 000-0000">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Bio</label>
+          <textarea class="form-textarea">Super administrator with full system access. Responsible for platform management and security.</textarea>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="showToast('success','Profile updated!','Your profile changes have been saved.')"><i class="fa-solid fa-check"></i>Save Changes</button>
+      </div>
+      <div id="tab-psecurity" style="display:none;">
+        <div class="alert alert-warning" style="margin-bottom:16px;">
+          <i class="fa-solid fa-lock alert-icon"></i>
+          <div><div class="alert-title">Password Requirements</div><div class="alert-text">At least 12 characters with uppercase, lowercase, numbers and symbols.</div></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Current Password</label>
+          <input class="form-input" type="password" placeholder="••••••••••••">
+        </div>
+        <div class="form-group">
+          <label class="form-label">New Password</label>
+          <input class="form-input" type="password" placeholder="••••••••••••">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirm New Password</label>
+          <input class="form-input" type="password" placeholder="••••••••••••">
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="showToast('success','Password changed!','Your password has been updated successfully.')"><i class="fa-solid fa-key"></i>Update Password</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ████████ SECURITY PAGE ████████ -->
+<section class="page" id="page-security">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-title">Security</div>
+      <div class="page-desc">Authentication, API keys, and access logs</div>
+    </div>
+  </div>
+
+  <div class="grid-cols-2" style="align-items:start; margin-bottom:20px;">
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i class="fa-solid fa-lock" style="color:var(--accent); margin-right:6px;"></i>Authentication</div></div>
+      <div class="space-y-4">
+        <div class="security-row">
+          <div class="security-row-info"><div class="security-label">Two-Factor Auth (2FA)</div><div class="security-desc">TOTP authenticator app</div></div>
+          <label class="toggle-inline"><input type="checkbox" checked></label>
+        </div>
+        <div class="security-row">
+          <div class="security-row-info"><div class="security-label">Login Alerts</div><div class="security-desc">Email on new logins</div></div>
+          <label class="toggle-inline"><input type="checkbox" checked></label>
+        </div>
+        <div class="security-row">
+          <div class="security-row-info"><div class="security-label">Single Session</div><div class="security-desc">Log out other sessions</div></div>
+          <label class="toggle-inline"><input type="checkbox"></label>
+        </div>
+        <div class="security-row">
+          <div class="security-row-info"><div class="security-label">IP Allowlist</div><div class="security-desc">Restrict by IP address</div></div>
+          <label class="toggle-inline"><input type="checkbox"></label>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label">Session Timeout</label>
+        <select class="form-select">
+          <option>30 minutes</option>
+          <option selected>1 hour</option>
+          <option>8 hours</option>
+          <option>Never</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i class="fa-solid fa-clock-rotate-left" style="color:var(--blue); margin-right:6px;"></i>Login History</div></div>
+      <div id="loginHistory"></div>
+    </div>
+  </div>
+
+  <!-- API Keys -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><i class="fa-solid fa-key" style="color:var(--purple); margin-right:6px;"></i>API Keys</div>
+      <button class="btn btn-primary btn-sm" onclick="openModal('modal-newKey')"><i class="fa-solid fa-plus"></i>New Key</button>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Name</th><th>Key</th><th>Created</th><th>Last Used</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span style="font-weight:500;">Production</span></td>
+          <td><span class="key-chip"><i class="fa-solid fa-key fa-xs"></i>nxs_prod_••••••••••1a2b</span></td>
+          <td><span style="font-size:12px; color:var(--text-muted);">Jan 15, 2024</span></td>
+          <td><span style="font-size:12px; color:var(--text-muted);">Today, 2:14pm</span></td>
+          <td><span class="badge badge-green">Active</span></td>
+          <td><button class="btn btn-ghost btn-xs" onclick="showToast('warning','Key revoked','Production key has been revoked.')">Revoke</button></td>
+        </tr>
+        <tr>
+          <td><span style="font-weight:500;">Development</span></td>
+          <td><span class="key-chip"><i class="fa-solid fa-key fa-xs"></i>nxs_dev_••••••••••3c4d</span></td>
+          <td><span style="font-size:12px; color:var(--text-muted);">Mar 2, 2024</span></td>
+          <td><span style="font-size:12px; color:var(--text-muted);">Yesterday</span></td>
+          <td><span class="badge badge-green">Active</span></td>
+          <td><button class="btn btn-ghost btn-xs" onclick="showToast('warning','Key revoked','Development key has been revoked.')">Revoke</button></td>
+        </tr>
+        <tr>
+          <td><span style="font-weight:500;">Staging</span></td>
+          <td><span class="key-chip"><i class="fa-solid fa-key fa-xs"></i>nxs_stg_••••••••••7e8f</span></td>
+          <td><span style="font-size:12px; color:var(--text-muted);">Apr 10, 2024</span></td>
+          <td><span style="font-size:12px; color:var(--text-muted);">3 days ago</span></td>
+          <td><span class="badge badge-gray">Inactive</span></td>
+          <td><button class="btn btn-ghost btn-xs" onclick="showToast('info','Key activated','Staging key has been activated.')">Activate</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ████████ 404 PAGE ████████ -->
+<section class="page" id="page-404">
+  <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:60vh; text-align:center;">
+    <div style="font-size:96px; font-weight:800; color:var(--border); letter-spacing:-6px; font-family:var(--font-sans); line-height:1;">404</div>
+    <div style="font-size:22px; font-weight:700; margin:12px 0 6px;">Page Not Found</div>
+    <div style="font-size:14px; color:var(--text-muted); margin-bottom:24px; max-width:300px;">The page you're looking for doesn't exist or has been moved.</div>
+    <button class="btn btn-primary" data-goto="#/dashboard"><i class="fa-solid fa-house"></i>Go to Dashboard</button>
+  </div>
+</section>
+
+</main><!-- end #main-content -->
+
+<!-- ═══════ MODALS ═══════ -->
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="modal-confirm">
+  <div class="modal-box" style="max-width:400px;">
+    <div class="modal-header">
+      <div><div class="modal-title" id="modal-confirm-title">Confirm Action</div></div>
+      <button class="modal-close" data-close="modal-confirm"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <p id="modal-confirm-body" style="font-size:13.5px; color:var(--text-secondary); line-height:1.6;">Are you sure you want to proceed?</p>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close="modal-confirm">Cancel</button>
+      <button class="btn btn-danger" id="modal-confirm-ok">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- New Item Modal (form modal) -->
+<div class="modal-overlay" id="modal-newItem">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div><div class="modal-title">Create New Item</div><div class="modal-subtitle">Add a new resource to your dashboard</div></div>
+      <button class="modal-close" data-close="modal-newItem"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="form-group">
+      <label class="form-label form-label-req">Item Name</label>
+      <input class="form-input" type="text" placeholder="Enter name…">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <select class="form-select"><option>General</option><option>Analytics</option><option>System</option></select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <textarea class="form-textarea" rows="3" placeholder="Optional description…"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close="modal-newItem">Cancel</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-newItem'); showToast('success','Item created!','Your new item has been added.')"><i class="fa-solid fa-plus"></i>Create</button>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Photo Modal -->
+<div class="modal-overlay" id="modal-uploadPhoto">
+  <div class="modal-box" style="max-width:400px;">
+    <div class="modal-header">
+      <div class="modal-title">Change Profile Photo</div>
+      <button class="modal-close" data-close="modal-uploadPhoto"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div style="border: 2px dashed var(--border-strong); border-radius:12px; padding:32px; text-align:center; cursor:pointer; transition:border-color var(--transition);" onmouseenter="this.style.borderColor='var(--accent)'" onmouseleave="this.style.borderColor='var(--border-strong)'">
+      <i class="fa-solid fa-cloud-arrow-up" style="font-size:32px; color:var(--text-muted); display:block; margin-bottom:10px;"></i>
+      <div style="font-size:14px; font-weight:500;">Drop photo here or click to browse</div>
+      <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">PNG, JPG up to 5MB</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close="modal-uploadPhoto">Cancel</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-uploadPhoto'); showToast('success','Photo updated!','Your profile photo has been changed.')"><i class="fa-solid fa-upload"></i>Upload</button>
+    </div>
+  </div>
+</div>
+
+<!-- New API Key Modal -->
+<div class="modal-overlay" id="modal-newKey">
+  <div class="modal-box" style="max-width:400px;">
+    <div class="modal-header">
+      <div><div class="modal-title">Generate API Key</div><div class="modal-subtitle">Create a new API key for external access</div></div>
+      <button class="modal-close" data-close="modal-newKey"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="form-group">
+      <label class="form-label form-label-req">Key Name</label>
+      <input class="form-input" type="text" placeholder="e.g. Mobile App">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Environment</label>
+      <select class="form-select"><option>Production</option><option>Development</option><option>Staging</option></select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Expiry</label>
+      <select class="form-select"><option>Never</option><option>30 days</option><option>90 days</option><option>1 year</option></select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close="modal-newKey">Cancel</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-newKey'); showToast('success','API key generated!','Your new API key is ready to use.')"><i class="fa-solid fa-key"></i>Generate</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ TOAST CONTAINER ═══════ -->
+<div id="toast-container"></div>
+
+<!-- ═══════ TOUR ELEMENTS ═══════ -->
+<div id="tour-backdrop" style="display:none;">
+  <div id="tour-highlight" class="tour-highlight"></div>
+</div>
+<div id="tour-popover" class="tour-popover" style="display:none;"></div>
+
+<!-- ════════════════════════════════════════════════════════════
+   JAVASCRIPT
+═══════════════════════════════════════════════════════════ -->
+<script>
+/* ────────────────────────────────────────────────
+   DATA
+──────────────────────────────────────────────── */
+const USERS = [
+  {id:1, name:'Alice Johnson', email:'alice@nexus.dev', role:'Admin', status:'Active', joined:'2024-01-10', avatar:'AJ', bg:'#6366f1'},
+  {id:2, name:'Bob Smith', email:'bob@nexus.dev', role:'Editor', status:'Active', joined:'2024-02-14', avatar:'BS', bg:'#3b82f6'},
+  {id:3, name:'Carol Martinez', email:'carol@nexus.dev', role:'Viewer', status:'Inactive', joined:'2024-03-05', avatar:'CM', bg:'#10b981'},
+  {id:4, name:'David Kim', email:'david@nexus.dev', role:'Editor', status:'Active', joined:'2024-03-22', avatar:'DK', bg:'#f59e0b'},
+  {id:5, name:'Emma Davis', email:'emma@nexus.dev', role:'Admin', status:'Active', joined:'2024-04-01', avatar:'ED', bg:'#8b5cf6'},
+  {id:6, name:'Frank Oliver', email:'frank@nexus.dev', role:'Viewer', status:'Pending', joined:'2024-04-15', avatar:'FO', bg:'#ec4899'},
+  {id:7, name:'Grace Lee', email:'grace@nexus.dev', role:'Editor', status:'Active', joined:'2024-05-02', avatar:'GL', bg:'#14b8a6'},
+  {id:8, name:'Henry Park', email:'henry@nexus.dev', role:'Viewer', status:'Inactive', joined:'2024-05-18', avatar:'HP', bg:'#f97316'},
+  {id:9, name:'Irene Wang', email:'irene@nexus.dev', role:'Admin', status:'Active', joined:'2024-06-01', avatar:'IW', bg:'#6366f1'},
+  {id:10, name:'James Brown', email:'james@nexus.dev', role:'Editor', status:'Active', joined:'2024-06-14', avatar:'JB', bg:'#3b82f6'},
+  {id:11, name:'Karen White', email:'karen@nexus.dev', role:'Viewer', status:'Pending', joined:'2024-07-02', avatar:'KW', bg:'#10b981'},
+  {id:12, name:'Leo Garcia', email:'leo@nexus.dev', role:'Editor', status:'Active', joined:'2024-07-20', avatar:'LG', bg:'#f59e0b'},
+];
+
+const JOBS = [
+  {id:'JOB-1001', name:'Daily Backup', type:'Backup', status:'Completed', progress:100, created:'2024-04-10'},
+  {id:'JOB-1002', name:'Weekly Report', type:'Report', status:'Running', progress:67, created:'2024-04-12'},
+  {id:'JOB-1003', name:'User Data Sync', type:'Sync', status:'Failed', progress:34, created:'2024-04-13'},
+  {id:'JOB-1004', name:'Log Cleanup', type:'Cleanup', status:'Completed', progress:100, created:'2024-04-14'},
+  {id:'JOB-1005', name:'Hourly Snapshot', type:'Backup', status:'Running', progress:82, created:'2024-04-16'},
+  {id:'JOB-1006', name:'Data Import', type:'Import', status:'Pending', progress:0, created:'2024-04-16'},
+  {id:'JOB-1007', name:'Monthly Summary', type:'Report', status:'Pending', progress:0, created:'2024-04-16'},
+  {id:'JOB-1008', name:'Asset Sync', type:'Sync', status:'Completed', progress:100, created:'2024-04-15'},
+];
+
+/* ────────────────────────────────────────────────
+   STATE
+──────────────────────────────────────────────── */
+const state = {
+  darkMode: localStorage.getItem('nx_theme') === 'dark',
+  sidebarCollapsed: localStorage.getItem('nx_sidebar') === 'collapsed',
+  openSubmenus: new Set(JSON.parse(localStorage.getItem('nx_submenus') || '[]')),
+  users: { data: [...USERS], page:1, perPage:6, sort:{col:'name',dir:'asc'}, search:'', role:'', status:'' },
+  jobs:  { data: [...JOBS],  page:1, perPage:5, search:'', statusFilter:'' },
+  jobStep: 0,
+  revenueChartType: 'bar',
+  charts: {},
+};
+
+/* ────────────────────────────────────────────────
+   ROUTING
+──────────────────────────────────────────────── */
+const ROUTES = {
+  '#/dashboard': 'dashboard',
+  '#/users': 'users',
+  '#/users/add': 'users-add',
+  '#/jobs': 'jobs',
+  '#/jobs/create': 'jobs-create',
+  '#/analytics': 'analytics',
+  '#/settings': 'settings',
+  '#/settings/preferences': 'settings-preferences',
+  '#/profile': 'profile',
+  '#/security': 'security',
+};
+
+const BREADCRUMBS = {
+  'dashboard': 'Dashboard', 'users': 'Users', 'users-add': 'Add User',
+  'jobs': 'Jobs', 'jobs-create': 'Create Job', 'analytics': 'Analytics',
+  'settings': 'Settings', 'settings-preferences': 'Preferences',
+  'profile': 'Profile', 'security': 'Security',
+};
+
+function navigate(hash) { window.location.hash = hash; }
+
+function handleRoute() {
+  const hash = window.location.hash || '#/dashboard';
+  const pageId = ROUTES[hash] || '404';
+
+  // Deactivate all pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('page-' + pageId);
+  if (target) target.classList.add('active');
+
+  // Breadcrumb
+  const bc = document.getElementById('breadcrumb-current');
+  if (bc) bc.textContent = BREADCRUMBS[pageId] || '404';
+
+  updateActiveNav(hash);
+
+  // Page-specific init
+  if (pageId === 'dashboard') initDashboard();
+  if (pageId === 'analytics') initAnalytics();
+  if (pageId === 'users') renderUsersTable();
+  if (pageId === 'jobs') renderJobsTable();
+  if (pageId === 'settings-preferences') syncPrefPage();
+
+  // Close mobile sidebar
+  closeMobileSidebar();
+}
+
+function updateActiveNav(hash) {
+  document.querySelectorAll('.nav-item[data-route], .submenu-item[data-route], .nav-popup-item[data-route]').forEach(el => {
+    el.classList.toggle('active', el.dataset.route === hash);
+  });
+  // Also highlight parent nav item if submenu is active
+  const subParentMap = {
+    '#/users': 'toggle-users', '#/users/add': 'toggle-users',
+    '#/jobs': 'toggle-jobs', '#/jobs/create': 'toggle-jobs',
+    '#/settings': 'toggle-settings', '#/settings/preferences': 'toggle-settings',
+  };
+  document.querySelectorAll('.nav-item.has-sub').forEach(el => el.classList.remove('active'));
+  if (subParentMap[hash]) {
+    const el = document.getElementById(subParentMap[hash]);
+    if (el) el.classList.add('active');
+  }
+}
+
+/* ────────────────────────────────────────────────
+   SIDEBAR
+──────────────────────────────────────────────── */
+function initSidebar() {
+  const sidebar = document.getElementById('sidebar');
+
+  if (state.sidebarCollapsed) sidebar.classList.add('collapsed');
+
+  // Toggle button
+  document.getElementById('sidebarToggle').addEventListener('click', () => {
+    if (window.innerWidth <= 768) {
+      toggleMobileSidebar();
+    } else {
+      sidebar.classList.toggle('collapsed');
+      state.sidebarCollapsed = sidebar.classList.contains('collapsed');
+      localStorage.setItem('nx_sidebar', state.sidebarCollapsed ? 'collapsed' : 'expanded');
+      // Resize charts
+      setTimeout(() => { Object.values(state.charts).forEach(c => c && c.resize && c.resize()); }, 300);
+    }
+  });
+
+  // Mobile overlay
+  document.getElementById('sidebar-overlay').addEventListener('click', closeMobileSidebar);
+
+  // Submenus (expanded mode)
+  document.querySelectorAll('.nav-item.has-sub').forEach(item => {
+    item.addEventListener('click', (e) => {
+      if (sidebar.classList.contains('collapsed')) return;
+      const subId = item.id.replace('toggle-', 'sub-');
+      const sub = document.getElementById(subId);
+      if (!sub) return;
+      const isOpen = sub.classList.contains('open');
+      // Toggle
+      sub.classList.toggle('open', !isOpen);
+      item.classList.toggle('submenu-open', !isOpen);
+      const key = subId;
+      if (!isOpen) state.openSubmenus.add(key);
+      else state.openSubmenus.delete(key);
+      localStorage.setItem('nx_submenus', JSON.stringify([...state.openSubmenus]));
+    });
+  });
+
+  // Restore open submenus
+  state.openSubmenus.forEach(id => {
+    const sub = document.getElementById(id);
+    const toggle = document.getElementById(id.replace('sub-', 'toggle-'));
+    if (sub) sub.classList.add('open');
+    if (toggle) toggle.classList.add('submenu-open');
+  });
+
+  // Collapsed floating popups + tooltips
+  initCollapsedPopups();
+}
+
+function toggleMobileSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  sidebar.classList.toggle('mobile-open');
+  overlay.classList.toggle('show');
+}
+
+function closeMobileSidebar() {
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
+}
+
+function initCollapsedPopups() {
+  const sidebar = document.getElementById('sidebar');
+  let tooltip = document.createElement('div');
+  tooltip.className = 'nav-tooltip';
+  document.body.appendChild(tooltip);
+
+  // Hide on outside click
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-popup') && !e.target.closest('.nav-item.has-sub')) {
+      document.querySelectorAll('.nav-popup').forEach(p => p.classList.remove('visible'));
+    }
+  });
+
+  // Popup items navigation
+  document.querySelectorAll('.nav-popup-item[data-route]').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navigate(item.dataset.route);
+      document.querySelectorAll('.nav-popup').forEach(p => p.classList.remove('visible'));
+    });
+  });
+
+  document.querySelectorAll('.nav-item-wrapper').forEach(wrapper => {
+    const navItem = wrapper.querySelector('.nav-item');
+    if (!navItem) return;
+    const popup = wrapper.querySelector('.nav-popup');
+    const label = navItem.dataset.label || '';
+    const isHasSub = navItem.classList.contains('has-sub');
+
+    navItem.addEventListener('mouseenter', (e) => {
+      if (!sidebar.classList.contains('collapsed')) return;
+      if (isHasSub && popup) {
+        const rect = navItem.getBoundingClientRect();
+        popup.style.top = rect.top + 'px';
+        popup.classList.add('visible');
+      } else {
+        const rect = navItem.getBoundingClientRect();
+        tooltip.textContent = label;
+        tooltip.style.top = (rect.top + rect.height / 2 - 12) + 'px';
+        tooltip.classList.add('visible');
+      }
+    });
+
+    navItem.addEventListener('mouseleave', (e) => {
+      if (isHasSub && popup) {
+        // Don't hide if hovering over popup
+        const toEl = e.relatedTarget;
+        if (popup.contains(toEl)) return;
+      }
+      tooltip.classList.remove('visible');
+    });
+
+    if (popup) {
+      popup.addEventListener('mouseleave', () => {
+        popup.classList.remove('visible');
+      });
+      // Click inside popup = navigate
+      wrapper.addEventListener('click', (e) => {
+        if (!sidebar.classList.contains('collapsed') || !isHasSub) return;
+        e.stopPropagation();
+        const rect = navItem.getBoundingClientRect();
+        popup.style.top = rect.top + 'px';
+        popup.classList.toggle('visible');
+      });
+    }
+  });
+
+  // Hide tooltip on sidebar expand
+  const sidebarObs = new MutationObserver(() => {
+    if (!sidebar.classList.contains('collapsed')) {
+      tooltip.classList.remove('visible');
+      document.querySelectorAll('.nav-popup').forEach(p => p.classList.remove('visible'));
+    }
+  });
+  sidebarObs.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
+}
+
+/* ────────────────────────────────────────────────
+   THEME
+──────────────────────────────────────────────── */
+function applyTheme(dark) {
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  const icon = document.getElementById('themeIcon');
+  if (icon) icon.className = dark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+  localStorage.setItem('nx_theme', dark ? 'dark' : 'light');
+  // Rebuild charts for color adaptation
+  rebuildCharts();
+}
+
+function initTheme() {
+  applyTheme(state.darkMode);
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    state.darkMode = !state.darkMode;
+    applyTheme(state.darkMode);
+    // Sync pref page toggle
+    const pt = document.getElementById('prefDarkToggle');
+    if (pt) pt.checked = state.darkMode;
+  });
+}
+
+function syncPrefPage() {
+  const pt = document.getElementById('prefDarkToggle');
+  const pc = document.getElementById('prefCompact');
+  if (pt) {
+    pt.checked = state.darkMode;
+    pt.onchange = () => {
+      state.darkMode = pt.checked;
+      applyTheme(state.darkMode);
+    };
+  }
+  if (pc) {
+    pc.checked = state.sidebarCollapsed;
+    pc.onchange = () => {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('collapsed', pc.checked);
+      state.sidebarCollapsed = pc.checked;
+      localStorage.setItem('nx_sidebar', pc.checked ? 'collapsed' : 'expanded');
+    };
+  }
+}
+
+/* ────────────────────────────────────────────────
+   DROPDOWNS
+──────────────────────────────────────────────── */
+function initDropdowns() {
+  const pairs = [
+    ['notifTrigger', 'notifMenu'],
+    ['userMenuTrigger', 'userMenu'],
+  ];
+  pairs.forEach(([btnId, menuId]) => {
+    const btn = document.getElementById(btnId);
+    const menu = document.getElementById(menuId);
+    if (!btn || !menu) return;
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const wasOpen = menu.classList.contains('open');
+      closeAllDropdowns();
+      if (!wasOpen) menu.classList.add('open');
+    });
+  });
+  document.addEventListener('click', closeAllDropdowns);
+}
+
+function closeAllDropdowns() {
+  document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('open'));
+}
+
+/* ────────────────────────────────────────────────
+   MODALS
+──────────────────────────────────────────────── */
+function openModal(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.add('open');
+    el.addEventListener('click', (e) => { if (e.target === el) closeModal(id); }, { once: true });
+  }
+}
+
+function closeModal(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.remove('open');
+}
+
+function showConfirm(title, body, onOk) {
+  document.getElementById('modal-confirm-title').textContent = title;
+  document.getElementById('modal-confirm-body').textContent = body;
+  const btn = document.getElementById('modal-confirm-ok');
+  btn.onclick = () => { onOk(); closeModal('modal-confirm'); };
+  openModal('modal-confirm');
+}
+
+// [data-close] buttons
+document.addEventListener('click', (e) => {
+  const closer = e.target.closest('[data-close]');
+  if (closer) closeModal(closer.dataset.close);
+  // Navigation
+  const goer = e.target.closest('[data-goto]');
+  if (goer) navigate(goer.dataset.goto);
+});
+
+/* ────────────────────────────────────────────────
+   TOAST
+──────────────────────────────────────────────── */
+function showToast(type, title, msg, duration = 4000) {
+  // Handle old call signature: showToast('msg', 'type', 'title', 'msg')
+  if (typeof type === 'string' && (type === 'success' || type === 'error' || type === 'warning' || type === 'info')) {
+    // new signature: showToast(type, title, msg)
+  } else {
+    // old signature: showToast(msg, type, title, msg2)
+    [type, title, msg] = [title || 'info', type, title];
+  }
+
+  const icons = { success:'fa-circle-check', error:'fa-circle-xmark', warning:'fa-triangle-exclamation', info:'fa-circle-info' };
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.style.position = 'relative';
+  toast.innerHTML = `
+    <i class="fa-solid ${icons[type] || 'fa-circle-info'} toast-icon"></i>
+    <div class="toast-body">
+      <div class="toast-title">${title || 'Notification'}</div>
+      ${msg ? `<div class="toast-msg">${msg}</div>` : ''}
+    </div>
+    <button class="toast-dismiss"><i class="fa-solid fa-xmark"></i></button>
+    <div class="toast-progress" style="width:100%;"></div>
+  `;
+  container.appendChild(toast);
+  toast.querySelector('.toast-dismiss').addEventListener('click', () => dismissToast(toast));
+
+  requestAnimationFrame(() => {
+    toast.classList.add('show');
+    const prog = toast.querySelector('.toast-progress');
+    prog.style.transition = `width ${duration}ms linear`;
+    prog.style.width = '0%';
+  });
+
+  const t = setTimeout(() => dismissToast(toast), duration);
+  toast._timer = t;
+}
+
+function dismissToast(toast) {
+  clearTimeout(toast._timer);
+  toast.classList.add('hide');
+  toast.classList.remove('show');
+  setTimeout(() => toast.remove(), 350);
+}
+
+/* ────────────────────────────────────────────────
+   DASHBOARD
+──────────────────────────────────────────────── */
+function initDashboard() {
+  buildActivityFeed();
+  buildProgressCards();
+  buildRevenueChart();
+  buildDonutChart();
+}
+
+function buildActivityFeed() {
+  const items = [
+    { icon:'fa-user-plus', color:'var(--blue-soft)', iconColor:'var(--blue)', text:'<strong>Carol Martinez</strong> registered as a new user', time:'2 minutes ago' },
+    { icon:'fa-check-circle', color:'var(--green-soft)', iconColor:'var(--green)', text:'Job <strong>Daily Backup #1001</strong> completed successfully', time:'15 minutes ago' },
+    { icon:'fa-triangle-exclamation', color:'var(--accent-soft)', iconColor:'var(--accent)', text:'CPU usage spiked to <strong>87%</strong> on server US-East-1', time:'1 hour ago' },
+    { icon:'fa-key', color:'var(--purple-soft)', iconColor:'var(--purple)', text:'New API key generated by <strong>Admin User</strong>', time:'3 hours ago' },
+    { icon:'fa-xmark-circle', color:'var(--red-soft)', iconColor:'var(--red)', text:'Job <strong>User Data Sync #1003</strong> failed after 3 retries', time:'5 hours ago' },
+  ];
+  const el = document.getElementById('activityFeed');
+  if (!el) return;
+  el.innerHTML = items.map(a => `
+    <div class="activity-item">
+      <div class="activity-icon" style="background:${a.color}; color:${a.iconColor};"><i class="fa-solid ${a.icon}"></i></div>
+      <div>
+        <div class="activity-text">${a.text}</div>
+        <div class="activity-time">${a.time}</div>
+      </div>
+    </div>`).join('');
+}
+
+function buildProgressCards() {
+  const projects = [
+    { name:'Platform Redesign', progress:78, color:'var(--blue)', badge:'In Progress' },
+    { name:'API v4 Migration', progress:55, color:'var(--accent)', badge:'In Progress' },
+    { name:'Mobile App Beta', progress:32, color:'var(--purple)', badge:'Early Stage' },
+    { name:'Data Pipeline', progress:94, color:'var(--green)', badge:'Nearly Done' },
+  ];
+  const el = document.getElementById('projectProgress');
+  if (!el) return;
+  el.innerHTML = projects.map(p => `
+    <div>
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+        <div style="font-size:13px; font-weight:500;">${p.name}</div>
+        <span class="badge badge-gray" style="font-size:10px;">${p.badge}</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="progress-bar" style="flex:1;">
+          <div class="progress-fill" style="width:${p.progress}%; background:${p.color};"></div>
+        </div>
+        <span style="font-size:12px; font-weight:600; color:var(--text-secondary); min-width:30px; text-align:right;">${p.progress}%</span>
+      </div>
+    </div>`).join('');
+}
+
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function getChartColors() {
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  return {
+    grid: dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)',
+    text: dark ? '#475569' : '#94a3b8',
+  };
+}
+
+function buildRevenueChart(type) {
+  type = type || state.revenueChartType;
+  state.revenueChartType = type;
+  const ctx = document.getElementById('revenueChart');
+  if (!ctx) return;
+  if (state.charts.revenue) { state.charts.revenue.destroy(); }
+  const { grid, text } = getChartColors();
+  const data = [42, 58, 53, 71, 66, 89, 78, 92, 84, 110, 98, 120];
+  state.charts.revenue = new Chart(ctx, {
+    type,
+    data: {
+      labels: MONTHS,
+      datasets: [{
+        label: 'Revenue ($K)',
+        data,
+        backgroundColor: type === 'bar' ? '#fbbf24cc' : 'rgba(251,191,36,0.1)',
+        borderColor: '#fbbf24',
+        borderWidth: type === 'bar' ? 0 : 2,
+        borderRadius: type === 'bar' ? 6 : 0,
+        fill: type === 'line',
+        tension: 0.4,
+        pointBackgroundColor: '#fbbf24',
+        pointRadius: type === 'line' ? 4 : 0,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: grid }, ticks: { color: text, font: { family: "'JetBrains Mono', monospace", size: 10 } } },
+        y: { grid: { color: grid }, ticks: { color: text, font: { family: "'JetBrains Mono', monospace", size: 10 }, callback: v => '$' + v + 'K' } },
+      }
+    }
+  });
+}
+
+function buildDonutChart() {
+  const ctx = document.getElementById('donutChart');
+  if (!ctx) return;
+  if (state.charts.donut) state.charts.donut.destroy();
+  const labels = ['Organic', 'Direct', 'Referral', 'Social'];
+  const values = [45, 28, 17, 10];
+  const colors = ['#fbbf24', '#3b82f6', '#10b981', '#8b5cf6'];
+  state.charts.donut = new Chart(ctx, {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data: values, backgroundColor: colors, borderWidth: 0, hoverOffset: 6 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '72%',
+      plugins: { legend: { display: false } }
+    }
+  });
+  const legend = document.getElementById('donutLegend');
+  if (legend) {
+    legend.innerHTML = labels.map((l, i) => `
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div style="width:10px; height:10px; border-radius:3px; background:${colors[i]};"></div>
+          <span style="font-size:12px; color:var(--text-secondary);">${l}</span>
+        </div>
+        <span style="font-size:12px; font-weight:600; color:var(--text-primary);">${values[i]}%</span>
+      </div>`).join('');
+  }
+}
+
+function switchChartType(btn, type) {
+  document.querySelectorAll('#page-dashboard .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildRevenueChart(type);
+}
+
+function initAnalytics() {
+  buildGrowthChart();
+  buildSuccessChart();
+}
+
+function buildGrowthChart() {
+  const ctx = document.getElementById('growthChart');
+  if (!ctx || state.charts.growth) return;
+  const { grid, text } = getChartColors();
+  state.charts.growth = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: MONTHS,
+      datasets: [{
+        label: 'New Users',
+        data: [120, 190, 170, 250, 280, 320, 310, 380, 400, 450, 480, 520],
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59,130,246,0.1)',
+        fill: true, tension: 0.4,
+        pointBackgroundColor: '#3b82f6', pointRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: grid }, ticks: { color: text, font: { size: 10 } } },
+        y: { grid: { color: grid }, ticks: { color: text, font: { size: 10 } } },
+      }
+    }
+  });
+}
+
+function buildSuccessChart() {
+  const ctx = document.getElementById('successChart');
+  if (!ctx || state.charts.success) return;
+  const { grid, text } = getChartColors();
+  state.charts.success = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: MONTHS,
+      datasets: [
+        { label: 'Success', data: [95,88,92,97,94,98,91,96,99,95,97,98], backgroundColor: '#10b981cc', borderRadius: 4 },
+        { label: 'Failed',  data: [5,12,8,3,6,2,9,4,1,5,3,2],  backgroundColor: '#ef4444cc', borderRadius: 4 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: text, font: { size: 11 } } } },
+      scales: {
+        x: { stacked: true, grid: { color: grid }, ticks: { color: text, font: { size: 10 } } },
+        y: { stacked: true, grid: { color: grid }, ticks: { color: text, font: { size: 10 } } },
+      }
+    }
+  });
+}
+
+function rebuildCharts() {
+  if (state.charts.revenue) buildRevenueChart();
+  if (state.charts.donut) buildDonutChart();
+  if (state.charts.growth) { state.charts.growth.destroy(); state.charts.growth = null; if (document.getElementById('page-analytics')?.classList.contains('active')) buildGrowthChart(); }
+  if (state.charts.success) { state.charts.success.destroy(); state.charts.success = null; if (document.getElementById('page-analytics')?.classList.contains('active')) buildSuccessChart(); }
+}
+
+/* ────────────────────────────────────────────────
+   USERS TABLE
+──────────────────────────────────────────────── */
+const ROLE_BADGES = { Admin:'badge-purple', Editor:'badge-blue', Viewer:'badge-gray' };
+const STATUS_BADGES = { Active:'badge-green', Inactive:'badge-gray', Pending:'badge-amber' };
+
+function filterAndSortUsers() {
+  let data = [...USERS];
+  const { search, role, status, sort } = state.users;
+  if (search) data = data.filter(u => u.name.toLowerCase().includes(search) || u.email.toLowerCase().includes(search));
+  if (role)   data = data.filter(u => u.role === role);
+  if (status) data = data.filter(u => u.status === status);
+  data.sort((a, b) => {
+    let va = a[sort.col] || '', vb = b[sort.col] || '';
+    return sort.dir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+  });
+  return data;
+}
+
+function renderUsersTable() {
+  const data = filterAndSortUsers();
+  const { page, perPage } = state.users;
+  const total = data.length;
+  const pages = Math.max(1, Math.ceil(total / perPage));
+  state.users.page = Math.min(page, pages);
+  const start = (state.users.page - 1) * perPage;
+  const paged = data.slice(start, start + perPage);
+
+  const tbody = document.getElementById('usersTableBody');
+  if (!tbody) return;
+
+  tbody.innerHTML = paged.length === 0
+    ? `<tr><td colspan="7" style="text-align:center; padding:32px; color:var(--text-muted);">No users found.</td></tr>`
+    : paged.map(u => `
+      <tr>
+        <td><input type="checkbox" style="accent-color:var(--accent);"></td>
+        <td>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div class="avatar-circle" style="background:${u.bg}; color:#fff; width:32px; height:32px; font-size:11px;">${u.avatar}</div>
+            <div><div style="font-weight:500;">${u.name}</div></div>
+          </div>
+        </td>
+        <td style="color:var(--text-secondary); font-size:13px;">${u.email}</td>
+        <td><span class="badge ${ROLE_BADGES[u.role] || 'badge-gray'}">${u.role}</span></td>
+        <td><span class="badge ${STATUS_BADGES[u.status] || 'badge-gray'}">${u.status}</span></td>
+        <td style="color:var(--text-muted); font-size:12px; font-family:var(--font-mono);">${u.joined}</td>
+        <td>
+          <div style="display:flex; gap:6px;">
+            <button class="btn btn-ghost btn-xs" title="Edit" onclick="showToast('info','Edit User','Opening editor for ${u.name}')"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button class="btn btn-ghost btn-xs" style="color:var(--red);" title="Delete" onclick="showConfirm('Delete User','Delete ${u.name}? This cannot be undone.',() => showToast('error','User Deleted','${u.name} has been removed.'))"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </td>
+      </tr>`).join('');
+
+  document.getElementById('usersCount').textContent = `${total} user${total !== 1 ? 's' : ''}`;
+  document.getElementById('usersPageInfo').textContent = `Page ${state.users.page} of ${pages}`;
+  renderPagination('usersPagination', state.users.page, pages, p => { state.users.page = p; renderUsersTable(); });
+}
+
+// Search + filter
+document.addEventListener('DOMContentLoaded', () => {
+  const us = document.getElementById('usersSearch');
+  const rf = document.getElementById('roleFilter');
+  const sf = document.getElementById('statusFilter');
+  if (us) us.addEventListener('input', () => { state.users.search = us.value; state.users.page = 1; renderUsersTable(); });
+  if (rf) rf.addEventListener('change', () => { state.users.role = rf.value; state.users.page = 1; renderUsersTable(); });
+  if (sf) sf.addEventListener('change', () => { state.users.status = sf.value; state.users.page = 1; renderUsersTable(); });
+
+  // Sorting
+  document.querySelectorAll('#usersTable th[data-col]').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.col;
+      if (state.users.sort.col === col) state.users.sort.dir = state.users.sort.dir === 'asc' ? 'desc' : 'asc';
+      else { state.users.sort.col = col; state.users.sort.dir = 'asc'; }
+      document.querySelectorAll('#usersTable th[data-col]').forEach(t => t.className = '');
+      th.className = 'sort-' + state.users.sort.dir;
+      renderUsersTable();
+    });
+  });
+
+  // Jobs search + filter
+  const js = document.getElementById('jobsSearch');
+  const jf = document.getElementById('jobStatusFilter');
+  if (js) js.addEventListener('input', () => { state.jobs.search = js.value; state.jobs.page = 1; renderJobsTable(); });
+  if (jf) jf.addEventListener('change', () => { state.jobs.statusFilter = jf.value; state.jobs.page = 1; renderJobsTable(); });
+});
+
+/* ────────────────────────────────────────────────
+   JOBS TABLE
+──────────────────────────────────────────────── */
+const JOB_STATUS_BADGES = { Completed:'badge-green', Running:'badge-blue', Failed:'badge-red', Pending:'badge-amber' };
+const JOB_PROGRESS_COLORS = { Completed:'var(--green)', Running:'var(--blue)', Failed:'var(--red)', Pending:'var(--border-strong)' };
+
+function renderJobsTable() {
+  let data = [...JOBS];
+  const { search, statusFilter, page, perPage } = state.jobs;
+  if (search)       data = data.filter(j => j.name.toLowerCase().includes(search) || j.id.toLowerCase().includes(search));
+  if (statusFilter) data = data.filter(j => j.status === statusFilter);
+
+  // Stats
+  document.getElementById('jobs-total').textContent = data.length;
+  document.getElementById('jobs-running').textContent = data.filter(j => j.status === 'Running').length;
+  document.getElementById('jobs-completed').textContent = data.filter(j => j.status === 'Completed').length;
+  document.getElementById('jobs-failed').textContent = data.filter(j => j.status === 'Failed').length;
+
+  const total = data.length;
+  const pages = Math.max(1, Math.ceil(total / perPage));
+  state.jobs.page = Math.min(page, pages);
+  const start = (state.jobs.page - 1) * perPage;
+  const paged = data.slice(start, start + perPage);
+
+  const tbody = document.getElementById('jobsTableBody');
+  if (!tbody) return;
+  tbody.innerHTML = paged.length === 0
+    ? `<tr><td colspan="7" style="text-align:center; padding:32px; color:var(--text-muted);">No jobs found.</td></tr>`
+    : paged.map(j => `
+      <tr>
+        <td><span class="text-mono" style="font-size:12px; color:var(--text-muted);">${j.id}</span></td>
+        <td style="font-weight:500;">${j.name}</td>
+        <td><span class="badge badge-gray">${j.type}</span></td>
+        <td><span class="badge ${JOB_STATUS_BADGES[j.status] || 'badge-gray'}">${j.status}</span></td>
+        <td style="min-width:120px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div class="progress-bar" style="flex:1; height:5px;">
+              <div class="progress-fill" style="width:${j.progress}%; background:${JOB_PROGRESS_COLORS[j.status]};"></div>
+            </div>
+            <span style="font-size:11px; color:var(--text-muted); min-width:26px;">${j.progress}%</span>
+          </div>
+        </td>
+        <td style="color:var(--text-muted); font-size:12px; font-family:var(--font-mono);">${j.created}</td>
+        <td>
+          <div style="display:flex; gap:6px;">
+            <button class="btn btn-ghost btn-xs" onclick="showToast('info','Job Details','Viewing ${j.id}: ${j.name}')"><i class="fa-solid fa-eye"></i></button>
+            <button class="btn btn-ghost btn-xs" style="color:var(--red);" onclick="showConfirm('Delete Job','Delete job ${j.id}?', () => showToast('error','Job Deleted','${j.name} has been removed.'))"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </td>
+      </tr>`).join('');
+
+  document.getElementById('jobsPageInfo').textContent = `Page ${state.jobs.page} of ${pages} — ${total} job${total !== 1 ? 's' : ''}`;
+  renderPagination('jobsPagination', state.jobs.page, pages, p => { state.jobs.page = p; renderJobsTable(); });
+}
+
+/* ────────────────────────────────────────────────
+   PAGINATION
+──────────────────────────────────────────────── */
+function renderPagination(containerId, current, total, onChange) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  let html = `<button class="page-btn" ${current===1?'disabled':''} onclick="(${onChange})(${current-1})"><i class="fa-solid fa-chevron-left fa-xs"></i></button>`;
+  for (let i = 1; i <= total; i++) {
+    if (total > 6 && i > 2 && i < total - 1 && Math.abs(i - current) > 1) {
+      if (i === 3 || i === total - 2) html += `<span class="page-btn" style="cursor:default; pointer-events:none;">…</span>`;
+      continue;
+    }
+    html += `<button class="page-btn ${i === current ? 'active' : ''}" onclick="(${onChange})(${i})">${i}</button>`;
+  }
+  html += `<button class="page-btn" ${current===total||total===0?'disabled':''} onclick="(${onChange})(${current+1})"><i class="fa-solid fa-chevron-right fa-xs"></i></button>`;
+  el.innerHTML = html;
+}
+
+/* ────────────────────────────────────────────────
+   STEPPER FORM (Create Job)
+──────────────────────────────────────────────── */
+function initJobStepper() {
+  state.jobStep = 0;
+  updateJobStepperUI();
+
+  document.getElementById('jobNextBtn').addEventListener('click', () => {
+    if (!validateJobStep(state.jobStep)) return;
+    if (state.jobStep < 3) {
+      state.jobStep++;
+      updateJobStepperUI();
+    }
+  });
+
+  document.getElementById('jobPrevBtn').addEventListener('click', () => {
+    if (state.jobStep > 0) {
+      state.jobStep--;
+      updateJobStepperUI();
+    }
+  });
+
+  document.getElementById('createJobForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!validateJobStep(state.jobStep)) return;
+    showToast('success', 'Job Created!', 'Your job has been scheduled successfully.');
+    navigate('#/jobs');
+  });
+}
+
+function validateJobStep(step) {
+  if (step === 0) {
+    let ok = true;
+    const name = document.getElementById('jobName');
+    const type = document.getElementById('jobType');
+    setFieldError('fg-jobName', !name.value.trim(), 'Job name is required.');
+    setFieldError('fg-jobType', !type.value, 'Please select a job type.');
+    if (!name.value.trim() || !type.value) ok = false;
+    return ok;
+  }
+  if (step === 1) {
+    let ok = true;
+    const sched = document.getElementById('jobSchedule');
+    const start = document.getElementById('jobStart');
+    setFieldError('fg-jobSchedule', !sched.value, 'Please select a schedule.');
+    setFieldError('fg-jobStart', !start.value, 'Start date is required.');
+    if (!sched.value || !start.value) ok = false;
+    return ok;
+  }
+  return true;
+}
+
+function updateJobStepperUI() {
+  const steps = document.querySelectorAll('.step-item');
+  steps.forEach((s, i) => {
+    s.classList.toggle('active', i === state.jobStep);
+    s.classList.toggle('completed', i < state.jobStep);
+    const circle = s.querySelector('.step-circle');
+    if (i < state.jobStep) circle.innerHTML = '<i class="fa-solid fa-check fa-xs"></i>';
+    else circle.textContent = i + 1;
+  });
+
+  document.querySelectorAll('.step-panel').forEach((p, i) => {
+    p.style.display = i === state.jobStep ? 'block' : 'none';
+  });
+
+  document.getElementById('jobPrevBtn').style.display = state.jobStep > 0 ? 'inline-flex' : 'none';
+  document.getElementById('jobNextBtn').style.display = state.jobStep < 3 ? 'inline-flex' : 'none';
+  document.getElementById('jobSubmitBtn').style.display = state.jobStep === 3 ? 'inline-flex' : 'none';
+
+  if (state.jobStep === 3) buildJobReview();
+}
+
+function buildJobReview() {
+  const el = document.getElementById('jobReviewContent');
+  if (!el) return;
+  const fields = [
+    ['Job Name', document.getElementById('jobName')?.value || '—'],
+    ['Type', document.getElementById('jobType')?.value || '—'],
+    ['Priority', document.getElementById('jobPriority')?.value || '—'],
+    ['Schedule', document.getElementById('jobSchedule')?.value || '—'],
+    ['Start Date', document.getElementById('jobStart')?.value || '—'],
+  ];
+  el.innerHTML = fields.map(([k, v]) => `
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:var(--bg-sunken); border-radius:8px; font-size:13px;">
+      <span style="color:var(--text-muted);">${k}</span>
+      <span style="font-weight:500;">${v}</span>
+    </div>`).join('');
+}
+
+/* ────────────────────────────────────────────────
+   ADD USER FORM (Tab-based)
+──────────────────────────────────────────────── */
+function initAddUserForm() {
+  const tabs = ['tab-basic', 'tab-role', 'tab-notify'];
+  let currentTab = 0;
+
+  const tabBtns = document.querySelectorAll('#addUserTabs .tab-btn');
+  tabBtns.forEach((btn, i) => {
+    btn.addEventListener('click', () => {
+      switchTab(i);
+    });
+  });
+
+  function switchTab(idx) {
+    currentTab = idx;
+    tabBtns.forEach((b, i) => b.classList.toggle('active', i === idx));
+    tabs.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('active', i === idx);
+    });
+    document.getElementById('prevTabBtn').style.display = idx > 0 ? 'inline-flex' : 'none';
+    document.getElementById('nextTabBtn').style.display = idx < tabs.length - 1 ? 'inline-flex' : 'none';
+  }
+
+  document.getElementById('nextTabBtn')?.addEventListener('click', () => {
+    if (currentTab < tabs.length - 1) switchTab(currentTab + 1);
+  });
+  document.getElementById('prevTabBtn')?.addEventListener('click', () => {
+    if (currentTab > 0) switchTab(currentTab - 1);
+  });
+
+  // Password strength
+  const pwdInput = document.getElementById('passwordInput');
+  if (pwdInput) {
+    pwdInput.addEventListener('input', () => {
+      const v = pwdInput.value;
+      const score = [v.length >= 8, /[A-Z]/.test(v), /[0-9]/.test(v), /[^A-Za-z0-9]/.test(v)].filter(Boolean).length;
+      const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+      const colors = ['', 'var(--red)', 'var(--accent)', 'var(--blue)', 'var(--green)'];
+      const el = document.getElementById('passwordStrength');
+      if (el) el.innerHTML = v.length > 0 ? `<div style="display:flex; align-items:center; gap:8px;"><div style="display:flex; gap:3px;">${[1,2,3,4].map(i => `<div style="width:32px; height:3px; border-radius:2px; background:${i<=score ? colors[score] : 'var(--border)'};"></div>`).join('')}</div><span style="font-size:11px; font-weight:500; color:${colors[score]};">${labels[score]}</span></div>` : '';
+    });
+  }
+
+  // Toggle password
+  const tBtn = document.getElementById('togglePwd');
+  if (tBtn && pwdInput) {
+    tBtn.addEventListener('click', () => {
+      const show = pwdInput.type === 'password';
+      pwdInput.type = show ? 'text' : 'password';
+      tBtn.innerHTML = `<i class="fa-solid fa-eye${show ? '-slash' : ''} fa-sm"></i>`;
+    });
+  }
+
+  // Form submit
+  document.getElementById('addUserForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let valid = true;
+    const fn = document.getElementById('firstName');
+    const ln = document.getElementById('lastName');
+    const em = document.getElementById('emailInput');
+    const pw = document.getElementById('passwordInput');
+    const ro = document.getElementById('roleSelect');
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    setFieldError('fg-firstName', !fn.value.trim(), 'First name is required.');
+    setFieldError('fg-lastName',  !ln.value.trim(), 'Last name is required.');
+    setFieldError('fg-email',     !emailRe.test(em.value), 'Valid email required.');
+    setFieldError('fg-password',  pw.value.length < 8, 'Min 8 characters.');
+    setFieldError('fg-role',      !ro.value, 'Please select a role.');
+
+    if (!fn.value.trim() || !ln.value.trim() || !emailRe.test(em.value) || pw.value.length < 8 || !ro.value) {
+      valid = false;
+      switchTab(0);
+    }
+    if (!valid) return;
+
+    const newUser = {
+      id: USERS.length + 1,
+      name: fn.value.trim() + ' ' + ln.value.trim(),
+      email: em.value.trim(),
+      role: ro.value.charAt(0).toUpperCase() + ro.value.slice(1),
+      status: 'Active',
+      joined: new Date().toISOString().slice(0,10),
+      avatar: (fn.value[0] + ln.value[0]).toUpperCase(),
+      bg: '#6366f1',
+    };
+    USERS.push(newUser);
+    state.users.data = [...USERS];
+    showToast('success', 'User Created!', `${newUser.name} has been added successfully.`);
+    navigate('#/users');
+  });
+
+  // Real-time validation
+  ['firstName','lastName'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', (e) => {
+      setFieldError('fg-' + id, !e.target.value.trim(), 'This field is required.');
+    });
+  });
+  document.getElementById('emailInput')?.addEventListener('input', (e) => {
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setFieldError('fg-email', e.target.value && !emailRe.test(e.target.value), 'Enter a valid email.');
+  });
+}
+
+function setFieldError(groupId, hasError, msg) {
+  const group = document.getElementById(groupId);
+  if (!group) return;
+  group.classList.toggle('has-error', !!hasError);
+  const errEl = group.querySelector('.form-error-msg');
+  if (errEl && msg) errEl.textContent = msg;
+}
+
+/* ────────────────────────────────────────────────
+   PROFILE PAGE TABS
+──────────────────────────────────────────────── */
+function initProfileTabs() {
+  document.querySelectorAll('[data-tab-profile]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.tabProfile;
+      document.querySelectorAll('[data-tab-profile]').forEach(b => b.classList.toggle('active', b === btn));
+      ['tab-pinfo','tab-psecurity'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = id === target ? 'block' : 'none';
+      });
+    });
+  });
+}
+
+/* ────────────────────────────────────────────────
+   SECURITY PAGE
+──────────────────────────────────────────────── */
+function buildLoginHistory() {
+  const logins = [
+    { ip:'192.168.1.42', loc:'Dhaka, BD', time:'Just now', ok:true },
+    { ip:'10.0.0.5', loc:'Dhaka, BD', time:'2 hours ago', ok:true },
+    { ip:'185.22.44.99', loc:'Berlin, DE', time:'Yesterday', ok:false },
+    { ip:'192.168.1.42', loc:'Dhaka, BD', time:'3 days ago', ok:true },
+  ];
+  const el = document.getElementById('loginHistory');
+  if (!el) return;
+  el.innerHTML = logins.map(l => `
+    <div class="activity-item">
+      <div class="activity-icon" style="background:${l.ok ? 'var(--green-soft)' : 'var(--red-soft)'}; color:${l.ok ? 'var(--green)' : 'var(--red)'}">
+        <i class="fa-solid ${l.ok ? 'fa-check' : 'fa-xmark'}"></i>
+      </div>
+      <div>
+        <div class="activity-text"><strong>${l.ip}</strong> — ${l.loc}</div>
+        <div class="activity-time">${l.time} · <span class="badge ${l.ok ? 'badge-green' : 'badge-red'}" style="font-size:10px;">${l.ok ? 'Success' : 'Blocked'}</span></div>
+      </div>
+    </div>`).join('');
+}
+
+/* ────────────────────────────────────────────────
+   TOUR GUIDE
+──────────────────────────────────────────────── */
+const TOUR_STEPS = [
+  { target: '#sidebarToggle', title: 'Sidebar Toggle', body: 'Click here to expand or collapse the sidebar. When collapsed, hover over icons to see floating popup menus.', pos: 'bottom-left' },
+  { target: '#tour-step-2',   title: 'Navigation Menu', body: 'Use the sidebar to navigate between sections. Menu items with arrows have expandable submenus.', pos: 'right' },
+  { target: '#tour-step-3',   title: 'Stat Cards', body: 'These cards give you a quick overview of key metrics. They update in real-time.', pos: 'bottom' },
+  { target: '#themeToggle',   title: 'Dark Mode', body: 'Toggle between light and dark themes. Your preference is saved automatically.', pos: 'bottom-right' },
+  { target: '#startTourBtn',  title: 'Tour Guide', body: "You're done! Click here any time to restart this tour. Enjoy NexusAdmin!", pos: 'bottom-right' },
+];
+
+let tourStep = 0;
+let tourActive = false;
+
+function startTour() {
+  tourStep = 0;
+  tourActive = true;
+  navigate('#/dashboard');
+  setTimeout(() => showTourStep(), 300);
+}
+
+function showTourStep() {
+  if (!tourActive || tourStep >= TOUR_STEPS.length) return endTour();
+  const step = TOUR_STEPS[tourStep];
+  const target = document.querySelector(step.target);
+  const backdrop = document.getElementById('tour-backdrop');
+  const popover = document.getElementById('tour-popover');
+  if (!target) { tourStep++; showTourStep(); return; }
+
+  backdrop.style.display = 'block';
+  popover.style.display = 'block';
+
+  const rect = target.getBoundingClientRect();
+  const hl = document.getElementById('tour-highlight');
+  const pad = 8;
+  hl.style.cssText = `left:${rect.left-pad}px; top:${rect.top-pad}px; width:${rect.width+pad*2}px; height:${rect.height+pad*2}px;`;
+
+  // Position popover
+  const pw = 280, ph = 180;
+  let pLeft = rect.left, pTop = rect.bottom + 12;
+  if (step.pos === 'right') { pLeft = rect.right + 12; pTop = rect.top; }
+  if (step.pos === 'bottom-right') { pLeft = rect.right - pw; pTop = rect.bottom + 12; }
+  if (step.pos === 'bottom-left') { pLeft = rect.left; pTop = rect.bottom + 12; }
+  pLeft = Math.max(10, Math.min(pLeft, window.innerWidth - pw - 10));
+  pTop = Math.max(10, Math.min(pTop, window.innerHeight - ph - 10));
+
+  popover.style.cssText = `display:block; left:${pLeft}px; top:${pTop}px;`;
+
+  const dots = TOUR_STEPS.map((_, i) => `<div class="tour-dot ${i===tourStep?'active':''}"></div>`).join('');
+  popover.innerHTML = `
+    <div class="tour-step-count">Step ${tourStep+1} of ${TOUR_STEPS.length}</div>
+    <div class="tour-title">${step.title}</div>
+    <div class="tour-body">${step.body}</div>
+    <div class="tour-actions">
+      <div class="tour-dots">${dots}</div>
+      <div style="display:flex; gap:6px;">
+        <button class="btn btn-ghost btn-xs" onclick="endTour()">Skip</button>
+        ${tourStep > 0 ? '<button class="btn btn-secondary btn-xs" onclick="prevTourStep()"><i class="fa-solid fa-arrow-left fa-xs"></i></button>' : ''}
+        <button class="btn btn-primary btn-xs" onclick="nextTourStep()">${tourStep === TOUR_STEPS.length-1 ? 'Done' : 'Next <i class="fa-solid fa-arrow-right fa-xs"></i>'}</button>
+      </div>
+    </div>`;
+}
+
+function nextTourStep() { tourStep++; if (tourStep >= TOUR_STEPS.length) endTour(); else showTourStep(); }
+function prevTourStep() { if (tourStep > 0) { tourStep--; showTourStep(); } }
+function endTour() {
+  tourActive = false;
+  document.getElementById('tour-backdrop').style.display = 'none';
+  document.getElementById('tour-popover').style.display = 'none';
+  if (tourStep >= TOUR_STEPS.length) showToast('success', 'Tour Complete!', "You're all set to use NexusAdmin.");
+}
+
+/* ────────────────────────────────────────────────
+   GLOBAL SEARCH
+──────────────────────────────────────────────── */
+document.getElementById('globalSearch')?.addEventListener('input', (e) => {
+  const q = e.target.value.toLowerCase();
+  if (!q) return;
+  const matches = [
+    { label:'Dashboard', route:'#/dashboard' },
+    { label:'Users', route:'#/users' },
+    { label:'Add User', route:'#/users/add' },
+    { label:'Jobs', route:'#/jobs' },
+    { label:'Create Job', route:'#/jobs/create' },
+    { label:'Settings', route:'#/settings' },
+    { label:'Profile', route:'#/profile' },
+    { label:'Security', route:'#/security' },
+  ].filter(m => m.label.toLowerCase().includes(q));
+  // Simple: navigate to first match
+  if (matches.length === 1 && e.key === 'Enter') navigate(matches[0].route);
+});
+
+/* ────────────────────────────────────────────────
+   BOOT
+──────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+  initSidebar();
+  initDropdowns();
+  initAddUserForm();
+  initProfileTabs();
+  buildLoginHistory();
+
+  // Nav data-route clicks
+  document.querySelectorAll('[data-route]').forEach(el => {
+    el.addEventListener('click', () => navigate(el.dataset.route));
+  });
+
+  // Tour button
+  document.getElementById('startTourBtn')?.addEventListener('click', startTour);
+
+  // Logout
+  document.getElementById('logoutNavItem')?.addEventListener('click', () => {
+    showConfirm('Sign Out', 'Are you sure you want to sign out?', () => showToast('info','Signed Out','You have been logged out.'));
+  });
+  document.getElementById('logoutMenuBtn')?.addEventListener('click', () => {
+    closeAllDropdowns();
+    showConfirm('Sign Out', 'Are you sure you want to sign out?', () => showToast('info','Signed Out','You have been logged out.'));
+  });
+
+  // Job stepper
+  initJobStepper();
+
+  // Routing
+  window.addEventListener('hashchange', handleRoute);
+  if (!window.location.hash) window.location.hash = '#/dashboard';
+  handleRoute();
+
+  // Welcome toast
+  setTimeout(() => showToast('info','Welcome back, Admin!','Click the <i class="fa-solid fa-circle-question fa-xs"></i> button for a guided tour.'), 1200);
+});
+</script>
+</body>
+</html>

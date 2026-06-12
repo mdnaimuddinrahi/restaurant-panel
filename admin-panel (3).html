@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nexus Admin</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      fontFamily: {
+        display: ['Syne', 'sans-serif'],
+        body: ['DM Sans', 'sans-serif'],
+      }
+    }
+  }
+}
+</script>
+<style>
+  :root {
+    --accent: #6366f1;
+    --accent-light: #818cf8;
+    --accent-dark: #4f46e5;
+    --accent-subtle: #eef2ff;
+    --accent-subtle-dark: #1e1b4b;
+  }
+  * { font-family: 'DM Sans', sans-serif; }
+  h1,h2,h3,h4,h5,.font-display { font-family: 'Syne', sans-serif; }
+
+  /* Sidebar */
+  #sidebar { transition: width 0.3s cubic-bezier(.4,0,.2,1); width: 260px; }
+  #sidebar.collapsed { width: 68px; }
+  #sidebar.collapsed .nav-label, #sidebar.collapsed .nav-arrow, #sidebar.collapsed .section-label { opacity: 0; width: 0; overflow: hidden; transition: opacity 0.2s, width 0.2s; pointer-events: none; }
+  #sidebar .nav-label, #sidebar .nav-arrow, #sidebar .section-label { opacity: 1; width: auto; transition: opacity 0.25s 0.05s, width 0.2s; }
+  #sidebar.collapsed .submenu { display: none !important; }
+  #main-content { transition: margin-left 0.3s cubic-bezier(.4,0,.2,1); margin-left: 260px; }
+  #main-content.expanded { margin-left: 68px; }
+
+  /* Accent dynamic color usage */
+  .accent-bg { background-color: var(--accent) !important; }
+  .accent-text { color: var(--accent) !important; }
+  .accent-border { border-color: var(--accent) !important; }
+  .accent-ring { --tw-ring-color: var(--accent) !important; }
+  .accent-subtle-bg { background-color: var(--accent-subtle) !important; }
+
+  .dark .accent-subtle-bg { background-color: var(--accent-subtle-dark) !important; }
+
+  /* Nav item active */
+  .nav-item.active > .nav-row {
+    background-color: var(--accent) !important;
+    color: white !important;
+  }
+  .nav-item.active > .nav-row svg { color: white !important; }
+
+  /* Submenu active */
+  .submenu-item.active {
+    color: var(--accent) !important;
+    font-weight: 600;
+  }
+  .submenu-item.active::before {
+    background-color: var(--accent) !important;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 999px; }
+  .dark ::-webkit-scrollbar-thumb { background: #374151; }
+
+  /* Animations */
+  @keyframes fadeInUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  @keyframes slideDown { from { opacity:0; transform:scaleY(0.95) translateY(-8px); } to { opacity:1; transform:scaleY(1) translateY(0); } }
+  @keyframes scaleIn { from { opacity:0; transform:scale(0.95); } to { opacity:1; transform:scale(1); } }
+  @keyframes pulse-dot { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.4);opacity:0.7;} }
+
+  .animate-fadeInUp { animation: fadeInUp 0.4s ease both; }
+  .animate-fadeIn { animation: fadeIn 0.3s ease both; }
+  .animate-slideDown { animation: slideDown 0.2s ease both; transform-origin: top; }
+  .animate-scaleIn { animation: scaleIn 0.2s ease both; }
+
+  .page-content { animation: fadeInUp 0.35s ease both; }
+
+  /* Stat card shimmer */
+  .stat-card::before {
+    content:''; position:absolute; inset:0; border-radius:inherit;
+    background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.08) 50%, transparent 70%);
+    opacity:0; transition:opacity 0.3s;
+  }
+  .stat-card:hover::before { opacity:1; }
+
+  /* Tour overlay */
+  #tour-overlay { display:none; position:fixed; inset:0; z-index:9998; }
+  #tour-overlay.active { display:block; }
+  .tour-highlight { position:fixed; z-index:9999; border-radius:8px; box-shadow:0 0 0 9999px rgba(0,0,0,0.6); transition:all 0.3s ease; border:2px solid var(--accent); }
+  #tour-popup { position:fixed; z-index:10000; background:white; border-radius:12px; padding:20px; width:280px; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+  .dark #tour-popup { background:#1e293b; }
+
+  /* Step progress */
+  .step-bar { height:3px; background: #e5e7eb; border-radius:2px; overflow:hidden; }
+  .step-bar-fill { height:100%; background:var(--accent); border-radius:2px; transition:width 0.4s ease; }
+
+  /* Table sort */
+  th.sortable { cursor:pointer; user-select:none; }
+  th.sortable:hover { background-color: rgba(0,0,0,0.04); }
+  .dark th.sortable:hover { background-color: rgba(255,255,255,0.04); }
+
+  /* Badge */
+  .badge { display:inline-flex; align-items:center; padding:2px 10px; border-radius:999px; font-size:0.7rem; font-weight:600; letter-spacing:0.03em; }
+
+  /* Tooltip */
+  [data-tooltip] { position:relative; }
+  [data-tooltip]::after {
+    content: attr(data-tooltip);
+    position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%);
+    background:#1e293b; color:white; padding:4px 10px; border-radius:6px;
+    font-size:0.72rem; white-space:nowrap; pointer-events:none;
+    opacity:0; transition:opacity 0.15s;
+    z-index:100;
+  }
+  [data-tooltip]:hover::after { opacity:1; }
+
+  /* Modal backdrop */
+  .modal-backdrop { animation: fadeIn 0.2s ease both; }
+  .modal-box { animation: scaleIn 0.25s ease both; }
+
+  /* Color picker swatches */
+  .swatch { width:28px;height:28px;border-radius:50%;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s; border:2px solid transparent; }
+  .swatch:hover { transform:scale(1.15); box-shadow:0 0 0 3px rgba(0,0,0,0.15); }
+  .swatch.selected { border-color:white; box-shadow:0 0 0 3px var(--accent); }
+
+  /* Notification dot pulse */
+  .notif-dot { animation: pulse-dot 2s infinite; }
+
+  /* Sidebar section separator */
+  .sidebar-section-label {
+    font-size:0.62rem; font-weight:700; letter-spacing:0.1em;
+    text-transform:uppercase; padding:0 12px; margin:16px 0 4px;
+    color:#94a3b8;
+  }
+
+  /* Input focus accent */
+  input:focus, select:focus, textarea:focus {
+    outline:none;
+    box-shadow:0 0 0 2px var(--accent) !important;
+  }
+
+  /* Loader spinner */
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .spinner { border:3px solid transparent; border-top-color:var(--accent); border-radius:50%; animation:spin 0.7s linear infinite; }
+
+  /* Chat bubble */
+  .chat-bubble-own { background:var(--accent); color:white; border-radius:18px 18px 4px 18px; }
+  .chat-bubble-other { background:#f1f5f9; color:#1e293b; border-radius:18px 18px 18px 4px; }
+  .dark .chat-bubble-other { background:#334155; color:#e2e8f0; }
+
+  /* Submenu */
+  .submenu { overflow:hidden; transition:max-height 0.3s cubic-bezier(.4,0,.2,1), opacity 0.25s; max-height:0; opacity:0; }
+  .submenu.open { max-height:400px; opacity:1; }
+
+  .submenu-item::before {
+    content:''; display:inline-block; width:6px; height:6px;
+    border-radius:50%; background:#cbd5e1; margin-right:10px; flex-shrink:0;
+    transition:background 0.2s;
+  }
+  .dark .submenu-item::before { background:#475569; }
+
+  .nav-row { transition:background 0.15s, color 0.15s; }
+  .nav-row:hover { background-color:rgba(0,0,0,0.05); }
+  .dark .nav-row:hover { background-color:rgba(255,255,255,0.06); }
+
+  .dark { color-scheme: dark; }
+</style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen">
+
+<!-- ========== NAVBAR ========== -->
+<nav class="fixed top-0 left-0 right-0 z-50 h-14 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex items-center px-4 gap-3 shadow-sm">
+  <!-- Sidebar toggle -->
+  <button id="sidebar-toggle" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors flex-shrink-0" data-tooltip="Toggle sidebar">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+
+  <!-- Logo -->
+  <div class="flex items-center gap-2 mr-3 flex-shrink-0">
+    <div class="w-7 h-7 accent-bg rounded-lg flex items-center justify-center">
+      <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+    </div>
+    <span class="font-display font-700 text-lg tracking-tight hidden sm:block">Nexus</span>
+  </div>
+
+  <!-- Search -->
+  <div class="flex-1 max-w-xs relative hidden md:block">
+    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+    <input type="text" placeholder="Search anything..." class="w-full pl-9 pr-4 py-1.5 text-sm bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg focus:bg-white dark:focus:bg-slate-600 transition-colors"/>
+  </div>
+
+  <div class="flex-1"></div>
+
+  <!-- Color picker -->
+  <div class="relative" id="color-picker-wrap">
+    <button id="color-picker-btn" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" data-tooltip="Accent color">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+    </button>
+    <div id="color-picker-dropdown" class="hidden absolute right-0 top-11 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl p-3 w-44 animate-slideDown z-50">
+      <p class="text-xs font-600 text-slate-500 dark:text-slate-400 mb-2 font-display">Accent Color</p>
+      <div class="grid grid-cols-6 gap-1.5" id="swatches"></div>
+    </div>
+  </div>
+
+  <!-- Tour -->
+  <button id="tour-btn" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" data-tooltip="Product tour">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+  </button>
+
+  <!-- Dark mode -->
+  <button id="theme-toggle" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" data-tooltip="Toggle theme">
+    <svg id="sun-icon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+    <svg id="moon-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+  </button>
+
+  <!-- Notifications -->
+  <div class="relative" id="notif-wrap">
+    <button id="notif-btn" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors relative" data-tooltip="Notifications">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+      <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full notif-dot"></span>
+    </button>
+    <div id="notif-dropdown" class="hidden absolute right-0 top-11 w-80 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl animate-slideDown z-50">
+      <div class="p-3 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
+        <span class="font-display font-600 text-sm">Notifications</span>
+        <button class="text-xs accent-text font-500">Mark all read</button>
+      </div>
+      <div class="max-h-64 overflow-y-auto">
+        <div class="notif-item p-3 flex gap-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer border-l-2 accent-border">
+          <div class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 accent-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div>
+          <div><p class="text-sm font-500">New user registered</p><p class="text-xs text-slate-400 mt-0.5">2 minutes ago</p></div>
+        </div>
+        <div class="notif-item p-3 flex gap-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer">
+          <div class="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+          <div><p class="text-sm font-500">Job #4821 completed</p><p class="text-xs text-slate-400 mt-0.5">15 minutes ago</p></div>
+        </div>
+        <div class="notif-item p-3 flex gap-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer">
+          <div class="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg></div>
+          <div><p class="text-sm font-500">Storage limit at 85%</p><p class="text-xs text-slate-400 mt-0.5">1 hour ago</p></div>
+        </div>
+        <div class="notif-item p-3 flex gap-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer">
+          <div class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+          <div><p class="text-sm font-500">3 new messages</p><p class="text-xs text-slate-400 mt-0.5">3 hours ago</p></div>
+        </div>
+      </div>
+      <div class="p-2 border-t border-slate-100 dark:border-slate-700">
+        <button class="w-full text-center text-xs accent-text font-500 py-1">View all notifications</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Avatar dropdown -->
+  <div class="relative" id="avatar-wrap">
+    <button id="avatar-btn" class="flex items-center gap-2 rounded-lg pl-1 pr-2 py-1 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+      <div class="w-7 h-7 rounded-full accent-bg flex items-center justify-center text-white text-xs font-700">JD</div>
+      <span class="text-sm font-500 hidden sm:block">John Doe</span>
+      <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+    </button>
+    <div id="avatar-dropdown" class="hidden absolute right-0 top-11 w-52 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl animate-slideDown z-50 overflow-hidden">
+      <div class="p-3 bg-slate-50 dark:bg-slate-700/50 border-b border-slate-100 dark:border-slate-700">
+        <p class="font-600 text-sm">John Doe</p>
+        <p class="text-xs text-slate-500 dark:text-slate-400">john@nexus.io</p>
+      </div>
+      <div class="p-1">
+        <button onclick="navigate('#/profile')" class="w-full flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+          <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          View Profile
+        </button>
+        <button onclick="navigate('#/settings')" class="w-full flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+          <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Settings
+        </button>
+        <button onclick="navigate('#/security')" class="w-full flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+          <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          Security
+        </button>
+        <div class="my-1 border-t border-slate-100 dark:border-slate-700"></div>
+        <button onclick="showModal('logout-modal')" class="w-full flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+          Sign Out
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ========== SIDEBAR ========== -->
+<aside id="sidebar" class="fixed left-0 top-14 bottom-0 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 z-40 flex flex-col overflow-hidden">
+  <nav class="flex-1 overflow-y-auto overflow-x-hidden py-3 px-2">
+    <!-- Main -->
+    <div class="sidebar-section-label section-label">Main</div>
+
+    <div class="nav-item" data-route="#/dashboard">
+      <div class="nav-row flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer" onclick="navigate('#/dashboard')">
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <span class="nav-label text-sm font-500 whitespace-nowrap">Dashboard</span>
+      </div>
+    </div>
+
+    <!-- Users group -->
+    <div class="nav-item" data-route="#/users" data-has-sub="true">
+      <div class="nav-row flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer" onclick="toggleSubmenu(this)">
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        <span class="nav-label text-sm font-500 whitespace-nowrap flex-1">Users</span>
+        <svg class="nav-arrow w-4 h-4 flex-shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </div>
+      <div class="submenu pl-10 pr-2 space-y-0.5">
+        <div class="submenu-item flex items-center text-sm py-1.5 px-2 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors" onclick="navigate('#/users')">All Users</div>
+        <div class="submenu-item flex items-center text-sm py-1.5 px-2 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors" onclick="navigate('#/users/roles')">Roles & Permissions</div>
+        <div class="submenu-item flex items-center text-sm py-1.5 px-2 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors" onclick="navigate('#/users/activity')">Activity Log</div>
+      </div>
+    </div>
+
+    <!-- Jobs group -->
+    <div class="nav-item" data-route="#/jobs" data-has-sub="true">
+      <div class="nav-row flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer" onclick="toggleSubmenu(this)">
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        <span class="nav-label text-sm font-500 whitespace-nowrap flex-1">Jobs</span>
+        <svg class="nav-arrow w-4 h-4 flex-shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </div>
+      <div class="submenu pl-10 pr-2 space-y-0.5">
+        <div class="submenu-item flex items-center text-sm py-1.5 px-2 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors" onclick="navigate('#/jobs')">Job Queue</div>
+        <div class="submenu-item flex items-center text-sm py-1.5 px-2 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors" onclick="navigate('#/jobs/scheduler')">Scheduler</div>
+        <div class="submenu-item flex items-center text-sm py-1.5 px-2 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors" onclick="navigate('#/jobs/history')">Job History</div>
+      </div>
+    </div>
+
+    <!-- Communication -->
+    <div class="sidebar-section-label section-label mt-3">Communication</div>
+
+    <div class="nav-item" data-route="#/email">
+      <div class="nav-row flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer" onclick="navigate('#/email')">
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        <span class="nav-label text-sm font-500 whitespace-nowrap">Email</span>
+      </div>
+    </div>
+
+    <div class="nav-item" data-route="#/chat">
+      <div class="nav-row flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer" onclick="navigate('#/chat')">
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        <span class="nav-label text-sm font-500 whitespace-nowrap">Chat</span>
+        <span class="nav-label ml-auto badge accent-bg text-white" style="padding:1px 7px;font-size:0.65rem;">5</span>
+      </div>
+    </div>
+
+    <!-- Account -->
+    <div class="sidebar-section-label section-label mt-3">Account</div>
+
+    <div class="nav-item" data-route="#/profile">
+      <div class="nav-row flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer" onclick="navigate('#/profile')">
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        <span class="nav-label text-sm font-500 whitespace-nowrap">Profile</span>
+      </div>
+    </div>
+
+    <div class="nav-item" data-route="#/security">
+      <div class="nav-row flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer" onclick="navigate('#/security')">
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        <span class="nav-label text-sm font-500 whitespace-nowrap">Security</span>
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="sidebar-section-label section-label mt-3">System</div>
+
+    <div class="nav-item" data-route="#/settings" data-has-sub="true">
+      <div class="nav-row flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer" onclick="toggleSubmenu(this)">
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <span class="nav-label text-sm font-500 whitespace-nowrap flex-1">Settings</span>
+        <svg class="nav-arrow w-4 h-4 flex-shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </div>
+      <div class="submenu pl-10 pr-2 space-y-0.5">
+        <div class="submenu-item flex items-center text-sm py-1.5 px-2 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors" onclick="navigate('#/settings')">General</div>
+        <div class="submenu-item flex items-center text-sm py-1.5 px-2 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors" onclick="navigate('#/settings/billing')">Billing</div>
+        <div class="submenu-item flex items-center text-sm py-1.5 px-2 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors" onclick="navigate('#/settings/api')">API Keys</div>
+        <div class="submenu-item flex items-center text-sm py-1.5 px-2 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors" onclick="navigate('#/settings/integrations')">Integrations</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Sidebar footer -->
+  <div class="p-3 border-t border-slate-200 dark:border-slate-700">
+    <div class="flex items-center gap-3 px-2 py-2">
+      <div class="w-7 h-7 rounded-full accent-bg flex items-center justify-center text-white text-xs font-700 flex-shrink-0">JD</div>
+      <div class="nav-label min-w-0">
+        <p class="text-xs font-600 truncate">John Doe</p>
+        <p class="text-xs text-slate-400 truncate">Administrator</p>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ========== MAIN CONTENT ========== -->
+<main id="main-content" class="mt-14 min-h-screen p-6">
+  <div id="page-outlet"></div>
+</main>
+
+<!-- ========== MODALS ========== -->
+<!-- Logout confirm -->
+<div id="logout-modal" class="hidden fixed inset-0 z-[200] flex items-center justify-center">
+  <div class="modal-backdrop absolute inset-0 bg-black/50" onclick="hideModal('logout-modal')"></div>
+  <div class="modal-box relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 w-full max-w-sm mx-4">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+        <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+      </div>
+      <div>
+        <h3 class="font-display font-700 text-base">Sign Out</h3>
+        <p class="text-sm text-slate-500">Are you sure you want to sign out?</p>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-5">
+      <button onclick="hideModal('logout-modal')" class="flex-1 px-4 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors font-500">Cancel</button>
+      <button onclick="hideModal('logout-modal')" class="flex-1 px-4 py-2 text-sm rounded-xl bg-red-600 text-white hover:bg-red-700 transition-colors font-500">Sign Out</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm modal -->
+<div id="confirm-modal" class="hidden fixed inset-0 z-[200] flex items-center justify-center">
+  <div class="modal-backdrop absolute inset-0 bg-black/50" onclick="hideModal('confirm-modal')"></div>
+  <div class="modal-box relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 w-full max-w-sm mx-4">
+    <h3 class="font-display font-700 text-base mb-2">Confirm Action</h3>
+    <p class="text-sm text-slate-500 mb-5">This action cannot be undone. Please confirm you want to proceed.</p>
+    <div class="flex gap-2">
+      <button onclick="hideModal('confirm-modal')" class="flex-1 px-4 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors font-500">Cancel</button>
+      <button onclick="hideModal('confirm-modal')" class="flex-1 px-4 py-2 text-sm rounded-xl accent-bg text-white hover:opacity-90 transition-opacity font-500">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- Info modal -->
+<div id="info-modal" class="hidden fixed inset-0 z-[200] flex items-center justify-center">
+  <div class="modal-backdrop absolute inset-0 bg-black/50" onclick="hideModal('info-modal')"></div>
+  <div class="modal-box relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 w-full max-w-md mx-4">
+    <button onclick="hideModal('info-modal')" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-10 h-10 rounded-full accent-subtle-bg flex items-center justify-center">
+        <svg class="w-5 h-5 accent-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <h3 class="font-display font-700 text-base">Information</h3>
+    </div>
+    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">This is an informational modal dialog. It can be used to display helpful information, documentation, or any additional context that the user might need without leaving the current page.</p>
+    <button onclick="hideModal('info-modal')" class="mt-5 px-5 py-2 text-sm rounded-xl accent-bg text-white hover:opacity-90 transition-opacity font-500">Got it</button>
+  </div>
+</div>
+
+<!-- Form modal -->
+<div id="form-modal" class="hidden fixed inset-0 z-[200] flex items-center justify-center">
+  <div class="modal-backdrop absolute inset-0 bg-black/50" onclick="hideModal('form-modal')"></div>
+  <div class="modal-box relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 w-full max-w-md mx-4">
+    <button onclick="hideModal('form-modal')" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    <h3 class="font-display font-700 text-base mb-4">Add New User</h3>
+    <div class="space-y-3">
+      <div>
+        <label class="block text-xs font-600 text-slate-500 mb-1">Full Name</label>
+        <input type="text" placeholder="Jane Smith" class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-600 rounded-lg bg-transparent focus:border-transparent transition-all"/>
+      </div>
+      <div>
+        <label class="block text-xs font-600 text-slate-500 mb-1">Email</label>
+        <input type="email" placeholder="jane@example.com" class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-600 rounded-lg bg-transparent focus:border-transparent transition-all"/>
+      </div>
+      <div>
+        <label class="block text-xs font-600 text-slate-500 mb-1">Role</label>
+        <select class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 focus:border-transparent transition-all">
+          <option>Administrator</option><option>Editor</option><option>Viewer</option>
+        </select>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-5">
+      <button onclick="hideModal('form-modal')" class="flex-1 px-4 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors font-500">Cancel</button>
+      <button onclick="hideModal('form-modal')" class="flex-1 px-4 py-2 text-sm rounded-xl accent-bg text-white hover:opacity-90 transition-opacity font-500">Add User</button>
+    </div>
+  </div>
+</div>
+
+<!-- Tour overlay -->
+<div id="tour-overlay">
+  <div class="tour-highlight" id="tour-highlight"></div>
+  <div id="tour-popup">
+    <div class="flex items-center justify-between mb-2">
+      <span id="tour-step-label" class="text-xs font-600 accent-text font-display"></span>
+      <button onclick="endTour()" class="text-slate-400 hover:text-slate-600 text-xs">✕ Skip</button>
+    </div>
+    <h4 id="tour-title" class="font-display font-700 text-sm mb-1"></h4>
+    <p id="tour-desc" class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-3"></p>
+    <div class="step-bar mb-3"><div class="step-bar-fill" id="tour-progress"></div></div>
+    <div class="flex items-center justify-between">
+      <button onclick="prevTourStep()" id="tour-prev" class="text-xs px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors font-500 disabled:opacity-40">← Back</button>
+      <button onclick="nextTourStep()" id="tour-next" class="text-xs px-3 py-1.5 rounded-lg accent-bg text-white hover:opacity-90 transition-opacity font-500">Next →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ STATE ============
+let sidebarCollapsed = false;
+let darkMode = localStorage.getItem('darkMode') === 'true';
+let accentColor = localStorage.getItem('accentColor') || '#6366f1';
+let currentRoute = '';
+let sortState = { col: null, dir: 'asc' };
+let tablePage = 1;
+const tablePageSize = 5;
+let tableSearch = '';
+let tableFilter = '';
+let tourStep = 0;
+
+// ============ ACCENT COLORS ============
+const accentColors = [
+  '#6366f1','#8b5cf6','#ec4899','#ef4444','#f97316',
+  '#eab308','#22c55e','#10b981','#14b8a6','#06b6d4',
+  '#3b82f6','#64748b'
+];
+
+function applyAccent(color) {
+  accentColor = color;
+  localStorage.setItem('accentColor', color);
+  document.documentElement.style.setProperty('--accent', color);
+  // Compute lighter/darker shades
+  document.documentElement.style.setProperty('--accent-light', color + 'cc');
+  document.documentElement.style.setProperty('--accent-dark', color);
+  const hex = color.replace('#','');
+  const r = parseInt(hex.substr(0,2),16), g = parseInt(hex.substr(2,2),16), b = parseInt(hex.substr(4,2),16);
+  document.documentElement.style.setProperty('--accent-subtle', `rgba(${r},${g},${b},0.1)`);
+  document.documentElement.style.setProperty('--accent-subtle-dark', `rgba(${r},${g},${b},0.2)`);
+  renderSwatches();
+}
+
+function renderSwatches() {
+  const container = document.getElementById('swatches');
+  container.innerHTML = accentColors.map(c => `
+    <div class="swatch ${c===accentColor?'selected':''}" style="background:${c}" onclick="applyAccent('${c}')" data-tooltip="${c}"></div>
+  `).join('');
+}
+
+// ============ THEME ============
+function applyTheme() {
+  document.documentElement.classList.toggle('dark', darkMode);
+  document.getElementById('sun-icon').classList.toggle('hidden', !darkMode);
+  document.getElementById('moon-icon').classList.toggle('hidden', darkMode);
+  localStorage.setItem('darkMode', darkMode);
+}
+
+document.getElementById('theme-toggle').addEventListener('click', () => {
+  darkMode = !darkMode;
+  applyTheme();
+});
+
+// ============ SIDEBAR ============
+document.getElementById('sidebar-toggle').addEventListener('click', () => {
+  sidebarCollapsed = !sidebarCollapsed;
+  document.getElementById('sidebar').classList.toggle('collapsed', sidebarCollapsed);
+  document.getElementById('main-content').classList.toggle('expanded', sidebarCollapsed);
+});
+
+function toggleSubmenu(rowEl) {
+  const navItem = rowEl.closest('.nav-item');
+  const submenu = navItem.querySelector('.submenu');
+  const arrow = rowEl.querySelector('.nav-arrow');
+  if (!submenu) return;
+  const isOpen = submenu.classList.contains('open');
+  // Close all others
+  document.querySelectorAll('.submenu.open').forEach(s => {
+    s.classList.remove('open');
+    const a = s.previousElementSibling?.querySelector('.nav-arrow');
+    if(a) a.style.transform = '';
+  });
+  if (!isOpen) {
+    submenu.classList.add('open');
+    if(arrow) arrow.style.transform = 'rotate(90deg)';
+  }
+}
+
+// ============ DROPDOWNS ============
+function setupDropdown(btnId, dropId) {
+  document.getElementById(btnId).addEventListener('click', (e) => {
+    e.stopPropagation();
+    const drop = document.getElementById(dropId);
+    const wasHidden = drop.classList.contains('hidden');
+    closeAllDropdowns();
+    if(wasHidden) drop.classList.remove('hidden');
+  });
+}
+function closeAllDropdowns() {
+  ['notif-dropdown','avatar-dropdown','color-picker-dropdown'].forEach(id => {
+    document.getElementById(id)?.classList.add('hidden');
+  });
+}
+setupDropdown('notif-btn','notif-dropdown');
+setupDropdown('avatar-btn','avatar-dropdown');
+setupDropdown('color-picker-btn','color-picker-dropdown');
+document.addEventListener('click', closeAllDropdowns);
+
+// ============ MODALS ============
+function showModal(id) {
+  document.getElementById(id).classList.remove('hidden');
+  closeAllDropdowns();
+}
+function hideModal(id) { document.getElementById(id).classList.add('hidden'); }
+document.addEventListener('keydown', e => { if(e.key==='Escape') document.querySelectorAll('[id$="-modal"]').forEach(m=>m.classList.add('hidden')); });
+
+// ============ ROUTING ============
+const routes = {
+  '#/dashboard': renderDashboard,
+  '#/users': renderUsers,
+  '#/jobs': renderJobs,
+  '#/settings': renderSettings,
+  '#/profile': renderProfile,
+  '#/security': renderSecurity,
+  '#/email': renderEmail,
+  '#/chat': renderChat,
+};
+
+function navigate(hash) {
+  window.location.hash = hash;
+  closeAllDropdowns();
+  document.getElementById('avatar-dropdown').classList.add('hidden');
+}
+
+function resolveRoute() {
+  let hash = window.location.hash || '#/dashboard';
+  // match sub-routes
+  let matched = routes[hash];
+  if (!matched) {
+    const base = '#/' + hash.replace('#/','').split('/')[0];
+    matched = routes[base];
+  }
+  if (!matched) {
+    document.getElementById('page-outlet').innerHTML = render404();
+    updateSidebarActive(hash);
+    return;
+  }
+  const outlet = document.getElementById('page-outlet');
+  outlet.innerHTML = '';
+  outlet.appendChild(matched());
+  updateSidebarActive(hash);
+  currentRoute = hash;
+}
+
+function updateSidebarActive(hash) {
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.classList.remove('active');
+  });
+  document.querySelectorAll('.submenu-item').forEach(item => {
+    item.classList.remove('active');
+  });
+  const route = '#/' + hash.replace('#/','').split('/')[0];
+  const activeItem = document.querySelector(`.nav-item[data-route="${route}"]`);
+  if (activeItem) {
+    activeItem.classList.add('active');
+    const submenu = activeItem.querySelector('.submenu');
+    if (submenu) {
+      submenu.classList.add('open');
+      const arrow = activeItem.querySelector('.nav-arrow');
+      if(arrow) arrow.style.transform = 'rotate(90deg)';
+    }
+  }
+}
+
+window.addEventListener('hashchange', resolveRoute);
+
+// ============ PAGE RENDERS ============
+function pageWrapper(title, subtitle, content) {
+  const div = document.createElement('div');
+  div.className = 'page-content';
+  div.innerHTML = `
+    <div class="mb-6">
+      <h1 class="font-display text-2xl font-700 tracking-tight">${title}</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-sm mt-0.5">${subtitle}</p>
+    </div>
+    ${content}
+  `;
+  return div;
+}
+
+// ---- DASHBOARD ----
+function renderDashboard() {
+  const stats = [
+    { label:'Total Users', value:'12,482', change:'+8.2%', up:true, icon:'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>', color:'#6366f1' },
+    { label:'Active Jobs', value:'3,847', change:'+12.5%', up:true, icon:'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>', color:'#8b5cf6' },
+    { label:'Revenue', value:'$84,200', change:'+4.1%', up:true, icon:'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>', color:'#10b981' },
+    { label:'Open Tickets', value:'248', change:'-3.4%', up:false, icon:'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>', color:'#ef4444' },
+  ];
+
+  const recentActivity = [
+    { user:'Alice Chen', action:'Created job #4920', time:'2m ago', avatar:'AC', color:'#6366f1' },
+    { user:'Bob Miller', action:'Updated user role', time:'15m ago', avatar:'BM', color:'#10b981' },
+    { user:'Carol White', action:'Uploaded report.pdf', time:'1h ago', avatar:'CW', color:'#f97316' },
+    { user:'David Park', action:'Resolved ticket #88', time:'2h ago', avatar:'DP', color:'#8b5cf6' },
+    { user:'Eva Stone', action:'New user registered', time:'3h ago', avatar:'ES', color:'#ec4899' },
+  ];
+
+  return pageWrapper('Dashboard', 'Welcome back, John. Here\'s what\'s happening.', `
+    <!-- Stats -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+      ${stats.map((s,i) => `
+        <div class="stat-card relative bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow animate-fadeInUp overflow-hidden" style="animation-delay:${i*60}ms">
+          <div class="flex items-start justify-between mb-4">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:${s.color}20">
+              <svg class="w-5 h-5" style="color:${s.color}" fill="none" stroke="currentColor" viewBox="0 0 24 24">${s.icon}</svg>
+            </div>
+            <span class="text-xs font-600 px-2 py-0.5 rounded-full ${s.up ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'}">${s.change}</span>
+          </div>
+          <div class="font-display text-2xl font-700 mb-0.5">${s.value}</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400">${s.label}</div>
+          <div class="absolute bottom-0 left-0 right-0 h-1 rounded-b-2xl" style="background:${s.color}40"></div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+      <!-- Chart placeholder -->
+      <div class="lg:col-span-2 bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-display font-700 text-base">Revenue Overview</h2>
+          <select class="text-xs border border-slate-200 dark:border-slate-600 rounded-lg px-2 py-1 bg-transparent">
+            <option>Last 7 days</option><option>Last 30 days</option><option>This year</option>
+          </select>
+        </div>
+        <div class="relative h-48 flex items-end gap-2">
+          ${[40,65,45,80,55,90,70,85,60,95,75,88].map((h,i) => `
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full rounded-t-md transition-all hover:opacity-80 cursor-pointer" style="height:${h}%;background:var(--accent);opacity:${0.4+i*0.05}"></div>
+            </div>
+          `).join('')}
+          <div class="absolute inset-0 pointer-events-none" style="background:linear-gradient(to bottom, transparent 60%, rgba(255,255,255,0.02))"></div>
+        </div>
+        <div class="flex justify-between mt-2 text-xs text-slate-400">
+          ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].map(m=>`<span>${m}</span>`).join('')}
+        </div>
+      </div>
+
+      <!-- Activity -->
+      <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm">
+        <h2 class="font-display font-700 text-base mb-4">Recent Activity</h2>
+        <div class="space-y-3">
+          ${recentActivity.map(a => `
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-700 flex-shrink-0" style="background:${a.color}">${a.avatar}</div>
+              <div class="min-w-0 flex-1">
+                <p class="text-sm font-500 truncate">${a.user}</p>
+                <p class="text-xs text-slate-400 truncate">${a.action}</p>
+              </div>
+              <span class="text-xs text-slate-400 flex-shrink-0">${a.time}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm mb-6">
+      <h2 class="font-display font-700 text-base mb-4">Quick Actions</h2>
+      <div class="flex flex-wrap gap-3">
+        <button onclick="showModal('form-modal')" class="flex items-center gap-2 px-4 py-2 accent-bg text-white text-sm rounded-xl hover:opacity-90 transition-opacity font-500">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>Add User
+        </button>
+        <button onclick="showModal('confirm-modal')" class="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 text-sm rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors font-500">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>Run Job
+        </button>
+        <button onclick="showModal('info-modal')" class="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 text-sm rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors font-500">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>View Info
+        </button>
+        <button onclick="navigate('#/email')" class="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 text-sm rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors font-500">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>Send Email
+        </button>
+      </div>
+    </div>
+
+    <!-- Alerts -->
+    <div class="space-y-3">
+      <div class="flex items-start gap-3 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 rounded-xl">
+        <svg class="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <div><p class="text-sm font-600 text-emerald-800 dark:text-emerald-300">All systems operational</p><p class="text-xs text-emerald-600 dark:text-emerald-400 mt-0.5">Last checked 2 minutes ago</p></div>
+      </div>
+      <div class="flex items-start gap-3 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl">
+        <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+        <div><p class="text-sm font-600 text-amber-800 dark:text-amber-300">Storage usage at 85%</p><p class="text-xs text-amber-600 dark:text-amber-400 mt-0.5">Consider upgrading your plan</p></div>
+      </div>
+    </div>
+  `);
+}
+
+// ---- USERS ----
+const usersData = [
+  { id:1, name:'Alice Chen', email:'alice@example.com', role:'Admin', status:'Active', joined:'2024-01-15' },
+  { id:2, name:'Bob Miller', email:'bob@example.com', role:'Editor', status:'Active', joined:'2024-02-20' },
+  { id:3, name:'Carol White', email:'carol@example.com', role:'Viewer', status:'Inactive', joined:'2024-03-10' },
+  { id:4, name:'David Park', email:'david@example.com', role:'Editor', status:'Active', joined:'2024-03-25' },
+  { id:5, name:'Eva Stone', email:'eva@example.com', role:'Admin', status:'Active', joined:'2024-04-01' },
+  { id:6, name:'Frank Lee', email:'frank@example.com', role:'Viewer', status:'Pending', joined:'2024-04-12' },
+  { id:7, name:'Grace Kim', email:'grace@example.com', role:'Editor', status:'Active', joined:'2024-04-18' },
+  { id:8, name:'Henry Brown', email:'henry@example.com', role:'Viewer', status:'Inactive', joined:'2024-05-02' },
+  { id:9, name:'Ivy Wong', email:'ivy@example.com', role:'Admin', status:'Active', joined:'2024-05-10' },
+  { id:10, name:'Jack Davis', email:'jack@example.com', role:'Editor', status:'Active', joined:'2024-05-20' },
+  { id:11, name:'Karen Liu', email:'karen@example.com', role:'Viewer', status:'Pending', joined:'2024-05-25' },
+  { id:12, name:'Leo Martinez', email:'leo@example.com', role:'Editor', status:'Active', joined:'2024-06-01' },
+];
+
+function renderUsers() {
+  sortState = { col: null, dir: 'asc' };
+  tablePage = 1; tableSearch = ''; tableFilter = '';
+  return pageWrapper('Users', 'Manage your team members and their permissions.', `
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+      <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex flex-wrap gap-3 items-center">
+        <div class="relative flex-1 min-w-40">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input id="user-search" type="text" placeholder="Search users..." class="w-full pl-9 pr-4 py-2 text-sm bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl focus:border-transparent transition-all" oninput="tableSearch=this.value;tablePage=1;refreshUserTable()"/>
+        </div>
+        <select id="user-filter" class="text-sm border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2 bg-transparent" onchange="tableFilter=this.value;tablePage=1;refreshUserTable()">
+          <option value="">All Roles</option><option>Admin</option><option>Editor</option><option>Viewer</option>
+        </select>
+        <button onclick="showModal('form-modal')" class="flex items-center gap-2 px-4 py-2 accent-bg text-white text-sm rounded-xl hover:opacity-90 transition-opacity font-500 flex-shrink-0">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>Add User
+        </button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="bg-slate-50 dark:bg-slate-700/40 text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              <th class="px-4 py-3 text-left font-600 sortable" onclick="sortTable('name')">Name <span id="sort-name"></span></th>
+              <th class="px-4 py-3 text-left font-600 sortable" onclick="sortTable('email')">Email <span id="sort-email"></span></th>
+              <th class="px-4 py-3 text-left font-600 sortable" onclick="sortTable('role')">Role <span id="sort-role"></span></th>
+              <th class="px-4 py-3 text-left font-600 sortable" onclick="sortTable('status')">Status <span id="sort-status"></span></th>
+              <th class="px-4 py-3 text-left font-600 sortable" onclick="sortTable('joined')">Joined <span id="sort-joined"></span></th>
+              <th class="px-4 py-3 text-left font-600">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="user-table-body"></tbody>
+        </table>
+      </div>
+      <div class="p-4 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between text-sm text-slate-500">
+        <span id="table-info"></span>
+        <div class="flex gap-2" id="table-pagination"></div>
+      </div>
+    </div>
+  `);
+}
+
+function getFilteredUsers() {
+  return usersData.filter(u => {
+    const q = tableSearch.toLowerCase();
+    const matchSearch = !q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
+    const matchFilter = !tableFilter || u.role === tableFilter;
+    return matchSearch && matchFilter;
+  });
+}
+
+function sortTable(col) {
+  if (sortState.col === col) sortState.dir = sortState.dir === 'asc' ? 'desc' : 'asc';
+  else { sortState.col = col; sortState.dir = 'asc'; }
+  refreshUserTable();
+}
+
+function refreshUserTable() {
+  let data = getFilteredUsers();
+  if (sortState.col) {
+    data.sort((a,b) => {
+      const va = a[sortState.col], vb = b[sortState.col];
+      return sortState.dir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+    });
+  }
+  ['name','email','role','status','joined'].forEach(c => {
+    const el = document.getElementById('sort-'+c);
+    if(el) el.textContent = sortState.col===c ? (sortState.dir==='asc'?'↑':'↓') : '';
+  });
+  const total = data.length;
+  const pages = Math.ceil(total/tablePageSize);
+  if(tablePage > pages) tablePage = 1;
+  const slice = data.slice((tablePage-1)*tablePageSize, tablePage*tablePageSize);
+
+  const statusBadge = s => {
+    const map = { Active:'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400', Inactive:'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400', Pending:'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' };
+    return `<span class="badge ${map[s]||''}">${s}</span>`;
+  };
+  const roleBadge = r => {
+    const map = { Admin:'accent-subtle-bg accent-text', Editor:'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400', Viewer:'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400' };
+    return `<span class="badge ${map[r]||''}">${r}</span>`;
+  };
+  const initials = n => n.split(' ').map(p=>p[0]).join('');
+  const colors = ['#6366f1','#8b5cf6','#10b981','#f97316','#ec4899','#3b82f6'];
+
+  const tbody = document.getElementById('user-table-body');
+  if(tbody) tbody.innerHTML = slice.map((u,i) => `
+    <tr class="border-t border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
+      <td class="px-4 py-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-700 flex-shrink-0" style="background:${colors[u.id%colors.length]}">${initials(u.name)}</div>
+          <span class="font-500">${u.name}</span>
+        </div>
+      </td>
+      <td class="px-4 py-3 text-slate-500">${u.email}</td>
+      <td class="px-4 py-3">${roleBadge(u.role)}</td>
+      <td class="px-4 py-3">${statusBadge(u.status)}</td>
+      <td class="px-4 py-3 text-slate-500">${u.joined}</td>
+      <td class="px-4 py-3">
+        <div class="flex items-center gap-1">
+          <button onclick="showModal('form-modal')" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors" data-tooltip="Edit">
+            <svg class="w-3.5 h-3.5 accent-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+          </button>
+          <button onclick="showModal('confirm-modal')" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors" data-tooltip="Delete">
+            <svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          </button>
+        </div>
+      </td>
+    </tr>
+  `).join('') || '<tr><td colspan="6" class="px-4 py-8 text-center text-slate-400 text-sm">No users found</td></tr>';
+
+  const info = document.getElementById('table-info');
+  if(info) info.textContent = `Showing ${Math.min((tablePage-1)*tablePageSize+1,total)}–${Math.min(tablePage*tablePageSize,total)} of ${total}`;
+
+  const pag = document.getElementById('table-pagination');
+  if(pag) {
+    let html = `<button onclick="tablePage=Math.max(1,tablePage-1);refreshUserTable()" class="px-3 py-1 text-xs rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors ${tablePage===1?'opacity-40 cursor-not-allowed':''}">Prev</button>`;
+    for(let p=1;p<=pages;p++) html += `<button onclick="tablePage=${p};refreshUserTable()" class="px-3 py-1 text-xs rounded-lg ${p===tablePage?'accent-bg text-white':'border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700'} transition-colors">${p}</button>`;
+    html += `<button onclick="tablePage=Math.min(${pages},tablePage+1);refreshUserTable()" class="px-3 py-1 text-xs rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors ${tablePage===pages?'opacity-40 cursor-not-allowed':''}">Next</button>`;
+    pag.innerHTML = html;
+  }
+}
+
+// ---- JOBS ----
+function renderJobs() {
+  const jobs = [
+    { id:'#4920', name:'Data Export', type:'Scheduled', status:'Running', progress:65, started:'10:30 AM', duration:'12m' },
+    { id:'#4919', name:'Email Campaign', type:'Manual', status:'Completed', progress:100, started:'9:15 AM', duration:'8m' },
+    { id:'#4918', name:'DB Backup', type:'Scheduled', status:'Completed', progress:100, started:'8:00 AM', duration:'23m' },
+    { id:'#4917', name:'Report Gen', type:'Manual', status:'Failed', progress:30, started:'7:45 AM', duration:'3m' },
+    { id:'#4916', name:'Sync Users', type:'Scheduled', status:'Pending', progress:0, started:'—', duration:'—' },
+  ];
+  const statusBadge = s => {
+    const map = { Running:'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400', Completed:'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400', Failed:'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400', Pending:'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' };
+    return `<span class="badge ${map[s]||''}">${s}</span>`;
+  };
+  return pageWrapper('Jobs', 'Monitor and manage background tasks and scheduled jobs.', `
+    <div class="grid grid-cols-3 gap-4 mb-6">
+      <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 border border-slate-200 dark:border-slate-700 shadow-sm text-center">
+        <div class="font-display text-2xl font-700 accent-text">3</div><div class="text-xs text-slate-500 mt-1">Running</div>
+      </div>
+      <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 border border-slate-200 dark:border-slate-700 shadow-sm text-center">
+        <div class="font-display text-2xl font-700 text-emerald-600">142</div><div class="text-xs text-slate-500 mt-1">Completed Today</div>
+      </div>
+      <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 border border-slate-200 dark:border-slate-700 shadow-sm text-center">
+        <div class="font-display text-2xl font-700 text-red-500">2</div><div class="text-xs text-slate-500 mt-1">Failed</div>
+      </div>
+    </div>
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+      <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
+        <h2 class="font-display font-700 text-base">Job Queue</h2>
+        <button onclick="showModal('confirm-modal')" class="px-4 py-2 accent-bg text-white text-sm rounded-xl hover:opacity-90 transition-opacity font-500">+ New Job</button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="bg-slate-50 dark:bg-slate-700/40 text-xs text-slate-500 uppercase tracking-wider">
+              <th class="px-4 py-3 text-left font-600">ID</th>
+              <th class="px-4 py-3 text-left font-600">Name</th>
+              <th class="px-4 py-3 text-left font-600">Type</th>
+              <th class="px-4 py-3 text-left font-600">Status</th>
+              <th class="px-4 py-3 text-left font-600">Progress</th>
+              <th class="px-4 py-3 text-left font-600">Started</th>
+              <th class="px-4 py-3 text-left font-600">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${jobs.map(j => `
+              <tr class="border-t border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
+                <td class="px-4 py-3 font-600 accent-text">${j.id}</td>
+                <td class="px-4 py-3 font-500">${j.name}</td>
+                <td class="px-4 py-3 text-slate-500">${j.type}</td>
+                <td class="px-4 py-3">${statusBadge(j.status)}</td>
+                <td class="px-4 py-3 w-32">
+                  <div class="flex items-center gap-2">
+                    <div class="flex-1 h-1.5 bg-slate-200 dark:bg-slate-600 rounded-full overflow-hidden">
+                      <div class="h-full rounded-full accent-bg" style="width:${j.progress}%"></div>
+                    </div>
+                    <span class="text-xs text-slate-400">${j.progress}%</span>
+                  </div>
+                </td>
+                <td class="px-4 py-3 text-slate-500">${j.started}</td>
+                <td class="px-4 py-3">
+                  <div class="flex gap-1">
+                    <button class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-600" data-tooltip="Retry"><svg class="w-3.5 h-3.5 accent-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg></button>
+                    <button onclick="showModal('confirm-modal')" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20" data-tooltip="Cancel"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                  </div>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `);
+}
+
+// ---- SETTINGS ----
+function renderSettings() {
+  return pageWrapper('Settings', 'Configure your workspace and application preferences.', `
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+      <!-- Tabs -->
+      <div class="flex border-b border-slate-200 dark:border-slate-700 overflow-x-auto">
+        ${['General','Notifications','Billing','API Keys','Integrations'].map((t,i)=>`
+          <button onclick="switchSettingsTab(${i})" id="stab-${i}" class="px-5 py-3 text-sm font-500 whitespace-nowrap border-b-2 transition-colors ${i===0?'accent-text border-transparent':'text-slate-500 border-transparent hover:text-slate-700 dark:hover:text-slate-300'}" style="${i===0?'border-color:var(--accent)':''}">
+            ${t}
+          </button>
+        `).join('')}
+      </div>
+      <div id="settings-tab-content" class="p-6">
+        ${renderGeneralSettings()}
+      </div>
+    </div>
+  `);
+}
+
+function renderGeneralSettings() {
+  return `
+    <div class="max-w-lg space-y-5">
+      <div>
+        <label class="block text-xs font-600 text-slate-500 mb-1.5">Workspace Name</label>
+        <input type="text" value="Nexus HQ" class="w-full px-3 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-transparent focus:border-transparent transition-all"/>
+      </div>
+      <div>
+        <label class="block text-xs font-600 text-slate-500 mb-1.5">Support Email</label>
+        <input type="email" value="support@nexus.io" class="w-full px-3 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-transparent focus:border-transparent transition-all"/>
+      </div>
+      <div>
+        <label class="block text-xs font-600 text-slate-500 mb-1.5">Timezone</label>
+        <select class="w-full px-3 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800">
+          <option>UTC+0 (London)</option><option>UTC-5 (New York)</option><option>UTC+5:30 (Dhaka)</option><option>UTC+9 (Tokyo)</option>
+        </select>
+      </div>
+      <div class="flex items-center justify-between py-3 border-t border-slate-100 dark:border-slate-700">
+        <div>
+          <p class="text-sm font-500">Email Notifications</p>
+          <p class="text-xs text-slate-400 mt-0.5">Receive email alerts for system events</p>
+        </div>
+        <button onclick="this.classList.toggle('active-toggle')" class="toggle-btn relative w-11 h-6 rounded-full bg-slate-200 dark:bg-slate-600 transition-colors active:scale-95" style="background:var(--accent)">
+          <span class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow transition-transform translate-x-5"></span>
+        </button>
+      </div>
+      <div class="flex items-center justify-between py-3 border-t border-slate-100 dark:border-slate-700">
+        <div>
+          <p class="text-sm font-500">Two-Factor Authentication</p>
+          <p class="text-xs text-slate-400 mt-0.5">Add an extra layer of security</p>
+        </div>
+        <button class="relative w-11 h-6 rounded-full bg-slate-200 dark:bg-slate-600 transition-colors">
+          <span class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow transition-transform"></span>
+        </button>
+      </div>
+      <div class="flex gap-2 pt-2">
+        <button class="px-5 py-2 accent-bg text-white text-sm rounded-xl hover:opacity-90 transition-opacity font-500">Save Changes</button>
+        <button class="px-5 py-2 border border-slate-200 dark:border-slate-600 text-sm rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors font-500">Reset</button>
+      </div>
+    </div>
+  `;
+}
+
+function switchSettingsTab(idx) {
+  document.querySelectorAll('[id^="stab-"]').forEach((t,i) => {
+    t.style.borderColor = i===idx ? 'var(--accent)' : 'transparent';
+    t.classList.toggle('accent-text', i===idx);
+    t.classList.toggle('text-slate-500', i!==idx);
+  });
+  const contents = [
+    renderGeneralSettings(),
+    `<div class="max-w-lg"><p class="text-sm text-slate-500">Configure your notification preferences here.</p></div>`,
+    `<div class="max-w-lg space-y-4"><div class="p-4 bg-slate-50 dark:bg-slate-700/40 rounded-xl"><p class="text-sm font-600">Current Plan: <span class="accent-text">Pro</span></p><p class="text-xs text-slate-400 mt-1">$49/mo · Renews Jun 1, 2026</p></div><button class="px-4 py-2 accent-bg text-white text-sm rounded-xl hover:opacity-90 font-500">Manage Subscription</button></div>`,
+    `<div class="max-w-lg space-y-3"><div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/40 rounded-xl"><div><p class="text-sm font-500 font-mono">sk-live-••••••••••••••••4f3a</p><p class="text-xs text-slate-400 mt-0.5">Created Mar 15, 2026</p></div><button class="text-xs text-red-500 hover:text-red-600 font-500">Revoke</button></div><button class="px-4 py-2 accent-bg text-white text-sm rounded-xl hover:opacity-90 font-500">+ New API Key</button></div>`,
+    `<div class="max-w-lg"><p class="text-sm text-slate-500">Connect third-party integrations.</p></div>`,
+  ];
+  document.getElementById('settings-tab-content').innerHTML = contents[idx] || '';
+}
+
+// ---- PROFILE ----
+function renderProfile() {
+  return pageWrapper('Profile', 'Manage your personal account settings.', `
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6 flex flex-col items-center text-center">
+        <div class="w-20 h-20 rounded-full accent-bg flex items-center justify-center text-white text-2xl font-display font-700 mb-3">JD</div>
+        <h2 class="font-display font-700 text-lg">John Doe</h2>
+        <p class="text-sm text-slate-500 mt-0.5">Administrator</p>
+        <p class="text-xs text-slate-400 mt-0.5">john@nexus.io</p>
+        <div class="flex gap-2 mt-4">
+          <span class="badge accent-subtle-bg accent-text">Pro Plan</span>
+          <span class="badge bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">Active</span>
+        </div>
+        <div class="w-full mt-6 pt-4 border-t border-slate-100 dark:border-slate-700 space-y-2 text-sm">
+          <div class="flex justify-between"><span class="text-slate-500">Joined</span><span class="font-500">Jan 2024</span></div>
+          <div class="flex justify-between"><span class="text-slate-500">Last login</span><span class="font-500">Today</span></div>
+          <div class="flex justify-between"><span class="text-slate-500">Location</span><span class="font-500">Dhaka, BD</span></div>
+        </div>
+        <button class="mt-5 w-full px-4 py-2 border border-slate-200 dark:border-slate-600 text-sm rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors font-500">Change Avatar</button>
+      </div>
+
+      <div class="lg:col-span-2 space-y-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+          <h3 class="font-display font-700 text-base mb-4">Personal Information</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-600 text-slate-500 mb-1.5">First Name</label>
+              <input value="John" class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-transparent focus:border-transparent transition-all"/>
+            </div>
+            <div>
+              <label class="block text-xs font-600 text-slate-500 mb-1.5">Last Name</label>
+              <input value="Doe" class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-transparent focus:border-transparent transition-all"/>
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-600 text-slate-500 mb-1.5">Email</label>
+              <input value="john@nexus.io" class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-transparent focus:border-transparent transition-all"/>
+            </div>
+            <div>
+              <label class="block text-xs font-600 text-slate-500 mb-1.5">Phone</label>
+              <input value="+880 1234-567890" class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-transparent focus:border-transparent transition-all"/>
+            </div>
+            <div>
+              <label class="block text-xs font-600 text-slate-500 mb-1.5">Location</label>
+              <input value="Dhaka, Bangladesh" class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-transparent focus:border-transparent transition-all"/>
+            </div>
+          </div>
+          <button class="mt-4 px-5 py-2 accent-bg text-white text-sm rounded-xl hover:opacity-90 transition-opacity font-500">Save Changes</button>
+        </div>
+
+        <!-- Stepper form -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+          <h3 class="font-display font-700 text-base mb-4">Setup Wizard</h3>
+          <div id="stepper" class="stepper-wrap">
+            <div class="flex items-center mb-6 gap-2">
+              ${['Personal','Preferences','Review'].map((s,i)=>`
+                <div class="flex items-center gap-2 ${i>0?'flex-1':''}">
+                  ${i>0?`<div class="flex-1 h-0.5 step-line-${i}" style="background:#e2e8f0"></div>`:''}
+                  <div class="step-circle-${i} w-7 h-7 rounded-full flex items-center justify-center text-xs font-700 ${i===0?'accent-bg text-white':'bg-slate-200 dark:bg-slate-600 text-slate-600 dark:text-slate-300'}">${i+1}</div>
+                  <span class="text-xs font-500 ${i===0?'accent-text':'text-slate-400'} hidden sm:block">${s}</span>
+                </div>
+              `).join('')}
+            </div>
+            <div id="step-content-0" class="step-page space-y-3">
+              <div><label class="block text-xs font-600 text-slate-500 mb-1">Bio</label>
+              <textarea rows="2" class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-transparent focus:border-transparent transition-all resize-none">Admin at Nexus HQ.</textarea></div>
+              <div><label class="block text-xs font-600 text-slate-500 mb-1">Website</label>
+              <input placeholder="https://example.com" class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-transparent"/></div>
+            </div>
+            <div id="step-content-1" class="step-page hidden space-y-3">
+              <div class="flex items-center justify-between"><span class="text-sm font-500">Dark mode by default</span><span class="text-xs accent-text font-600">${darkMode?'On':'Off'}</span></div>
+              <div class="flex items-center justify-between"><span class="text-sm font-500">Weekly digest email</span><span class="text-xs text-emerald-600 font-600">On</span></div>
+              <div class="flex items-center justify-between"><span class="text-sm font-500">Activity notifications</span><span class="text-xs text-emerald-600 font-600">On</span></div>
+            </div>
+            <div id="step-content-2" class="step-page hidden">
+              <div class="bg-slate-50 dark:bg-slate-700/40 rounded-xl p-4 text-sm space-y-2">
+                <div class="flex justify-between"><span class="text-slate-500">Name</span><span class="font-500">John Doe</span></div>
+                <div class="flex justify-between"><span class="text-slate-500">Email</span><span class="font-500">john@nexus.io</span></div>
+                <div class="flex justify-between"><span class="text-slate-500">Plan</span><span class="font-500">Pro</span></div>
+              </div>
+            </div>
+            <div class="flex gap-2 mt-4">
+              <button id="step-prev" onclick="stepNav(-1)" class="px-4 py-2 border border-slate-200 dark:border-slate-600 text-sm rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors font-500 opacity-40 cursor-not-allowed" disabled>Back</button>
+              <button id="step-next" onclick="stepNav(1)" class="px-4 py-2 accent-bg text-white text-sm rounded-xl hover:opacity-90 transition-opacity font-500">Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `);
+}
+
+let stepCurrent = 0;
+const stepCount = 3;
+function stepNav(dir) {
+  const next = stepCurrent + dir;
+  if(next < 0 || next >= stepCount) return;
+  document.getElementById('step-content-'+stepCurrent).classList.add('hidden');
+  stepCurrent = next;
+  document.getElementById('step-content-'+stepCurrent).classList.remove('hidden');
+  for(let i=0;i<stepCount;i++) {
+    const circle = document.querySelector('.step-circle-'+i);
+    if(circle) {
+      circle.className = `step-circle-${i} w-7 h-7 rounded-full flex items-center justify-center text-xs font-700 ${i<=stepCurrent?'accent-bg text-white':'bg-slate-200 dark:bg-slate-600 text-slate-600 dark:text-slate-300'}`;
+    }
+    if(i>0) {
+      const line = document.querySelector('.step-line-'+i);
+      if(line) line.style.background = i<=stepCurrent?'var(--accent)':'#e2e8f0';
+    }
+  }
+  const prev = document.getElementById('step-prev');
+  const nxt = document.getElementById('step-next');
+  if(prev){ prev.disabled = stepCurrent===0; prev.classList.toggle('opacity-40',stepCurrent===0); prev.classList.toggle('cursor-not-allowed',stepCurrent===0); }
+  if(nxt){ nxt.textContent = stepCurrent===stepCount-1?'Finish':'Next'; }
+  if(stepCurrent===stepCount-1 && nxt) nxt.onclick = ()=>{ nxt.textContent='✓ Saved!'; nxt.disabled=true; };
+}
+
+// ---- SECURITY ----
+function renderSecurity() {
+  return pageWrapper('Security', 'Manage your account security and access settings.', `
+    <div class="max-w-2xl space-y-4">
+      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+        <h3 class="font-display font-700 text-base mb-4">Change Password</h3>
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs font-600 text-slate-500 mb-1.5">Current Password</label>
+            <input type="password" placeholder="••••••••" class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-transparent focus:border-transparent transition-all"/>
+          </div>
+          <div>
+            <label class="block text-xs font-600 text-slate-500 mb-1.5">New Password</label>
+            <input type="password" id="pw-new" placeholder="••••••••" oninput="checkPwStrength(this.value)" class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-transparent focus:border-transparent transition-all"/>
+            <div class="mt-2">
+              <div class="flex gap-1 mb-1">
+                ${[0,1,2,3].map(i=>`<div class="pw-bar flex-1 h-1 rounded-full bg-slate-200 dark:bg-slate-600" id="pw-bar-${i}"></div>`).join('')}
+              </div>
+              <p id="pw-label" class="text-xs text-slate-400"></p>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-600 text-slate-500 mb-1.5">Confirm New Password</label>
+            <input type="password" placeholder="••••••••" class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-transparent focus:border-transparent transition-all"/>
+          </div>
+          <button class="px-5 py-2 accent-bg text-white text-sm rounded-xl hover:opacity-90 transition-opacity font-500">Update Password</button>
+        </div>
+      </div>
+
+      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-display font-700 text-base">Active Sessions</h3>
+          <button class="text-sm text-red-500 hover:text-red-600 font-500">Revoke all</button>
+        </div>
+        <div class="space-y-3">
+          ${[
+            {device:'Chrome on MacOS', location:'Dhaka, BD', time:'Current', icon:'💻'},
+            {device:'Safari on iPhone', location:'Dhaka, BD', time:'2 days ago', icon:'📱'},
+            {device:'Firefox on Windows', location:'London, UK', time:'5 days ago', icon:'🖥️'},
+          ].map(s=>`
+            <div class="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-700/40 rounded-xl">
+              <span class="text-2xl">${s.icon}</span>
+              <div class="flex-1">
+                <p class="text-sm font-500">${s.device}</p>
+                <p class="text-xs text-slate-400">${s.location} · ${s.time}</p>
+              </div>
+              ${s.time==='Current'?'<span class="badge bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">Current</span>':'<button class="text-xs text-red-500 hover:text-red-600 font-500">Revoke</button>'}
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+        <h3 class="font-display font-700 text-base mb-4">Two-Factor Authentication</h3>
+        <div class="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-700/40 rounded-xl">
+          <div class="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+            <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-600">2FA is not enabled</p>
+            <p class="text-xs text-slate-400 mt-0.5">Add an authenticator app for extra security</p>
+          </div>
+          <button class="px-4 py-2 accent-bg text-white text-sm rounded-xl hover:opacity-90 font-500">Enable</button>
+        </div>
+      </div>
+    </div>
+  `);
+}
+
+function checkPwStrength(pw) {
+  let score = 0;
+  if(pw.length >= 8) score++;
+  if(/[A-Z]/.test(pw)) score++;
+  if(/[0-9]/.test(pw)) score++;
+  if(/[^A-Za-z0-9]/.test(pw)) score++;
+  const colors = ['#ef4444','#f97316','#eab308','#22c55e'];
+  const labels = ['Weak','Fair','Good','Strong'];
+  for(let i=0;i<4;i++) {
+    const bar = document.getElementById('pw-bar-'+i);
+    if(bar) bar.style.background = i<score ? colors[score-1] : '';
+  }
+  const lbl = document.getElementById('pw-label');
+  if(lbl) { lbl.textContent = pw ? labels[score-1]||'' : ''; lbl.style.color = pw ? colors[score-1] : ''; }
+}
+
+// ---- EMAIL ----
+function renderEmail() {
+  const emails = [
+    { from:'Alice Chen', subject:'Q2 Report Ready', preview:'The quarterly report has been compiled...', time:'10:30', read:false, tag:'Work' },
+    { from:'System Alert', subject:'Storage limit warning', preview:'Your storage is at 85% capacity...', time:'9:15', read:false, tag:'Alert' },
+    { from:'Bob Miller', subject:'Project meeting notes', preview:'Sharing the meeting notes from yesterday...', time:'Yesterday', read:true, tag:'Work' },
+    { from:'Newsletter', subject:'Weekly digest — Apr 21', preview:'Top stories this week in tech...', time:'Yesterday', read:true, tag:'' },
+    { from:'Eva Stone', subject:'New feature request', preview:'I wanted to suggest a feature that...', time:'Mon', read:true, tag:'Feature' },
+    { from:'Support', subject:'Ticket #882 resolved', preview:'Your support ticket has been resolved...', time:'Mon', read:true, tag:'Support' },
+  ];
+  const tagColor = t => ({ Work:'accent-subtle-bg accent-text', Alert:'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400', Feature:'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400', Support:'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' }[t]||'');
+  return pageWrapper('Email', 'Manage your inbox and send messages.', `
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 h-full">
+      <div class="lg:col-span-1 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-4 space-y-1">
+        <button class="w-full px-4 py-2 accent-bg text-white text-sm rounded-xl hover:opacity-90 font-500 mb-3">+ Compose</button>
+        ${[['Inbox','📥','2'],['Sent','📤',''],['Drafts','📝','3'],['Starred','⭐',''],['Spam','🚫',''],['Trash','🗑️','']].map(([l,i,c])=>`
+          <button class="w-full flex items-center gap-2.5 px-3 py-2 text-sm rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+            <span>${i}</span><span class="flex-1 text-left font-500">${l}</span>
+            ${c?`<span class="badge accent-bg text-white" style="font-size:0.65rem;padding:1px 6px">${c}</span>`:''}
+          </button>
+        `).join('')}
+      </div>
+      <div class="lg:col-span-3 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex items-center gap-3">
+          <input type="text" placeholder="Search emails..." class="flex-1 px-3 py-1.5 text-sm bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg focus:border-transparent transition-all"/>
+          <button class="text-xs text-slate-500 hover:accent-text font-500">Filter</button>
+        </div>
+        <div class="divide-y divide-slate-100 dark:divide-slate-700">
+          ${emails.map(e=>`
+            <div class="flex items-start gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700/30 cursor-pointer transition-colors ${!e.read?'bg-blue-50/40 dark:bg-blue-900/10':''}">
+              <div class="w-7 h-7 rounded-full accent-bg flex items-center justify-center text-white text-xs font-700 flex-shrink-0 mt-0.5">${e.from[0]}</div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="text-sm ${!e.read?'font-700':'font-500'} truncate">${e.from}</span>
+                  <div class="flex items-center gap-2 flex-shrink-0">
+                    ${e.tag?`<span class="badge ${tagColor(e.tag)}">${e.tag}</span>`:''}
+                    <span class="text-xs text-slate-400">${e.time}</span>
+                  </div>
+                </div>
+                <p class="text-sm ${!e.read?'font-600':'text-slate-600 dark:text-slate-300'} truncate">${e.subject}</p>
+                <p class="text-xs text-slate-400 truncate mt-0.5">${e.preview}</p>
+              </div>
+              ${!e.read?'<div class="w-2 h-2 rounded-full accent-bg flex-shrink-0 mt-2"></div>':''}
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `);
+}
+
+// ---- CHAT ----
+function renderChat() {
+  const contacts = [
+    { name:'Alice Chen', msg:'Sure, I\'ll check that.', time:'10:32', online:true, unread:2 },
+    { name:'Bob Miller', msg:'Thanks for the update!', time:'9:14', online:false, unread:0 },
+    { name:'Carol White', msg:'Can we schedule a call?', time:'Yesterday', online:true, unread:3 },
+    { name:'David Park', msg:'Got it, will do.', time:'Yesterday', online:false, unread:0 },
+  ];
+  return pageWrapper('Chat', 'Real-time messaging with your team.', `
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4" style="height:520px">
+      <div class="lg:col-span-1 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col overflow-hidden">
+        <div class="p-3 border-b border-slate-100 dark:border-slate-700">
+          <input type="text" placeholder="Search conversations..." class="w-full px-3 py-1.5 text-sm bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg focus:border-transparent"/>
+        </div>
+        <div class="flex-1 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-700">
+          ${contacts.map((c,i)=>`
+            <div onclick="switchChat('${c.name}')" class="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors ${i===0?'accent-subtle-bg':''}" id="chat-contact-${i}">
+              <div class="relative flex-shrink-0">
+                <div class="w-9 h-9 rounded-full accent-bg flex items-center justify-center text-white text-xs font-700">${c.name.split(' ').map(p=>p[0]).join('')}</div>
+                ${c.online?`<div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-800"></div>`:''}
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-600 truncate">${c.name}</span>
+                  <span class="text-xs text-slate-400">${c.time}</span>
+                </div>
+                <p class="text-xs text-slate-400 truncate">${c.msg}</p>
+              </div>
+              ${c.unread?`<span class="badge accent-bg text-white flex-shrink-0" style="font-size:0.65rem;padding:1px 6px">${c.unread}</span>`:''}
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="lg:col-span-2 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col overflow-hidden">
+        <div class="px-4 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full accent-bg flex items-center justify-center text-white text-xs font-700">AC</div>
+          <div>
+            <p class="text-sm font-600">Alice Chen</p>
+            <p class="text-xs text-emerald-500">Online</p>
+          </div>
+        </div>
+        <div class="flex-1 overflow-y-auto p-4 space-y-4" id="chat-messages">
+          <div class="flex gap-2">
+            <div class="w-7 h-7 rounded-full accent-bg flex items-center justify-center text-white text-xs font-700 flex-shrink-0 mt-auto">AC</div>
+            <div class="max-w-xs">
+              <div class="chat-bubble-other px-3.5 py-2.5 text-sm">Hey! Have you seen the latest dashboard numbers?</div>
+              <p class="text-xs text-slate-400 mt-1">10:28 AM</p>
+            </div>
+          </div>
+          <div class="flex gap-2 justify-end">
+            <div class="max-w-xs text-right">
+              <div class="chat-bubble-own px-3.5 py-2.5 text-sm inline-block">Yes, they look great! Revenue is up 8%.</div>
+              <p class="text-xs text-slate-400 mt-1">10:29 AM</p>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <div class="w-7 h-7 rounded-full accent-bg flex items-center justify-center text-white text-xs font-700 flex-shrink-0 mt-auto">AC</div>
+            <div class="max-w-xs">
+              <div class="chat-bubble-other px-3.5 py-2.5 text-sm">Sure, I'll check that report.</div>
+              <p class="text-xs text-slate-400 mt-1">10:32 AM</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-3 border-t border-slate-100 dark:border-slate-700 flex items-center gap-2">
+          <input id="chat-input" type="text" placeholder="Type a message..." class="flex-1 px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl focus:border-transparent transition-all" onkeydown="if(event.key==='Enter')sendChatMsg()"/>
+          <button onclick="sendChatMsg()" class="w-9 h-9 accent-bg rounded-xl flex items-center justify-center text-white hover:opacity-90 transition-opacity flex-shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  `);
+}
+
+function sendChatMsg() {
+  const inp = document.getElementById('chat-input');
+  if(!inp || !inp.value.trim()) return;
+  const msgs = document.getElementById('chat-messages');
+  if(!msgs) return;
+  const div = document.createElement('div');
+  div.className = 'flex gap-2 justify-end animate-fadeInUp';
+  const now = new Date();
+  div.innerHTML = `<div class="max-w-xs text-right"><div class="chat-bubble-own px-3.5 py-2.5 text-sm inline-block">${inp.value}</div><p class="text-xs text-slate-400 mt-1">${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}</p></div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  inp.value = '';
+}
+
+function render404() {
+  return `<div class="flex flex-col items-center justify-center py-24 page-content text-center">
+    <div class="font-display text-8xl font-800 accent-text mb-4">404</div>
+    <h2 class="font-display text-2xl font-700 mb-2">Page not found</h2>
+    <p class="text-slate-500 mb-6">The page you're looking for doesn't exist.</p>
+    <button onclick="navigate('#/dashboard')" class="px-6 py-2.5 accent-bg text-white rounded-xl hover:opacity-90 transition-opacity font-500">Go to Dashboard</button>
+  </div>`;
+}
+
+// ---- TOUR ----
+const tourSteps = [
+  { target:'#sidebar-toggle', title:'Collapsible Sidebar', desc:'Click this button to toggle the sidebar between expanded and collapsed modes for more screen space.' },
+  { target:'#tour-btn', title:'Product Tour', desc:'This button triggers the guided tour to help you discover key features of the admin panel.' },
+  { target:'#theme-toggle', title:'Dark/Light Mode', desc:'Switch between dark and light themes. Your preference is saved automatically.' },
+  { target:'#color-picker-btn', title:'Accent Color', desc:'Customize the primary color of the entire interface from 12 preset options.' },
+  { target:'#notif-btn', title:'Notifications', desc:'View real-time alerts, system events, and updates from your team.' },
+  { target:'#avatar-btn', title:'User Menu', desc:'Access your profile, settings, security options, and sign out from here.' },
+];
+
+function startTour() {
+  tourStep = 0;
+  document.getElementById('tour-overlay').classList.add('active');
+  renderTourStep();
+}
+function endTour() {
+  document.getElementById('tour-overlay').classList.remove('active');
+  document.querySelector('.tour-highlight').style.cssText = '';
+}
+function nextTourStep() {
+  if(tourStep >= tourSteps.length-1){ endTour(); return; }
+  tourStep++;
+  renderTourStep();
+}
+function prevTourStep() {
+  if(tourStep <= 0) return;
+  tourStep--;
+  renderTourStep();
+}
+function renderTourStep() {
+  const step = tourSteps[tourStep];
+  const el = document.querySelector(step.target);
+  const popup = document.getElementById('tour-popup');
+  const hl = document.getElementById('tour-highlight');
+  if(el) {
+    const r = el.getBoundingClientRect();
+    hl.style.cssText = `top:${r.top-4}px;left:${r.left-4}px;width:${r.width+8}px;height:${r.height+8}px;`;
+    // Position popup
+    const pw = 280, ph = 180;
+    let top = r.bottom + 12, left = r.left;
+    if(top + ph > window.innerHeight) top = r.top - ph - 12;
+    if(left + pw > window.innerWidth) left = window.innerWidth - pw - 12;
+    popup.style.cssText = `top:${top}px;left:${Math.max(8,left)}px;`;
+  }
+  document.getElementById('tour-step-label').textContent = `Step ${tourStep+1} of ${tourSteps.length}`;
+  document.getElementById('tour-title').textContent = step.title;
+  document.getElementById('tour-desc').textContent = step.desc;
+  document.getElementById('tour-progress').style.width = `${((tourStep+1)/tourSteps.length)*100}%`;
+  document.getElementById('tour-prev').disabled = tourStep===0;
+  document.getElementById('tour-prev').classList.toggle('opacity-40', tourStep===0);
+  document.getElementById('tour-next').textContent = tourStep===tourSteps.length-1?'Finish →':'Next →';
+}
+
+document.getElementById('tour-btn').addEventListener('click', startTour);
+
+// ============ INIT ============
+applyTheme();
+applyAccent(accentColor);
+renderSwatches();
+
+// Initial route
+if(!window.location.hash || window.location.hash===' ') window.location.hash='#/dashboard';
+resolveRoute();
+
+// After Users page renders, init table
+const origRenderUsers = renderUsers;
+window.renderUsers = function() {
+  const el = origRenderUsers();
+  setTimeout(() => { if(document.getElementById('user-table-body')) refreshUserTable(); }, 0);
+  return el;
+};
+routes['#/users'] = window.renderUsers;
+
+// Re-run table init after route change
+window.addEventListener('hashchange', () => {
+  setTimeout(() => {
+    if(window.location.hash.startsWith('#/users') && document.getElementById('user-table-body')) {
+      refreshUserTable();
+    }
+  }, 50);
+});
+</script>
+</body>
+</html>
