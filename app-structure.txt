@@ -1,0 +1,72 @@
+src/
+│
+├── app/
+│   ├── admin/
+│   │   ├── products/
+│   │   │   ├── page.tsx
+│   │   │   ├── create/page.tsx
+│   │   │   └── [id]/edit/page.tsx
+│   │   ├── categories/
+│   │   ├── customers/
+│   │   └── orders/
+│   │
+│   ├── pos/
+│   │   ├── page.tsx
+│   │   ├── cart/
+│   │   └── checkout/
+│   │
+│   └── login/
+│       └── page.tsx
+│
+├── features/
+│   ├── auth/
+│   │   ├── authSlice.ts
+│   │   ├── authApi.ts
+│   │   ├── authTypes.ts
+│   │   └── components/
+│   │       └── LoginForm.tsx
+│   │
+│   ├── products/
+│   │   ├── productSlice.ts
+│   │   ├── productApi.ts
+│   │   ├── productTypes.ts
+│   │   ├── productSchema.ts
+│   │   ├── hooks.ts
+│   │   ├── utils.ts
+│   │   └── components/
+│   │       ├── ProductForm.tsx
+│   │       ├── ProductTable.tsx
+│   │       └── ProductCard.tsx
+│   │
+│   ├── categories/
+│   │   ├── categorySlice.ts
+│   │   ├── categoryApi.ts
+│   │   ├── categoryTypes.ts
+│   │   └── components/
+│   │
+│   ├── orders/
+│   ├── customers/
+│   ├── tables/
+│   ├── cart/
+│   └── settings/
+│
+├── components/
+│   └── ui/
+│       ├── Button.tsx
+│       ├── Input.tsx
+│       ├── Modal.tsx
+│       └── DataTable.tsx
+│
+├── store/
+│   ├── store.ts
+│   ├── hooks.ts
+│   └── provider.tsx
+│
+├── lib/
+│   ├── axios.ts
+│   └── constants.ts
+│
+├── types/
+│   └── apiResponse.ts
+│
+└── middleware.ts
