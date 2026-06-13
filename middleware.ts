@@ -8,9 +8,9 @@ export function middleware(request: NextRequest) {
   const publicRoutes = ["/login"];
 
   // If not logged in and trying to access protected routes
-  if (!token && !publicRoutes.includes(pathname)) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
+  // if (!token && !publicRoutes.includes(pathname)) {
+  //   return NextResponse.redirect(new URL("/login", request.url));
+  // }
 
   // If already logged in and visiting login page
   if (token && pathname === "/login") {
