@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 export default function NavbarThemeToggle() {
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
     console.log('darkMode', darkMode)

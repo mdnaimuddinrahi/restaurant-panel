@@ -4,18 +4,17 @@ import cartReducer from "@/features/cart/cartSlice";
 import { baseApi } from "@/services/baseApi";
 
 export const store = configureStore({
-  // reducer: {
-  //   auth: authReducer,
+  reducer: {
+    auth: authReducer,
   //   cart: cartReducer,
-  // },
-   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: false, // important for POS (dates, objects, etc.)
-    }),
+    // getDefaultMiddleware({
+    //   serializableCheck: false, // important for POS (dates, objects, etc.)
+    // }),
+    getDefaultMiddleware().concat(baseApi.middleware),
 });
 
 // Types

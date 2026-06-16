@@ -4,19 +4,24 @@ import { FormEvent, useEffect, useMemo, useState } from 'react'
 import './login.css'
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useLoginMutation } from '@/features/auth/authApi';
+import { setCredentials } from '@/features/auth/authSlice';
+import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/navigation';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export default function page() {
   const [email, setEmail] = useState('admin@gmail.com')
-  const [password, setPassword] = useState('admin123')
+  const [password, setPassword] = useState('12345678')
   // const [remember, setRemember] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [shake, setShake] = useState(false)
   const [toast, setToast] = useState({ visible: false, message: '', error: false })
   const [errors, setErrors] = useState({ email: '', password: '' })
-  const [login, { isLoading }] = useLoginMutation()
+  const [login, { data, isLoading, isError, isSuccess, error: errorResponse }] = useLoginMutation()
+  const dispatch = useDispatch()
+  const router = useRouter()
 
   useEffect(() => {
     if (!toast.visible) return
@@ -46,6 +51,20 @@ export default function page() {
     try {
       const response = await login({ email, password }).unwrap()
       console.log('Login successful:', response)
+      localStorage.setItem('token', response.access_token)
+      document.cookie = `token=${response.access_token}; path=/`;
+      localStorage.setItem('auth', JSON.stringify({
+          accessToken: response.access_token,
+          user: response.user,
+      }))
+      dispatch(
+        setCredentials({
+          token: response.access_token,
+          user: response.user,
+        })
+      );
+      router.push('/admin')
+
     } catch (error) {
       setToast({ visible: true, message: 'Invalid email or password.', error: true })
     }
