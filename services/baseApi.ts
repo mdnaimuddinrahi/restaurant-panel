@@ -9,7 +9,14 @@ export const baseApi = createApi({
     baseUrl: process.env.NEXT_PUBLIC_API_URL,
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState)?.auth?.token;
-      console.log('getStates::>', getState())
+      if(!token) {
+        // Try to get token from localStorage as a fallback
+        const storedAuth = localStorage.getItem("auth");
+        if (storedAuth) {
+          const { accessToken } = JSON.parse(storedAuth);
+          headers.set("authorization", `Bearer ${accessToken}`);
+        }
+      }
 
       if (token) {
         headers.set("authorization", `Bearer ${token}`);
