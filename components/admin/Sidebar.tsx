@@ -30,8 +30,6 @@ export default function Sidebar() {
       return () => btn.removeEventListener("click", handleClick);
     }, []);
   
-
-
   const toggleSubmenu = (rowEl: HTMLElement) => {
     const navItem = rowEl.closest(".nav-item") as HTMLElement | null;
     if (!navItem) return;
@@ -60,22 +58,21 @@ export default function Sidebar() {
     }
   };
 
-
   return (
       <aside id="sidebar" className="fixed left-0 top-14 bottom-0 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 z-40 flex flex-col overflow-hidden">
         <nav className="flex-1 overflow-y-auto overflow-x-hidden py-3 px-2">
           {/* <!-- Main --> */}
           <div className="sidebar-section-label section-label">Main</div>
 
-          <div className="nav-item" data-route="#/dashboard">
-            <div className="nav-row flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer" onClick={() => router.push('#/dashboard')}>
+          <div className="nav-item" data-route="/">
+            <div className="nav-row flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer" onClick={() => router.push('/admin')}>
               <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
               <span className="nav-label text-sm font-500 whitespace-nowrap text-black dark:text-white">Dashboard</span>
             </div>
           </div>
 
           {/* <!-- Users group --> */}
-          <div className="nav-item" data-route="#/users" data-has-sub="true">
+          <div className="nav-item" data-route="/admin/users" data-has-sub="true">
             <div className="nav-row flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer" 
             onClick={(e) => toggleSubmenu(e.currentTarget)}
             >
@@ -86,15 +83,15 @@ export default function Sidebar() {
             <div className="submenu pl-10 pr-2 space-y-0.5">
               <div 
                 className="submenu-item flex items-center text-sm py-1.5 px-2 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors" 
-                onClick={() => router.push('#/users')}
+                onClick={() => router.push('/admin/users')}
                 >All Users</div>
               <div 
                 className="submenu-item flex items-center text-sm py-1.5 px-2 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors" 
-                onClick={() => router.push('#/users/roles')}
+                onClick={() => router.push('/admin/users/roles')}
                 >Roles & Permissions</div>
               <div 
                 className="submenu-item flex items-center text-sm py-1.5 px-2 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors" 
-                onClick={() => router.push('#/users/activity')}
+                onClick={() => router.push('/admin/users/activity')}
                 >Activity Log</div>
             </div>
           </div>

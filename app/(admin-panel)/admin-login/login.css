@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+@property --angle {
+          syntax: '<angle>';
+          initial-value: 0deg;
+          inherits: false;
+        }
+
+        html,
+        body {
+          min-height: 100%;
+          margin: 0;
+          font-family: Inter, sans-serif;
+        }
+
+        body {
+          background-color: #f4f6fb;
+          background-image:
+            radial-gradient(circle at 15% 20%, rgba(6, 182, 212, 0.10), transparent 35%),
+            radial-gradient(circle at 85% 75%, rgba(99, 102, 241, 0.10), transparent 40%),
+            linear-gradient(rgba(15,23,42,0.025) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(15,23,42,0.025) 1px, transparent 1px);
+          background-size: auto, auto, 42px 42px, 42px 42px;
+        }
+
+        .bg-nx-bg { background-color: #f4f6fb; }
+        .text-nx-text { color: #1e2a3b; }
+        .bg-nx-surface { background: #ffffff; }
+        .bg-nx-surface-2 { background: #f3f5fb; }
+        .border-nx-border { border-color: #e3e8f5; }
+        .text-nx-muted { color: #94a1b8; }
+        .bg-nx-cyan { background-color: #06b6d4; }
+        .bg-nx-violet { background-color: #6366f1; }
+        .bg-nx-pink { background-color: #ec4899; }
+        .text-nx-cyan { color: #06b6d4; }
+        .text-nx-violet { color: #6366f1; }
+
+        .panel-gradient {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(circle at top left, rgba(6, 182, 212, 0.16), transparent 30%);
+          pointer-events: none;
+        }
+
+        .panel-bubble {
+          background: radial-gradient(circle, rgba(236, 72, 153, 0.18), transparent 55%);
+          filter: blur(20px);
+        }
+
+        .hero-overlay {
+          background: linear-gradient(180deg, rgba(255,255,255,0.64), rgba(255,255,255,0));
+        }
+
+        .card-inner {
+          position: relative;
+          z-index: 1;
+          border-radius: 21px;
+          background: #ffffff;
+          box-shadow: 0 20px 60px -15px rgba(30, 41, 59, 0.12);
+        }
+
+        .nx-input {
+          transition: box-shadow 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+        }
+
+        .nx-input:focus {
+          border-color: #06b6d4;
+          box-shadow: 0 0 0 1px rgba(6, 182, 212, 0.25), 0 0 16px rgba(6, 182, 212, 0.18);
+          background-color: #ffffff;
+        }
+
+        .nx-btn {
+          transition: transform 0.15s ease, box-shadow 0.25s ease, filter 0.25s ease;
+          box-shadow: 0 8px 24px -4px rgba(99, 102, 241, 0.35), 0 0 0 1px rgba(99, 102, 241, 0.1);
+        }
+
+        .nx-btn:hover {
+          box-shadow: 0 10px 30px -4px rgba(6, 182, 212, 0.4), 0 0 0 1px rgba(6, 182, 212, 0.15);
+          filter: brightness(1.03);
+        }
+
+        .nx-btn:active {
+          transform: scale(0.985);
+        }
+
+        .nx-btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          box-shadow: none;
+        }
+
+        .logo-glow {
+          filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.35));
+        }
+
+        @keyframes shake {
+          10%, 90% { transform: translateX(-1px); }
+          20%, 80% { transform: translateX(2px); }
+          30%, 50%, 70% { transform: translateX(-4px); }
+          40%, 60% { transform: translateX(4px); }
+        }
+
+        .shake {
+          animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        .field-error {
+          max-height: 0;
+          overflow: hidden;
+          transition: max-height 0.2s ease;
+        }
+
+        .field-error.show {
+          max-height: 2rem;
+        }
+
+        .spinner {
+          border: 2px solid rgba(255,255,255,0.35);
+          border-top-color: #ffffff;
+          border-radius: 50%;
+          width: 16px;
+          height: 16px;
+          animation: spin-loader 0.6s linear infinite;
+        }
+
+        @keyframes spin-loader {
+          to { transform: rotate(360deg); }
+        }
+
+        .toast {
+          transform: translateY(120%);
+          opacity: 0;
+          transition: transform 0.35s ease, opacity 0.35s ease;
+        }
+
+        .toast.show {
+          transform: translateY(0);
+          opacity: 1;
+        }
