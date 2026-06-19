@@ -33,19 +33,19 @@ export function useSelectTheme() {
   const classNames = {
     control: ({ isFocused }: any) =>
       `
-      min-h-10 rounded-lg border px-3 text-sm
+      min-h-10 rounded-lg border px-3 text-xs
       bg-white dark:bg-slate-800
       border-slate-300 dark:border-slate-700
       ${isFocused ? "shadow-md" : ""}
     `,
 
-    valueContainer: () => "py-1 text-sm",
+    valueContainer: () => "py-1 text-xs",
 
-    input: () => "!text-sm !text-slate-900 dark:!text-slate-100",
+    input: () => "!text-xs !text-slate-900 dark:!text-slate-100",
 
-    singleValue: () => "text-sm text-slate-900 dark:text-slate-100",
+    singleValue: () => "text-xs text-slate-900 dark:text-slate-100",
 
-    placeholder: () => "text-sm text-slate-400 dark:text-slate-500",
+    placeholder: () => "text-xs text-slate-400 dark:text-slate-500",
 
     menu: () =>
       `
@@ -59,7 +59,7 @@ export function useSelectTheme() {
 
     option: ({ isFocused, isSelected }: any) =>
       `
-      px-3 py-2 text-sm rounded-md cursor-pointer transition-colors
+      px-3 py-2 text-xs rounded-md cursor-pointer transition-colors
       ${
         isSelected
           ? "text-white"

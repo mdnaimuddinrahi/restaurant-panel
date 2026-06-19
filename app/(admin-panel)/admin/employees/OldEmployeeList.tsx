@@ -1,5 +1,5 @@
 
-import AnimatedSelect from '@/components/ui/select/AppSelect';
+import AnimatedSelect from '@/components/ui/select/AppReactSelect';
 import Pagination from '@/components/ui/Pagination';
 import SkeletonSelect from '@/components/ui/SkeletonSelect';
 import TableHead from '@/components/ui/TableHead';
