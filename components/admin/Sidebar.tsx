@@ -83,8 +83,8 @@ export default function Sidebar() {
             <div className="submenu pl-10 pr-2 space-y-0.5">
               <div 
                 className="submenu-item flex items-center text-sm py-1.5 px-2 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors" 
-                onClick={() => router.push('/admin/users')}
-                >All Users</div>
+                onClick={() => router.push('/admin/employees')}
+                >Employees</div>
               <div 
                 className="submenu-item flex items-center text-sm py-1.5 px-2 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors" 
                 onClick={() => router.push('/admin/users/roles')}

@@ -64,7 +64,7 @@ export default function page() {
         })
       );
       router.push('/admin')
-
+window.location.reload();
     } catch (error) {
       setToast({ visible: true, message: 'Invalid email or password.', error: true })
     }

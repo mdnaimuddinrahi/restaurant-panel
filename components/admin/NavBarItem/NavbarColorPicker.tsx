@@ -1,7 +1,13 @@
+import { useTheme } from '@/theme';
 import React, { useEffect, useState } from 'react'
 
 export default function NavbarColorPicker() {
-    const [accentColor, setAccentColor] = useState<string>("");
+    // const [accentColor, setAccentColor] = useState<string>("");
+  const { accentColor, setAccentColor } = useTheme();
+//   function applyAccent(color: string) {
+//   setAccentColor(color);
+//   localStorage.setItem("accentColor", color);
+// }
 
   useEffect(() => {
     const saved = localStorage.getItem("accentColor") || "#6366f1";

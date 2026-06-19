@@ -7,11 +7,28 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
  :root {
+    --bg: #ffffff;
     --accent: #6366f1;
     --accent-light: #818cf8;
     --accent-dark: #4f46e5;
     --accent-subtle: #eef2ff;
     --accent-subtle-dark: #1e1b4b;
+    --border: #e2e8f0;
+    --text: #0f172a;
+
+    --color-primary: #6366f1;
+
+    --color-bg: #ffffff;
+    --color-text: #0f172a;
+    --color-muted: #64748b;
+    --color-border: #e2e8f0;
+  }
+
+  .dark {
+    --color-bg: #0f172a;
+    --color-text: #f1f5f9;
+    --color-muted: #94a3b8;
+    --color-border: #1e293b;
   }
   /* * { font-family: 'DM Sans', sans-serif; } */
   body {
@@ -127,10 +144,10 @@
   
 
   /* Input focus accent */
-  input:focus, select:focus, textarea:focus {
+  /* input:focus, select:focus, textarea:focus {
     outline:none;
     box-shadow:0 0 0 2px var(--accent) !important;
-  }
+  } */
 
   /* Loader spinner */
   @keyframes spin { to { transform:rotate(360deg); } }
@@ -198,3 +215,4 @@
     }
   }
  /* end sidebar section */
+ 
