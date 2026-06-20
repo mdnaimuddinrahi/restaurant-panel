@@ -29,22 +29,27 @@ export default function EmployeeFilterPanel() {
                     <AppSelect
                         options={bloodGroupOption}
                         placeholder="Blood Group"
+                        isClearable={true}
                     />
                     <AppSelect
                         options={employeeDesignation}
                         placeholder="Employee Designation"
+                        isClearable={true}
                     />
                     <AppSelect
                         options={employeeType}
                         placeholder="Employee Type"
+                        isClearable={true}
                     />
                     <AppSelect
                         options={gender}
                         placeholder="Gender"
+                        isClearable={true}
                     /> 
                     <AppSelect
                         options={maritalStatus}
                         placeholder="Marital Status"
+                        isClearable={true}
                     />
                     <AppInput placeholder="Search..." />
                     <AppButton>

@@ -1,6 +1,6 @@
 
 import AnimatedSelect from '@/components/ui/select/AppReactSelect';
-import Pagination from '@/components/ui/Pagination';
+import Pagination from '@/components/ui/TableFooter';
 import SkeletonSelect from '@/components/ui/SkeletonSelect';
 import TableHead from '@/components/ui/TableHead';
 import { useGetEmployeeResourcesQuery, useGetEmployeesQuery } from '@/features/employee/employeeApi';

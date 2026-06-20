@@ -53,6 +53,7 @@
   .accent-subtle-bg { background-color: var(--accent-subtle) !important; }
 
   .dark .accent-subtle-bg { background-color: var(--accent-subtle-dark) !important; }
+  
 
   /* Nav item active */
   .nav-item.active > .nav-row {
@@ -215,4 +216,6 @@
     }
   }
  /* end sidebar section */
- 
+ button :hover {
+  background-color: var(--accent);
+ }
