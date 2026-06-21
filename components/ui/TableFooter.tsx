@@ -2,14 +2,9 @@ import { FiChevronsLeft, FiChevronsRight } from 'react-icons/fi';
 import AppCustomButton from './button/AppCustomButton';
 import AppReactSelect from './select/AppReactSelect';
 import { DEFAULT_PAGINATION } from '@/store/commonConstants';
+import { PaginationProps } from '@/store/commonInterface';
 
-interface PaginationProps {
-    totalDataCount: number; 
-    tablePage: number; 
-    tablePageSize: number;
-    setTablePage: (page: number) => void; 
-    setTablePageSize: (size: number) => void; // 👈 add this
-}
+
 
 export default function TableFooter({
     totalDataCount,

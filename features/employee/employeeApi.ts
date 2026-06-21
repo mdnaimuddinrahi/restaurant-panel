@@ -1,41 +1,42 @@
 import { baseApi } from "@/services/baseApi";
-import { Employee, EmployeeResourceResponse } from "./employeeInterface";
+import { Employee, EmployeeResourceResponse, EmployeeTag, GetEmployeesRequests, GetEmployeesResponse } from "./employeeInterface";
 import { CreateEmployeeDTO, UpdateEmployeeDTO } from "./employeeDTOs";
+import { DEFAULT_SEGMENT_URL, DEFAULT_TAG, DEFAULT_TAG_SCOPE } from "@/store/commonConstants";
 
 export const employeeApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getEmployeeResources: builder.query<EmployeeResourceResponse, void>({
-      query: () => "/employee-resources",
-      providesTags: [{ type: "Employee" as const, id: "RESOURCE" }]
+      query: () => DEFAULT_SEGMENT_URL.EMPLOYEE.RESOURCE,
+      providesTags: [{ type: DEFAULT_TAG.EMPLOYEE, id: DEFAULT_TAG_SCOPE.RESOURCE }]
     }),
-    getEmployees: builder.query<Employee[], void>({
-      query: () => "/employees",
+    getEmployees: builder.query<GetEmployeesResponse, GetEmployeesRequests>({
+      query: (params) => ({
+        url: DEFAULT_SEGMENT_URL.EMPLOYEE.EMPLOYEES,
+        params,
+      }),
+      providesTags: (result): EmployeeTag[] => {
+        const listTag = {
+          type: DEFAULT_TAG.EMPLOYEE,
+          id: DEFAULT_TAG_SCOPE.LIST,
+        } as const;
 
-      providesTags: (result) =>
-        (result
-          ? [
-              ...result.map(({ id }) => ({
-                type: "Employee" as const,
-                id,
-              })),
-              { type: "Employee" as const, id: "LIST" },
-            ]
-          : [{ type: "Employee" as const, id: "LIST" }]) as any,
+        if (!result?.data) return [listTag];
+
+        return [
+          ...result.data.map((employee) => ({
+            type: DEFAULT_TAG.EMPLOYEE,
+            id: employee.id,
+          })),
+          listTag,
+        ];
+      }
     }),
-
-    // =========================
-    // GET SINGLE EMPLOYEE
-    // =========================
     getEmployeeById: builder.query<Employee, number>({
       query: (id) => `/employees/${id}`,
       providesTags: (_result, _error, id) => [
         { type: "Employee", id },
       ],
     }),
-
-    // =========================
-    // CREATE EMPLOYEE
-    // =========================
     createEmployee: builder.mutation<Employee, CreateEmployeeDTO>({
       query: (body) => ({
         url: "/employees",
@@ -45,14 +46,7 @@ export const employeeApi = baseApi.injectEndpoints({
 
       invalidatesTags: [{ type: "Employee", id: "LIST" }],
     }),
-
-    // =========================
-    // UPDATE EMPLOYEE
-    // =========================
-    updateEmployee: builder.mutation<
-      Employee,
-      { id: number; data: UpdateEmployeeDTO }
-    >({
+    updateEmployee: builder.mutation<Employee, { id: number; data: UpdateEmployeeDTO }>({
       query: ({ id, data }) => ({
         url: `/employees/${id}`,
         method: "PUT",
@@ -64,10 +58,6 @@ export const employeeApi = baseApi.injectEndpoints({
         { type: "Employee", id: "LIST" },
       ],
     }),
-
-    // =========================
-    // DELETE EMPLOYEE
-    // =========================
     deleteEmployee: builder.mutation<{ success: boolean }, number>({
       query: (id) => ({
         url: `/employees/${id}`,
@@ -82,9 +72,6 @@ export const employeeApi = baseApi.injectEndpoints({
   }),
 });
 
-// =========================
-// EXPORT HOOKS
-// =========================
 export const {
   useGetEmployeeResourcesQuery,
   useGetEmployeesQuery,

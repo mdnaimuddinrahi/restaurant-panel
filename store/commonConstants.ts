@@ -1,10 +1,39 @@
 export const DEFAULT_PAGINATION = {
+    PAGINATE: true,
     PER_PAGE: 5,
     PAGE: 1,
+    PAGE_NAME: 'employee_page',
     PAGE_OPTIONS:  [
         { label: "5", value: 5 },
         { label: "10", value: 10 },
         // { label: "50", value: 50 },
         { label: "100", value: 100 },
-    ]
+    ],
+}
+
+export const DEFAULT_SEARCH = {
+    SEARCH_FIELD: '',
+    SEARCH_TERM: '',
+    SORT_TYPE: 'asc',
+    SORT_BY: 'id',
+    NUMBER: -1,   
+}
+
+export const DEFAULT_TAG_SCOPE = {
+    LIST: 'LIST',
+    RESOURCE: 'RESOURCE'
+} as const
+
+export const DEFAULT_TAG = {
+  EMPLOYEE: 'Employee',
+  CUSTOMER: 'Customer',
+} as const;
+
+export const TAG_VALUES = Object.values(DEFAULT_TAG);
+
+export const DEFAULT_SEGMENT_URL = {
+    EMPLOYEE: {
+        RESOURCE: "/employee-resources",
+        EMPLOYEES: '/employees'
+    }
 }

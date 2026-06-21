@@ -3,27 +3,13 @@ import { EmployeeTableHead } from "./employeeInterface";
 
 
 export const EMPLOYEE_COLUMNS: TableColumn<EmployeeTableHead>[] = [
-    { isSort:true, key: "name", label: "Name"},
-    { isSort:true, key: "email", label: "Email"},
-    { isSort:true, key: "role", label: "Role"},
-    { isSort:true, key: "status", label: "Status"},
-    { isSort:true, key: "joined", label: "Joined"},
+    { isVisible: true, isSort:true, key: "name", label: "Name"},
+    { isVisible: true, isSort:true, key: "email", label: "Email"},
+    { isVisible: true, isSort:true, key: "role", label: "Role"},
+    { isVisible: true, isSort:true, key: "status", label: "Status"},
+    { isVisible: true, isSort:true, key: "joined", label: "Joined"},
 ]
 
-export const USER_DATA = [
-  { id: 1, name: 'Alice Chen', email: 'alice@example.com', role: 'Admin', status: 'Active', joined: '2024-01-15' },
-  { id: 2, name: 'Bob Miller', email: 'bob@example.com', role: 'Editor', status: 'Active', joined: '2024-02-20' },
-  { id: 3, name: 'Carol White', email: 'carol@example.com', role: 'Viewer', status: 'Inactive', joined: '2024-03-10' },
-  { id: 4, name: 'David Park', email: 'david@example.com', role: 'Editor', status: 'Active', joined: '2024-03-25' },
-  { id: 5, name: 'Eva Stone', email: 'eva@example.com', role: 'Admin', status: 'Active', joined: '2024-04-01' },
-  { id: 6, name: 'Frank Lee', email: 'frank@example.com', role: 'Viewer', status: 'Pending', joined: '2024-04-12' },
-  { id: 7, name: 'Grace Kim', email: 'grace@example.com', role: 'Editor', status: 'Active', joined: '2024-04-18' },
-  { id: 8, name: 'Henry Brown', email: 'henry@example.com', role: 'Viewer', status: 'Inactive', joined: '2024-05-02' },
-  { id: 9, name: 'Ivy Wong', email: 'ivy@example.com', role: 'Admin', status: 'Active', joined: '2024-05-10' },
-  { id: 10, name: 'Jack Davis', email: 'jack@example.com', role: 'Editor', status: 'Active', joined: '2024-05-20' },
-  { id: 11, name: 'Karen Liu', email: 'karen@example.com', role: 'Viewer', status: 'Pending', joined: '2024-05-25' },
-  { id: 12, name: 'Leo Martinez', email: 'leo@example.com', role: 'Editor', status: 'Active', joined: '2024-06-01' },
-];
 
 
       

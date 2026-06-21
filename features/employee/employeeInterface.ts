@@ -1,4 +1,5 @@
-import { CommonResponse, ResourceOption } from "@/store/commonInterface";
+import { DEFAULT_TAG } from "@/store/commonConstants";
+import { CommonResponse, MetaData, RequestParams, ResourceOption } from "@/store/commonInterface";
 
 export interface Employee {
   id: number;
@@ -52,26 +53,60 @@ export interface Employee {
 }
 
 export interface EmployeeTypeOption extends ResourceOption {
-  code: string;
+  code: string
 }
 
 export interface EmployeeResourceData {
-  blood_groups: ResourceOption[],
-  employee_designations: ResourceOption[],
-  employee_types: EmployeeTypeOption[],
-  genders: ResourceOption[],
+  blood_groups: ResourceOption[]
+  employee_designations: ResourceOption[]
+  employee_types: EmployeeTypeOption[]
+  genders: ResourceOption[]
   marital_status: ResourceOption[]
 }
 
 export type EmployeeResourceResponse = CommonResponse<EmployeeResourceData>
 export type EmployeeSortType = {col: keyof Employee | '', dir: 'asc' | 'desc'}
 
-
 export interface EmployeeTableHead {
-id: number;
-name: string;
-email: string;
-role: string;
-status: string;
-joined: string;
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+  joined: string;
 }
+
+export interface GetEmployeesRequests extends RequestParams {
+  blood_group: number | null
+  employee_designation: number | null
+  employee_type: number | null
+  gender: number | null
+  martial_status: number | null
+}
+
+export interface GetEmployeesResponse {
+    data: Employee[]
+    paginationHeaders: Headers
+    totalCount: number
+    meta_data?: MetaData
+}
+
+export type EmployeeTag = {
+  type: typeof DEFAULT_TAG.EMPLOYEE
+  id: number | "LIST"
+}
+
+
+export interface EmployeeFIlterPanelProps {
+    bloodGroup: number,
+    employeeDesignation: number,
+    employeeType: number,
+    gender: number,
+    martialStatus: number,
+    setBloodGroup: (page: number) => void,
+    setEmployeeDesignation: (page: number) => void,
+    setEmployeeType: (page: number) => void,
+    setGender: (page: number) => void,
+    setMartialStatus: (page: number) => void,
+}
+
