@@ -142,14 +142,6 @@
   /* Notification dot pulse */
   .notif-dot { animation: pulse-dot 2s infinite; }
 
-  
-
-  /* Input focus accent */
-  /* input:focus, select:focus, textarea:focus {
-    outline:none;
-    box-shadow:0 0 0 2px var(--accent) !important;
-  } */
-
   /* Loader spinner */
   @keyframes spin { to { transform:rotate(360deg); } }
   .spinner { border:3px solid transparent; border-top-color:var(--accent); border-radius:50%; animation:spin 0.7s linear infinite; }
@@ -215,7 +207,3 @@
       width: auto !important;
     }
   }
- /* end sidebar section */
- button :hover {
-  background-color: var(--accent);
- }

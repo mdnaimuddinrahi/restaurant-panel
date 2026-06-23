@@ -7,29 +7,46 @@ import { EMPLOYEE_COLUMNS } from '@/features/employee/employeeConstant';
 import EmployeeFilterPanel from './EmployeeFilterPanel';
 import TableFooter from '@/components/ui/TableFooter';
 import { DEFAULT_PAGINATION, DEFAULT_SEARCH } from '@/store/commonConstants';
-import { useGetEmployeesQuery } from '@/features/employee/employeeApi';
+import { useGetEmployeeResourcesQuery, useGetEmployeesQuery } from '@/features/employee/employeeApi';
+import ColumnSelectorModal from '@/components/ui/select/ColumnSelectorModal';
+import EmployeeTableBody from './EmployeeTableBody';
 
 export default function EmployeeList() {
-  const [sortState, setSortState] = useState<SortState<EmployeeTableHead>>({ col: "", dir: "asc" });
+  const [sortState, setSortState] = useState<SortState<EmployeeTableHead>>({ col: "id", dir: "asc" });
   const [bloodGroup, setBloodGroup] = useState(DEFAULT_SEARCH.NUMBER);
   const [employeeDesignation, setEmployeeDesignation] = useState(DEFAULT_SEARCH.NUMBER);
   const [employeeType, setEmployeeType] = useState(DEFAULT_SEARCH.NUMBER);
   const [gender, setGender] = useState(DEFAULT_SEARCH.NUMBER);
-  const [martialStatus, setMartialStatus] = useState(DEFAULT_SEARCH.NUMBER);
-  const [page, setPage] = useState(DEFAULT_PAGINATION.PAGE);
+  const [maritalStatus, setMaritalStatus] = useState(DEFAULT_SEARCH.NUMBER);
+  const [currentPage, setCurrentPage] = useState(DEFAULT_PAGINATION.CURRENT_PAGE);
+  const [lastPage, setLastPage] = useState(DEFAULT_PAGINATION.LAST_PAGE)
   const [perPage, setPerPage] = useState(DEFAULT_PAGINATION.PER_PAGE)
-  const [total, setTotal] = useState(0)
+  const [total, setTotal] = useState(DEFAULT_PAGINATION.TOTAL)
   const [searchTerm, setSearchTerm] = useState(DEFAULT_SEARCH.SEARCH_TERM)
-  const [searchFields, setSearchFields] = useState(DEFAULT_SEARCH.SEARCH_FIELD)
+  const [searchFields, setSearchFields] = useState("name,email,phone")
   const [sortType, setSortType] = useState(DEFAULT_SEARCH.SORT_TYPE)
   const [sortBy, setSortBy] = useState(DEFAULT_SEARCH.SORT_BY)
-  
+  const [columns, setColumns] = useState<TableColumn<EmployeeTableHead>[]>(EMPLOYEE_COLUMNS);
+  const [draftBloodGroup, setDraftBloodGroup] = useState(-1);
+  const [draftEmployeeDesignation, setDraftEmployeeDesignation] = useState(-1);
+  const [draftEmployeeType, setDraftEmployeeType] = useState(-1);
+  const [draftGender, setDraftGender] = useState(-1);
+  const [draftMaritalStatus, setDraftMaritalStatus] = useState(-1);
+  const [draftSearchTerm, setDraftSearchTerm] = useState(DEFAULT_SEARCH.SEARCH_TERM)
+
+  const {data: resourceResponse, 
+          isLoading: resourceIsLoading} = useGetEmployeeResourcesQuery()
+  const bloodGroupOption = resourceResponse?.data?.blood_groups;
+  const employeeDesignationOption = resourceResponse?.data?.employee_designations;
+  const employeeTypeOption = resourceResponse?.data?.employee_types;
+  const genderOption = resourceResponse?.data?.genders;
+  const maritalStatusOption = resourceResponse?.data?.marital_status;
 
   const searchParams: GetEmployeesRequests = useMemo(
     () => ({
       paginate: DEFAULT_PAGINATION.PAGINATE,
       page_name: DEFAULT_PAGINATION.PAGE_NAME,
-      page: page,
+      page: currentPage,
       per_page: perPage,
       search_term: searchTerm,
       search_fields: searchFields,
@@ -39,9 +56,9 @@ export default function EmployeeList() {
       employee_designation: employeeDesignation,
       employee_type: employeeType,
       gender: gender,
-      martial_status: martialStatus,
+      marital_status: maritalStatus,
     }), [
-      page,
+      currentPage,
       perPage,
       searchTerm,
       searchFields,
@@ -51,89 +68,110 @@ export default function EmployeeList() {
       employeeDesignation,
       employeeType,
       gender,
-      martialStatus,
+      maritalStatus,
     ]
   )
   const {data: employeesResponse, isLoading} = useGetEmployeesQuery(searchParams)
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  console.log('employees', employees)
-  // console.log('members', members)
+ 
   useEffect(() => {
-    setEmployees(employeesResponse?.data ?? [])
-  }, [employeesResponse?.data])
-// {
-//     "id": 1,
-//     "employee_type_id": 3,
-//     "employee_designation_id": 2,
-//     "user_id": null,
-//     "name": "John Smith",
-//     "email": "john.smith@example.com",
-//     "phone": "1000000001",
-//     "address": "Global Office Location 1",
-//     "date_of_birth": "2003-06-09",
-//     "date_of_joining": "2025-08-14",
-//     "is_active": true,
-//     "gender": 3,
-//     "profile_img": null,
-//     "national_id": "NID-G-00001",
-//     "passport_number": "PPT-G-00001",
-//     "emergency_contact_name": "Emergency Contact 1",
-//     "emergency_contact_phone": "9000000001",
-//     "emergency_contact_relation": "Family",
-//     "documents": [],
-//     "basic_salary": "18459.00",
-//     "termination_date": null,
-//     "blood_group": 1,
-//     "marital_status": 1,
-//     "shift_start": "09:00:00",
-//     "shift_end": "17:00:00",
-//     "created_at": "2026-06-09 17:06:54",
-//     "updated_at": null,
-//     "created_by": 1,
-//     "updated_by": null
-// }
-  
+    if (!employeesResponse?.meta) return;
+
+    setTotal(employeesResponse.meta.total ?? DEFAULT_PAGINATION.TOTAL);
+    setPerPage(employeesResponse.meta.per_page ?? DEFAULT_PAGINATION.PER_PAGE);
+    setCurrentPage(employeesResponse.meta.current_page ?? DEFAULT_PAGINATION.CURRENT_PAGE);
+    setLastPage(employeesResponse.meta.last_page ?? DEFAULT_PAGINATION.LAST_PAGE);
+    setBloodGroup(DEFAULT_SEARCH.NUMBER)
+  }, [employeesResponse?.meta]);
+
+  const employees = useMemo(() => {
+    const data = [...(employeesResponse?.data ?? [])]
+
+    if (!sortState.col) return data;
+
+      data.sort((a, b) => {
+        const aValue = a[sortState.col];
+        const bValue = b[sortState.col];
+
+        if (aValue == null || bValue == null) return 0;
+
+        if (typeof aValue === "string" && typeof bValue === "string") {
+          return sortState.dir === "asc"
+            ? aValue.localeCompare(bValue)
+            : bValue.localeCompare(aValue);
+        }
+
+        return sortState.dir === "asc"
+          ? Number(aValue) - Number(bValue)
+          : Number(bValue) - Number(aValue);
+      });
+
+      return data;
+  }, [employeesResponse?.data, sortState]);
+
+  const [openColumnModal, setOpenColumnModal] = useState(false);
+
   return (
       <div className=" bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
         <EmployeeFilterPanel
-          bloodGroup={bloodGroup} 
-          setBloodGroup={setBloodGroup}
-          employeeDesignation={employeeDesignation} 
-          setEmployeeDesignation={setEmployeeDesignation}
-          employeeType={employeeType} 
-          setEmployeeType={setEmployeeType}
-          gender={gender} 
-          setGender={setGender}
-          martialStatus={martialStatus} 
-          setMartialStatus={setMartialStatus}
+          resourceIsLoading={resourceIsLoading}
+          bloodGroupOption={bloodGroupOption ?? []}
+          employeeDesignationOption={employeeDesignationOption ?? []}
+          employeeTypeOption={employeeTypeOption ?? []}
+          genderOption={genderOption ?? []}
+          maritalStatusOption={maritalStatusOption ?? []}
+          bloodGroup={draftBloodGroup}
+          setBloodGroup={setDraftBloodGroup}
+          employeeDesignation={draftEmployeeDesignation}
+          setEmployeeDesignation={setDraftEmployeeDesignation}
+          employeeType={draftEmployeeType}
+          setEmployeeType={setDraftEmployeeType}
+          gender={draftGender}
+          setGender={setDraftGender}
+          maritalStatus={draftMaritalStatus}
+          setMaritalStatus={setDraftMaritalStatus}
+          searchTerm = {draftSearchTerm}
+          setSearchTerm = {setDraftSearchTerm}
+          onSearch={() => {
+              setBloodGroup(draftBloodGroup);
+              setEmployeeDesignation(draftEmployeeDesignation);
+              setEmployeeType(draftEmployeeType);
+              setGender(draftGender);
+              setMaritalStatus(draftMaritalStatus);
+              setCurrentPage(1);
+              setSearchTerm(draftSearchTerm)
+          }}
+          searchFields={searchFields}
         />
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <TableHead<EmployeeTableHead>
-              columns={EMPLOYEE_COLUMNS}
+              columns={columns}
               sortState={sortState}
               setSortState={setSortState}
+              setOpenColumnModal={setOpenColumnModal}
             />
-            <tbody id="employee-table-body">
-              {employees.length > 0 && (
-                <tr>
-
-                </tr>
-              )}
-              {employees.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-slate-400 text-sm">No employees found</td>
-                </tr>
-              )}
-            </tbody>
+            <EmployeeTableBody
+              bloodGroupOption={bloodGroupOption ?? []}
+              employeeDesignationOption={employeeDesignationOption ?? []}
+              employeeTypeOption={employeeTypeOption ?? []}
+              genderOption={genderOption ?? []}
+              maritalStatusOption={maritalStatusOption ?? []}
+              employees={employees} 
+              columns={columns}/>
           </table>
         </div>
         <TableFooter
           totalDataCount={total}
-          tablePage={page}
+          tablePage={currentPage}
           tablePageSize={perPage}
-          setTablePage={setPage}
+          setTablePage={setCurrentPage}
           setTablePageSize={setPerPage}
+        />
+        <ColumnSelectorModal<EmployeeTableHead>
+          open={openColumnModal}
+          onClose={() => setOpenColumnModal(false)}
+          columns={columns}
+          setColumns={setColumns}
         />
       </div>
   )

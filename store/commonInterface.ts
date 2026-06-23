@@ -12,11 +12,11 @@ export interface TableColumn<T> {
   key: keyof T
   label: string
   isSort: boolean
-  isVisible?: boolean;
+  isVisible: boolean;
 }
 
 export interface SortState<T> {
-  col: keyof T | ""
+  col: keyof T
   dir: "asc" | "desc"
 }
 
@@ -48,8 +48,15 @@ export interface Headers {
     xTotalPages: number
 }
 
-export type MetaData = null | {
-    [key: string]: string | number | boolean | null
+export type MetaData = {
+    // [key: string]: string | number | boolean | null
+    total: number, //20,
+    per_page: number, //5,
+    last_page: number, //4,
+    current_page: number, //1,
+    prev_page_url: boolean, //false,
+    next_page_url: boolean, //true
+
 }
 
 export interface PaginationProps {

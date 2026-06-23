@@ -1,7 +1,9 @@
 export const DEFAULT_PAGINATION = {
     PAGINATE: true,
     PER_PAGE: 5,
-    PAGE: 1,
+    CURRENT_PAGE: 0,
+    LAST_PAGE: 0,
+    TOTAL: 0,
     PAGE_NAME: 'employee_page',
     PAGE_OPTIONS:  [
         { label: "5", value: 5 },

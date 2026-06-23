@@ -5,107 +5,50 @@ import { EmployeeTableHead } from "./employeeInterface";
 export const EMPLOYEE_COLUMNS: TableColumn<EmployeeTableHead>[] = [
     { isVisible: true, isSort:true, key: "name", label: "Name"},
     { isVisible: true, isSort:true, key: "email", label: "Email"},
-    { isVisible: true, isSort:true, key: "role", label: "Role"},
-    { isVisible: true, isSort:true, key: "status", label: "Status"},
-    { isVisible: true, isSort:true, key: "joined", label: "Joined"},
+    { isVisible: true, isSort:true, key: "phone", label: "Phone"},
+    { isVisible: true, isSort:false, key: "blood_group", label: "Blood Group"},
+    { isVisible: true, isSort:true, key: "date_of_joining", label: "Joined"},
+    { isVisible: false, isSort:false, key: "employee_designation_id", label: "Employee Designation"},
+    { isVisible: false, isSort:false, key: "employee_type_id", label: "Employee Type"},
+    { isVisible: false, isSort:false, key: "gender", label: "Gender"},
+    { isVisible: false, isSort:false, key: "marital_status", label: "Marital Status"},
+    { isVisible: false, isSort:false, key: "emergency_contact_name", label: "Emergency Contact Name"},
+    { isVisible: false, isSort:false, key: "emergency_contact_phone", label: "Emergency Contact Phone"},
+    { isVisible: false, isSort:false, key: "emergency_contact_relation", label: "Emergency Contact Relation"},
+    { isVisible: false, isSort:false, key: "shift_start", label: "Shift Start"},
+    { isVisible: false, isSort:false, key: "shift_end", label: "Shift End"},
 ]
 
+// {
+//     "id": 1,
+//     "employee_type_id": 3,
+//     "employee_designation_id": 2,
+//     "user_id": null,
+//     "name": "John Smith",
+//     "email": "john.smith@example.com",
+//     "phone": "1000000001",
+//     "address": "Global Office Location 1",
+//     "date_of_birth": "2003-06-09",
+//     "date_of_joining": "2025-08-14",
+//     "is_active": true,
+//     "gender": 3,
+//     "profile_img": null,
+//     "national_id": "NID-G-00001",
+//     "passport_number": "PPT-G-00001",
+//     "emergency_contact_name": "Emergency Contact 1",
+//     "emergency_contact_phone": "9000000001",
+//     "emergency_contact_relation": "Family",
+//     "documents": [],
+//     "basic_salary": "18459.00",
+//     "termination_date": null,
+//     "blood_group": 1,
+//     "marital_status": 1,
+//     "shift_start": "09:00:00",
+//     "shift_end": "17:00:00",
+//     "created_at": "2026-06-09 17:06:54",
+//     "updated_at": null,
+//     "created_by": 1,
+//     "updated_by": null
+// }
 
-
-      
-  // const sortTable = (column: string) => {
-  //   setSortState(prev => {
-  //     if (prev.col === column) {
-  //       return {
-  //         col: column as keyof User,
-  //         dir: prev.dir === "asc" ? "desc" : "asc",
-  //       };
-  //     }
-
-  //     return {
-  //       col: column as keyof User,
-  //       dir: "asc",
-  //     };
-  //   });
-  // }
-
-  // const statusBadge = (s: string) => {
-  //     const map: Record<string, string> = {
-  //       Active: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
-  //       Inactive: 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400',
-  //       Pending: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
-  //     };
-  //     return <span className={`badge ${map[s] || ''}`}>{s}</span>;
-  //   };
-  
-  //   const roleBadge = (r: string) => {
-  //     const map: Record<string, string> = {
-  //       Admin: 'accent-subtle-bg accent-text',
-  //       Editor: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
-  //       Viewer: 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400'
-  //     };
-  //     return <span className={`badge ${map[r] || ''}`}>{r}</span>;
-  //   };
-  
-  //   const initials = (n: string) => n.split(' ').map(p => p[0]).join('');
-  //   const colors = ['#6366f1', '#8b5cf6', '#10b981', '#f97316', '#ec4899', '#3b82f6'];
-
-  //   const [activeModal, setActiveModal] = useState<string | null>(null);
-  //   const showModal = (id: string) => {
-  //     setActiveModal(id);
-  //   }
-  //   const options = [
-  //       { value: "chocolate", label: "Chocolate" },
-  //       { value: "strawberry", label: "Strawberry" },
-  //       { value: "vanilla", label: "Vanilla" },
-  //     ];
-
-  //     const [selected, setSelected] = useState(null);
-  //   const roles = [
-  //     { value: "", label: "All Roles" },
-  //     { value: "Admin", label: "Admin" },
-  //     { value: "Editor", label: "Editor" },
-  //     { value: "Viewer", label: "Viewer" },
-  //   ];
-
-      // useEffect(() => {
-      //     refreshUserTable();
-      // }, [tableSearch, tableFilter, tablePage, sortState]);
-  
-      // const refreshUserTable = () => {
-      //     let data = [...usersData];
-      
-      //     // Search filter
-      //     const q = tableSearch.toLowerCase();
-      //     data = data.filter(u => {
-      //       const matchSearch = !q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
-      //       const matchFilter = !tableFilter || u.role === tableFilter;
-      //       return matchSearch && matchFilter;
-      //     });
-      
-      //     // Sorting
-      //     if (sortState.col) {
-      //       data.sort((a, b) => {
-      //         const va = String(a[sortState.col as keyof User]);
-      //         const vb = String(b[sortState.col as keyof User]);
-      //         return sortState.dir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
-      //       });
-      //     }
-      
-      //     const total = data.length;
-      //     const pages = Math.ceil(total / tablePageSize);
-      
-      //     // Adjust page if current page exceeds total pages
-      //     let currentPage = tablePage;
-      //     if (currentPage > pages && pages > 0) {
-      //       currentPage = 1;
-      //       setTablePage(1);
-      //     }
-      
-      //     const slice = data.slice((currentPage - 1) * tablePageSize, currentPage * tablePageSize);
-      
-      //     setUsers(slice);
-      //     setTotalUsersCount(total);
-      //     setPagesCount(pages);
-      //   }
   

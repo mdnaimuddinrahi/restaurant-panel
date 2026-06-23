@@ -71,9 +71,18 @@ export interface EmployeeTableHead {
   id: number;
   name: string;
   email: string;
-  role: string;
-  status: string;
-  joined: string;
+  phone: string;
+  blood_group: string;
+  date_of_joining: string;
+  employee_designation_id: number;
+  employee_type_id: number;
+  gender: number;
+  marital_status: number;
+  emergency_contact_name: string;
+  emergency_contact_phone: string;
+  emergency_contact_relation: string;
+  shift_start: string;
+  shift_end: string;
 }
 
 export interface GetEmployeesRequests extends RequestParams {
@@ -81,14 +90,14 @@ export interface GetEmployeesRequests extends RequestParams {
   employee_designation: number | null
   employee_type: number | null
   gender: number | null
-  martial_status: number | null
+  marital_status: number | null
 }
 
 export interface GetEmployeesResponse {
     data: Employee[]
     paginationHeaders: Headers
     totalCount: number
-    meta_data?: MetaData
+    meta: MetaData
 }
 
 export type EmployeeTag = {
@@ -98,15 +107,25 @@ export type EmployeeTag = {
 
 
 export interface EmployeeFIlterPanelProps {
+    resourceIsLoading: boolean,
+    bloodGroupOption: ResourceOption[],
+    employeeDesignationOption: ResourceOption[],
+    employeeTypeOption: ResourceOption[],
+    genderOption: ResourceOption[],
+    maritalStatusOption: ResourceOption[],
     bloodGroup: number,
     employeeDesignation: number,
     employeeType: number,
     gender: number,
-    martialStatus: number,
-    setBloodGroup: (page: number) => void,
-    setEmployeeDesignation: (page: number) => void,
-    setEmployeeType: (page: number) => void,
-    setGender: (page: number) => void,
-    setMartialStatus: (page: number) => void,
+    maritalStatus: number,
+    searchTerm: string,
+    searchFields: string,
+    setBloodGroup: (blood_group: number) => void,
+    setEmployeeDesignation: (employee_designation: number) => void,
+    setEmployeeType: (employee_type: number) => void,
+    setGender: (gender: number) => void,
+    setMaritalStatus: (marital_status: number) => void,
+    setSearchTerm: (search: string) => void,
+    onSearch: () => void;
 }
 

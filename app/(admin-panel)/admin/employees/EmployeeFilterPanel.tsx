@@ -5,8 +5,16 @@ import AppInput from '@/components/ui/input/AppInput';
 import AppButton from '@/components/ui/button/AppButton';
 import { EmployeeFIlterPanelProps } from '@/features/employee/employeeInterface';
 import { ResourceOption } from '@/store/commonInterface';
+import { useState } from 'react';
+import { hexToRgba, useTheme } from "@/theme";  
 
 export default function EmployeeFilterPanel({
+    resourceIsLoading,
+    bloodGroupOption,
+    employeeDesignationOption,
+    employeeTypeOption,
+    genderOption,
+    maritalStatusOption,
     bloodGroup,
     setBloodGroup,
     employeeDesignation,
@@ -15,16 +23,17 @@ export default function EmployeeFilterPanel({
     setEmployeeType,
     gender,
     setGender,
-    martialStatus,
-    setMartialStatus,
+    maritalStatus,
+    setMaritalStatus,
+    onSearch,
+    searchTerm,
+    setSearchTerm,
+    searchFields
 }: EmployeeFIlterPanelProps) {
-    const {data: resourceResponse, 
-        isLoading: resourceIsLoading} = useGetEmployeeResourcesQuery()
-    const bloodGroupOption = resourceResponse?.data?.blood_groups;
-    const employeeDesignationOption = resourceResponse?.data?.employee_designations;
-    const employeeTypeOption = resourceResponse?.data?.employee_types;
-    const genderOption = resourceResponse?.data?.genders;
-    const maritalStatusOption = resourceResponse?.data?.marital_status;
+    
+    const [showSearchHint, setShowSearchHint] = useState(false)
+    const searchFieldList = searchFields.split(",").map(f => f.trim()).filter(Boolean);
+    const { accentColor } = useTheme();
       
     return (
         <div id="filterPanel">
@@ -72,11 +81,60 @@ export default function EmployeeFilterPanel({
                         options={maritalStatusOption}
                         placeholder="Marital Status"
                         isClearable={true}
-                        value={maritalStatusOption?.find(o => o.value ===martialStatus)}
-                        onChange={(option: ResourceOption) => setMartialStatus(option?.value ?? -1)}
+                        value={maritalStatusOption?.find(o => o.value ===maritalStatus)}
+                        onChange={(option: ResourceOption) => setMaritalStatus(option?.value ?? -1)}
                     />
-                    <AppInput placeholder="Search..." />
-                    <AppButton>
+                    <div
+                        className="relative w-full"
+                        onMouseEnter={() => setShowSearchHint(true)}
+                        onMouseLeave={() => setShowSearchHint(false)}
+                    >
+                        <AppInput
+                            placeholder="Search..."
+                            onFocus={() => setShowSearchHint(true)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+                        />
+
+                        {/* Tooltip */}
+                        <div
+                        
+                        style={{ background: hexToRgba(accentColor, 0.9) }}
+                        className={`
+                            absolute left-0 top-full mt-2
+                            z-50
+
+                            w-max max-w-xs
+
+                            rounded-lg
+                            text-white text-xs
+
+                            px-3 py-2
+
+                            shadow-xl
+
+                            transition-all duration-200
+
+                            ${showSearchHint ? "opacity-100 scale-100" : "opacity-0 scale-95"}
+
+                            pointer-events-none
+                        `}
+                        >
+                            <div className="font-medium mb-1">Search enabled for:</div>
+
+                            <div className="flex flex-wrap gap-1 text-slate-300">
+                            {searchFieldList.map((field) => (
+                                <span
+                                key={field}
+                                className="text-white px-2 py-0.5 rounded-md border border-gray-300"
+                                 style={{ backgroundColor: accentColor }}
+                                >
+                                {field}
+                                </span>
+                            ))}
+                            </div>
+                        </div>
+                    </div>
+                    <AppButton onClick={onSearch}>
                         Search
                     </AppButton>
                 </div>

@@ -34,17 +34,31 @@ export function useButtonTheme() {
         ? hexToRgba(accentColor, 0.2)
         : state?.isHovered
         ? hexToRgba(accentColor, 0.1)
-        : "transparent",
-      color: accentColor,
-      border: "1px solid transparent",
+        : 
+        "transparent",
+      // backgroundColor: "transparent",
+      // color: accentColor,
+      //  color: theme === "dark" ? "#fff" : accentColor,
+      border: "1px  transparent",
       transition: "all 0.15s ease",
     }),
   };
 
+  // const classNames = {
+  //   base: `
+  //     inline-flex items-center justify-center
+  //     px-2 py-1 text-xs font-medium
+  //     rounded-lg
+  //     focus:outline-none
+  //     disabled:opacity-50 disabled:cursor-not-allowed
+  //     select-none
+  //     text-gray-600 dark:text-gray-300
+  //   `,
+  // };
   const classNames = {
-    base: `
+    base: (textSize = "text-xs") => `
       inline-flex items-center justify-center
-      px-2 py-1 text-xs font-medium
+      px-2 py-1 ${textSize} font-medium
       rounded-lg
       focus:outline-none
       disabled:opacity-50 disabled:cursor-not-allowed

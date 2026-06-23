@@ -7,7 +7,7 @@ type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "solid" | "outline" | "ghost";
 };
 
-export default function AppButton({
+export default function AppCustomButton({
   variant = "solid",
   className = "",
   ...props
