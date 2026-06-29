@@ -1,3 +1,6 @@
+
+import { InputHTMLAttributes, ReactNode, useState } from "react";
+
 export interface CommonResponse<T> {
     message: string
     data: T
@@ -65,4 +68,12 @@ export interface PaginationProps {
     tablePageSize: number;
     setTablePage: (page: number) => void; 
     setTablePageSize: (size: number) => void;
+}
+
+
+export interface AppInputProps extends InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  required?: boolean;
+  error?: string;
+  icon?: ReactNode;
 }

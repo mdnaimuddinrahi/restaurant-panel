@@ -1,32 +1,133 @@
 import FormModal from '@/components/ui/FormModal'
-import React from 'react'
+import AppInput from '@/components/ui/input/AppInput';
+import AppReactSelect from '@/components/ui/select/AppReactSelect';
+import { useGetEmployeeResourcesQuery } from '@/features/employee/employeeApi';
+import { ResourceOption } from '@/store/commonInterface';
+import React, { useState } from 'react'
+import EmployeeFormLayout from './EmployeeFormLayout';
 
 type EmployeeCreateProps = {
   onClose: () => void;
 };
+
+interface EmployeeForm {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    dateOfBirth: string;
+    dateOfJoining: string;
+
+    employeeType: number | null;
+    employeeDesignation: number | null;
+    gender: number | null;
+    bloodGroup: number | null;
+    maritalStatus: number | null;
+
+    basicSalary: string;
+    nationalId: string;
+    passportNumber: string;
+
+    shiftStart: string;
+    shiftEnd: string;
+
+    emergencyContactName: string;
+    emergencyContactPhone: string;
+    emergencyContactRelation: string;
+
+    isActive: boolean;
+
+    profileImg: File | null;
+    documents: File[];
+    terminationDate: string;
+}
 export default function EmployeeCreate({onClose}: EmployeeCreateProps) {
-  return (
-    <FormModal 
-          onClose={onClose}
-          modalTitle="Add New Employee"
-          buttonText="Add Employee"
+    const {data: resourceResponse, 
+              isLoading: resourceIsLoading} = useGetEmployeeResourcesQuery()
+    const bloodGroupOption = resourceResponse?.data?.blood_groups;
+    const employeeDesignationOption = resourceResponse?.data?.employee_designations;
+    const employeeTypeOption = resourceResponse?.data?.employee_types;
+    const genderOption = resourceResponse?.data?.genders;
+    const maritalStatusOption = resourceResponse?.data?.marital_status;
+
+    const [form, setForm] = useState<EmployeeForm>({
+        name: "",
+        email: "",
+        phone: "",
+        address: "",
+        dateOfBirth: "",
+        dateOfJoining: "",
+
+        employeeType: null,
+        employeeDesignation: null,
+        gender: null,
+        bloodGroup: null,
+        maritalStatus: null,
+
+        basicSalary: "",
+        nationalId: "",
+        passportNumber: "",
+
+        shiftStart: "",
+        shiftEnd: "",
+
+        emergencyContactName: "",
+        emergencyContactPhone: "",
+        emergencyContactRelation: "",
+
+        isActive: true,
+
+        profileImg: null,
+        documents: [],
+        terminationDate: "",
+    });
+    // Personal Information
+    const [name, setName] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+    const [phone, setPhone] = useState<string>("");
+    const [address, setAddress] = useState<string>("");
+    const [dateOfBirth, setDateOfBirth] = useState<string>("");
+
+    // Employment Information
+    const [employeeType, setEmployeeType] = useState<number | null>(null);
+    const [employeeDesignation, setEmployeeDesignation] = useState<number | null>(null);
+    const [dateOfJoining, setDateOfJoining] = useState<string>("");
+    const [basicSalary, setBasicSalary] = useState<string>("");
+
+
+    // Profile Information
+    const [gender, setGender] = useState<number | null>(null);
+    const [bloodGroup, setBloodGroup] = useState<number | null>(null);
+    const [maritalStatus, setMaritalStatus] = useState<number | null>(null);
+    const [isActive, setIsActive] = useState<boolean>(true);
+
+    // Identification
+    const [nationalId, setNationalId] = useState<string>("");
+    const [passportNumber, setPassportNumber] = useState<string>("");
+
+    // Shift Information
+    const [shiftStart, setShiftStart] = useState<string>("");
+    const [shiftEnd, setShiftEnd] = useState<string>("");
+
+    // Emergency Contact
+    const [emergencyContactName, setEmergencyContactName] = useState<string>("");
+    const [emergencyContactPhone, setEmergencyContactPhone] = useState<string>("");
+    const [emergencyContactRelation, setEmergencyContactRelation] = useState<string>("");
+
+    // Optional Fields
+    const [profileImg, setProfileImg] = useState<File | null>(null);
+    const [terminationDate, setTerminationDate] = useState<string>("");
+
+    // Documents
+    const [documents, setDocuments] = useState<File[]>([]);
+    return (
+        <FormModal
+            modalTitle="Add New Employee" 
+            buttonText="Create Employee" 
+            onClose={onClose} 
+            size="full"
         >
-        <div className="space-y-3">
-            <div>
-                <label className="block text-xs font-600 text-slate-500 mb-1">Full Name</label>
-                <input type="text" placeholder="Jane Smith" className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-600 rounded-lg bg-transparent focus:border-transparent transition-all"/>
-            </div>
-            <div>
-                <label className="block text-xs font-600 text-slate-500 mb-1">Email</label>
-                <input type="email" placeholder="jane@example.com" className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-600 rounded-lg bg-transparent focus:border-transparent transition-all"/>
-            </div>
-            <div>
-                <label className="block text-xs font-600 text-slate-500 mb-1">Role</label>
-                <select className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 focus:border-transparent transition-all">
-                    <option>Administrator</option><option>Editor</option><option>Viewer</option>
-                </select>
-            </div>
-        </div>
-    </FormModal>
-  )
+            <EmployeeFormLayout/>
+        </FormModal>
+    )
 }

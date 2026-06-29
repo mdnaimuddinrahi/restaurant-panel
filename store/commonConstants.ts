@@ -39,3 +39,12 @@ export const DEFAULT_SEGMENT_URL = {
         EMPLOYEES: '/employees'
     }
 }
+
+export const MODAL_SIZE_CLASS = { 
+    sm: "max-w-md", 
+    md: "max-w-2xl", 
+    lg: "max-w-4xl", 
+    xl: "max-w-6xl", 
+    full: "max-w-7xl"
+}
+export const INVALID_NUMBER = -1

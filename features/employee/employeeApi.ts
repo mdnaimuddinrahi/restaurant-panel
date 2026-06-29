@@ -1,5 +1,5 @@
 import { baseApi } from "@/services/baseApi";
-import { Employee, EmployeeResourceResponse, EmployeeTag, GetEmployeesRequests, GetEmployeesResponse } from "./employeeInterface";
+import { CreateEmployeeRequest, Employee, EmployeeResourceResponse, EmployeeTag, GetEmployeesRequests, GetEmployeesResponse } from "./employeeInterface";
 import { CreateEmployeeDTO, UpdateEmployeeDTO } from "./employeeDTOs";
 import { DEFAULT_SEGMENT_URL, DEFAULT_TAG, DEFAULT_TAG_SCOPE } from "@/store/commonConstants";
 
@@ -37,7 +37,7 @@ export const employeeApi = baseApi.injectEndpoints({
         { type: "Employee", id },
       ],
     }),
-    createEmployee: builder.mutation<Employee, CreateEmployeeDTO>({
+    createEmployee: builder.mutation<Employee, CreateEmployeeRequest>({
       query: (body) => ({
         url: "/employees",
         method: "POST",

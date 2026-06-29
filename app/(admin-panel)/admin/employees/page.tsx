@@ -6,7 +6,7 @@ import EmployeeCreate from './EmployeeCreate';
 import EmployeeList from './EmployeeList';
 
 export default function page() {
-  const [activeModal, setActiveModal] = useState<string | null>(null);
+  const [activeModal, setActiveModal] = useState<string | null>("form-modal");
 
   function showModal(id: string) {
     setActiveModal(id);
@@ -21,7 +21,7 @@ export default function page() {
         buttonText="Add Employee" 
         onAddClick={() => showModal("form-modal")}
       />
-      <EmployeeList/>
+      {/* <EmployeeList/> */}
 
       {activeModal === 'form-modal' && (
           <EmployeeCreate onClose={closeModal} />

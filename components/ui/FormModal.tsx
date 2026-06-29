@@ -1,33 +1,53 @@
+import { MODAL_SIZE_CLASS } from '@/store/commonConstants';
 import React, { ReactNode } from 'react'
+import { GiCrossedSabres, GiTireIronCross } from 'react-icons/gi';
+import AppCustomButton from './button/AppCustomButton';
+import { useTheme } from '@/theme';
+import { RxCross2 } from 'react-icons/rx';
 
-
-interface FormModalProps {
-    children: ReactNode;
-    onClose: () => void;
-    modalTitle: string;
-    buttonText?: string;
-}
+interface FormModalProps { 
+    children: ReactNode; 
+    modalTitle: string; 
+    buttonText: string; 
+    onClose: () => void; 
+    onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void; 
+    size?: "sm" | "md" | "lg" | "xl" | "full"; 
+    isSubmitting?: boolean; 
+} 
 
 export default function FormModal({
     children,
     onClose,
     modalTitle,
-    buttonText,
+    size = "xl", 
 }: FormModalProps) {
+    const sizeClass = MODAL_SIZE_CLASS;
+    const {accentColor} = useTheme();
+
     return (
-        <div id="form-modal" className=" fixed inset-0 z-[200] flex items-center justify-center">
-            <div className="modal-backdrop absolute inset-0 bg-black/50" onClick={() => onClose()}></div>
-            
-            <div className="modal-box relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 w-full max-w-md mx-4">
-                <button onClick={() => onClose()} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
-                <h3 className="font-display font-700 text-base mb-4">{modalTitle}</h3>
-                <form >
+        <div id="form-modal" className=" fixed inset-0 z-200 flex items-center justify-center">
+            {/* BackDrop */}
+            <div className="modal-backdrop backdrop-blur-xs absolute inset-0 bg-black/50" onClick={() => onClose()}></div>
+            {/* Modal */}
+            <div className={`modal-box relative
+                         bg-white dark:bg-slate-800 
+                            rounded-lg shadow-2xl p-4
+                             w-full mx-4 ${sizeClass[size]} overflow-hidden`}>
+                <AppCustomButton 
+                    variant='ghost'
+                    onClick={() => onClose()} 
+                    className="absolute top-4 right-4 w-8 h-8 
+                                flex items-center justify-center">
+                    <RxCross2  style={{ color: accentColor }}/>
+
+
+                </AppCustomButton>
+                <h3 
+                    className="font-display font-700 
+                                text-base mb-4 text-center">
+                    {modalTitle}
+                </h3>
                 {children}
-                <div className="flex gap-2 mt-5">
-                    {/* <button onClick={() => onClose()} className="flex-1 px-4 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors font-500">Cancel</button> */}
-                    <button type="submit" className="flex-1 px-4 py-2 text-sm rounded-xl accent-bg text-white hover:opacity-90 transition-opacity font-500">{buttonText}</button>
-                </div>
-                </form>
             </div>
         </div>
     )

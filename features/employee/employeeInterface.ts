@@ -107,25 +107,35 @@ export type EmployeeTag = {
 
 
 export interface EmployeeFIlterPanelProps {
-    resourceIsLoading: boolean,
-    bloodGroupOption: ResourceOption[],
-    employeeDesignationOption: ResourceOption[],
-    employeeTypeOption: ResourceOption[],
-    genderOption: ResourceOption[],
-    maritalStatusOption: ResourceOption[],
-    bloodGroup: number,
-    employeeDesignation: number,
-    employeeType: number,
-    gender: number,
-    maritalStatus: number,
-    searchTerm: string,
-    searchFields: string,
-    setBloodGroup: (blood_group: number) => void,
-    setEmployeeDesignation: (employee_designation: number) => void,
-    setEmployeeType: (employee_type: number) => void,
-    setGender: (gender: number) => void,
-    setMaritalStatus: (marital_status: number) => void,
-    setSearchTerm: (search: string) => void,
-    onSearch: () => void;
+  resourceIsLoading: boolean,
+  bloodGroupOption: ResourceOption[],
+  employeeDesignationOption: ResourceOption[],
+  employeeTypeOption: ResourceOption[],
+  genderOption: ResourceOption[],
+  maritalStatusOption: ResourceOption[],
+  bloodGroup: number,
+  employeeDesignation: number,
+  employeeType: number,
+  gender: number,
+  maritalStatus: number,
+  searchTerm: string,
+  searchFields: string,
+  setBloodGroup: (blood_group: number) => void,
+  setEmployeeDesignation: (employee_designation: number) => void,
+  setEmployeeType: (employee_type: number) => void,
+  setGender: (gender: number) => void,
+  setMaritalStatus: (marital_status: number) => void,
+  setSearchTerm: (search: string) => void,
+  onSearch: () => void;
 }
 
+export type CreateEmployeeRequest = {
+ name: string
+ email: string
+ phone: string
+ gender: string
+ address: string
+ date_of_birth: Date
+ national_id?: string | null
+ passport_number?: string | null
+}

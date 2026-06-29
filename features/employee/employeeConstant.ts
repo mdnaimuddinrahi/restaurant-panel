@@ -19,6 +19,46 @@ export const EMPLOYEE_COLUMNS: TableColumn<EmployeeTableHead>[] = [
     { isVisible: false, isSort:false, key: "shift_end", label: "Shift End"},
 ]
 
+export const EMPLOYEE_SECTIONS = [ { id: "personal", title: "Personal Information", description: "Basic employee information", }, { id: "employment", title: "Employment Information", description: "Role and employment details", }, { id: "identity", title: "Identity Information", description: "National ID and passport", }, { id: "emergency", title: "Emergency Contact", description: "Emergency contact details", }, { id: "bank", title: "Bank Information", description: "Bank account details", }, { id: "address", title: "Address Information", description: "Present and permanent address", }, { id: "documents", title: "Documents", description: "Attachments and uploaded files", }, { id: "permissions", title: "Permissions", description: "Roles and access control", }, { id: "system", title: "System Information", description: "Internal settings", }, ];
+
+// employee.schema.ts
+
+import { z } from "zod";
+
+export const employeeSchema = z.object({
+  name: z
+    .string()
+    .min(1, "Employee name is required"),
+
+  email: z
+    .email("Invalid email address"),
+
+  phone: z
+    .string()
+    .min(11, "Phone number must be 11 digits"),
+
+  gender: z
+    .number()
+    .min(1, "Gender is required"),
+
+  address: z
+    .string()
+    .min(1, "Address is required"),
+
+  national_id: z
+    .string()
+    .optional(),
+
+  passport_number: z
+    .string()
+    .min(1, "Passport Number is Required."),
+
+  date_of_birth: z.date({
+    error: "Date of birth is required",
+  }),
+});
+
+export type EmployeeFormData = z.infer<typeof employeeSchema>;
 // {
 //     "id": 1,
 //     "employee_type_id": 3,
