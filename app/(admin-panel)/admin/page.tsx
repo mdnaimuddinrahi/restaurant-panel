@@ -1,7 +1,6 @@
 "use client";
 import Heading from '@/components/ui/Heading'
-import { title } from 'process'
-import React from 'react'
+import { useTranslation } from "react-i18next";
 
 export default function page() {
   const stats = [
@@ -30,9 +29,14 @@ export default function page() {
     console.log("Navigate to", url);
     // router.push(url);
   }
+  const { t, i18n } = useTranslation("common");
+    console.log("🔥 i18n fil");
+
+  console.log("Current Language:", i18n.language);
+  console.log("Translation:", t("admin_dad"));
   return (
     <>
-      <Heading title="Admin Dashboard" subtitle="Manage your restaurant settings" />
+      <Heading title={t("admin_dad")} subtitle="Manage your restaurant settings" />
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
         {stats.map((s, i) => (
           <div
