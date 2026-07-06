@@ -20,7 +20,7 @@ export default function NavbarLocalization() {
         flag: "🇺🇸",
       },
       {
-        code: "bn",
+        code: "bd",
         label: "বাংলা",
         flag: "🇧🇩",
       },

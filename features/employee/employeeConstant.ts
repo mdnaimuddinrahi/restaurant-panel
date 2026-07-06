@@ -19,11 +19,23 @@ export const EMPLOYEE_COLUMNS: TableColumn<EmployeeTableHead>[] = [
     { isVisible: false, isSort:false, key: "shift_end", label: "Shift End"},
 ]
 
-export const EMPLOYEE_SECTIONS = [ { id: "personal", title: "Personal Information", description: "Basic employee information", }, { id: "employment", title: "Employment Information", description: "Role and employment details", }, { id: "identity", title: "Identity Information", description: "National ID and passport", }, { id: "emergency", title: "Emergency Contact", description: "Emergency contact details", }, { id: "bank", title: "Bank Information", description: "Bank account details", }, { id: "address", title: "Address Information", description: "Present and permanent address", }, { id: "documents", title: "Documents", description: "Attachments and uploaded files", }, { id: "permissions", title: "Permissions", description: "Roles and access control", }, { id: "system", title: "System Information", description: "Internal settings", }, ];
+// export const EMPLOYEE_SECTIONS = [ { id: "personal", title: "Personal Information", description: "Basic employee information", }, { id: "employment", title: "Employment Information", description: "Role and employment details", }, { id: "identity", title: "Identity Information", description: "National ID and passport", }, { id: "emergency", title: "Emergency Contact", description: "Emergency contact details", }, { id: "bank", title: "Bank Information", description: "Bank account details", }, { id: "address", title: "Address Information", description: "Present and permanent address", }, { id: "documents", title: "Documents", description: "Attachments and uploaded files", }, { id: "permissions", title: "Permissions", description: "Roles and access control", }, { id: "system", title: "System Information", description: "Internal settings", }, ];
+export const EMPLOYEE_SECTIONS = [
+  { id: "personal" },
+  { id: "employment" },
+  { id: "identity" },
+  { id: "emergency" },
+  { id: "bank" },
+  { id: "address" },
+  { id: "documents" },
+  { id: "permissions" },
+  { id: "system" },
+] as const;
 
 // employee.schema.ts
 
 import { z } from "zod";
+import { useTranslation } from "react-i18next";
 
 export const employeeSchema = z.object({
   name: z
@@ -56,6 +68,17 @@ export const employeeSchema = z.object({
   date_of_birth: z.date({
     error: "Date of birth is required",
   }),
+  basic_salary: z
+    .number({
+      error: "Basic salary is required.",
+    })
+    .positive("Basic salary must be greater than 0.")
+    .refine(
+      (value) => Number.isInteger(value * 100),
+      {
+        message: "Basic salary can have at most 2 decimal places.",
+      }
+    ),
 });
 
 export type EmployeeFormData = z.infer<typeof employeeSchema>;

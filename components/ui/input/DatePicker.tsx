@@ -230,42 +230,6 @@ export default function DatePicker({
 
   // Add this
 
-// const handleInputChange = (
-//   e: React.ChangeEvent<HTMLInputElement>
-// ) => {
-//   let value = e.target.value;
-
-//   // Allow only digits and hyphens
-//   value = value.replace(/[^\d-]/g, "");
-
-//   // Remove all hyphens and rebuild
-//   const digits = value.replace(/-/g, "").slice(0, 8);
-
-//   let formatted = digits;
-
-//   if (digits.length > 4) {
-//     formatted = `${digits.slice(0, 4)}-${digits.slice(4)}`;
-//   }
-
-//   if (digits.length > 6) {
-//     formatted = `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6, 8)}`;
-//   }
-
-//   setInputValue(formatted);
-
-//   // Only validate when full date is entered
-//   if (formatted.length === 10) {
-//     const parsed = parse(formatted, "yyyy-MM-dd", new Date());
-
-//     if (
-//       isValid(parsed) &&
-//       format(parsed, "yyyy-MM-dd") === formatted
-//     ) {
-//       setCurrentMonth(parsed);
-//       onChange?.(parsed);
-//     }
-//   }
-// };
 const handleInputChange = (
   e: React.ChangeEvent<HTMLInputElement>
 ) => {
@@ -336,23 +300,6 @@ const handleInputChange = (
 
       {/* INPUT */}
       <div className="relative">
-        {/* <FiCalendar
-          className={`
-            absolute left-3 top-1/2 -translate-y-1/2
-            transition-all duration-300 pointer-events-none
-            ${
-              focused
-                ? "scale-110"
-                : "text-slate-400"
-            }
-          `}
-          style={{
-            color:
-              focused && !isError
-                ? accentColor
-                : undefined,
-          }}
-        /> */}
         <FiCalendar
           className={`
             absolute left-3 top-1/2 -translate-y-1/2
@@ -476,30 +423,6 @@ const handleInputChange = (
             "
           >
             {/* HEADER */}
-            {/* <div className="mb-4 flex items-center justify-between">
-              <AppCustomButton
-                type="button"
-                onClick={() =>
-                  setCurrentMonth((prev) =>
-                    subMonths(prev, 1)
-                  )
-                } 
-                variant="ghost" className="h-9 w-9"> <FiChevronLeft /></AppCustomButton>
-              
-
-              <h3 className="text-sm font-semibold">
-                {format(currentMonth, "MMMM - yyyy")}
-              </h3>
-              <AppCustomButton 
-                type="button"
-                onClick={() =>
-                  setCurrentMonth((prev) =>
-                    addMonths(prev, 1)
-                  )
-                }
-                variant="ghost" className="h-9 w-9"> <FiChevronRight /></AppCustomButton>
-              
-            </div> */}
             <div className="mb-4 flex items-center gap-2">
               <AppCustomButton
                 type="button"
@@ -512,111 +435,46 @@ const handleInputChange = (
                 <FiChevronLeft />
               </AppCustomButton>
               <div className="flex flex-1 gap-2">
-  <div className="flex-1">
-    <AppSelect
-      placeholder="Month"
-      className="text-xs p-0"
-      value={monthOptions.find(
-        (m) => m.value === currentMonth.getMonth()
-      )}
-      options={monthOptions}
-      isSearchable={false}
-      onChange={(option: any) => {
-        if (!option) return;
+          <div className="flex-1">
+            <AppSelect
+              placeholder="Month"
+              className="text-xs p-0"
+              value={monthOptions.find(
+                (m) => m.value === currentMonth.getMonth()
+              )}
+              options={monthOptions}
+              isSearchable={false}
+              onChange={(option: any) => {
+                if (!option) return;
 
-        setCurrentMonth((prev) =>
-          setMonth(prev, option.value)
-        );
-      }}
-      menuPortalTarget={document.body}
-    />
-  </div>
+                setCurrentMonth((prev) =>
+                  setMonth(prev, option.value)
+                );
+              }}
+              menuPortalTarget={document.body}
+            />
+          </div>
 
-  <div className="">
-    <AppSelect
-      placeholder="Year"
-      value={yearOptions.find(
-        (y) => y.value === currentMonth.getFullYear()
-      )}
-      className="text-xs"
-      options={yearOptions}
-      isSearchable
-      onChange={(option: any) => {
-        if (!option) return;
+          <div className="">
+            <AppSelect
+              placeholder="Year"
+              value={yearOptions.find(
+                (y) => y.value === currentMonth.getFullYear()
+              )}
+              className="text-xs"
+              options={yearOptions}
+              isSearchable
+              onChange={(option: any) => {
+                if (!option) return;
 
-        setCurrentMonth((prev) =>
-          setYear(prev, option.value)
-        );
-      }}
-      menuPortalTarget={document.body}
-    />
-  </div>
-</div>
-{/* 
-              <select
-                value={currentMonth.getMonth()}
-                onChange={(e) =>
-                  setCurrentMonth((prev) =>
-                    setMonth(prev, Number(e.target.value))
-                  )
-                }
-                className="
-                  flex-1
-                  rounded-lg
-                  border
-                  border-slate-300
-                  bg-white
-                  px-2
-                  py-2
-                  text-sm
-                  dark:border-slate-700
-                  dark:bg-slate-800
-                  dark:text-white
-                  outline-none
-                "
-                style={{
-                  borderColor: focused ? accentColor : undefined,
-                }}
-              >
-                {months.map((month, index) => (
-                  <option key={month} value={index}>
-                    {month}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                value={currentMonth.getFullYear()}
-                onChange={(e) =>
-                  setCurrentMonth((prev) =>
-                    setYear(prev, Number(e.target.value))
-                  )
-                }
-                className="
-                  w-24
-                  rounded-lg
-                  border
-                  border-slate-300
-                  bg-white
-                  px-2
-                  py-2
-                  text-sm
-                  dark:border-slate-700
-                  dark:bg-slate-800
-                  dark:text-white
-                  outline-none
-                "
-                style={{
-                  borderColor: focused ? accentColor : undefined,
-                }}
-              >
-                {years.map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select> */}
-
+                setCurrentMonth((prev) =>
+                  setYear(prev, option.value)
+                );
+              }}
+              menuPortalTarget={document.body}
+            />
+          </div>
+        </div>
               <AppCustomButton
                 type="button"
                 variant="ghost"

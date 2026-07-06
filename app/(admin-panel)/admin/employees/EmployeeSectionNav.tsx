@@ -1,19 +1,28 @@
 "use client";
+
+import { useTranslation } from "react-i18next";
+
 interface Props {
     activeSection: string;
     onNavigate: (id: string) => void;
-    sections: {
+    sectionIds: readonly {
         id: string;
-        title: string;
-        description: string;
     }[];
 }
 
 export default function EmployeeSectionNav({
     activeSection,
     onNavigate,
-    sections,
+    sectionIds,
 }: Props) {
+    const { t } = useTranslation("employee");
+
+    const sections = sectionIds.map((section) => ({
+        ...section,
+        title: t(`section.${section.id}.title`),
+        description: t(`section.${section.id}.description`),
+    }));
+    
     return (
         <div className="h-full overflow-y-auto pr-2 space-y-2">
             {sections.map((section, index) => (

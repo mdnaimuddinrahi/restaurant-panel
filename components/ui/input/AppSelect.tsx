@@ -52,6 +52,7 @@ export default function AppSelect<
   ...props
 }: AppSelectProps<Option, IsMulti, Group>) {
   const isDark = document.documentElement.classList.contains("dark");
+  // const isDark = false; // willl upddate later.
 
   const {accentColor} = useTheme();
   const isError = !!error;
@@ -87,7 +88,6 @@ export default function AppSelect<
         components={{
           DropdownIndicator,
         }}
-        menuPortalTarget={document.body}
         menuPosition="fixed"
         classNamePrefix="app-select"
         className="text-xs"
@@ -106,14 +106,6 @@ export default function AppSelect<
               ? "#334155"
               : "#e2e8f0",
 
-            // boxShadow: state.isFocused
-            //   ? `0 0 0 4px ${accentColor}20`
-            //   : "none",
-  //           boxShadow: isError
-  // ? "0 0 0 4px rgb(239 68 68 / 0.10)"
-  // : state.isFocused
-  // ? `0 0 0 4px ${accentColor}20`
-  // : "none",
   boxShadow:
   state.isFocused
     ? isError
@@ -126,13 +118,6 @@ transition: "all 200ms cubic-bezier(.4,0,.2,1)",
 "&:hover": {
   borderColor: isError ? "#ef4444" : accentColor,
 },
-
-            // transition: "all 200ms cubic-bezier(.4,0,.2,1)",
-
-            // "&:hover": {
-            //   borderColor: accentColor,
-            // },
-            
           }),
 
           valueContainer: (base) => ({

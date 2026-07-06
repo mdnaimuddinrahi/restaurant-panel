@@ -1,5 +1,11 @@
 {
   "save": "Save",
   "admin_dad": "Admin Dasheboard",
-  "cancel": "Cancel"
+  "creating": "Creating...",
+  "reset": "Reset",
+  "cancel": "Cancel",
+  "employee": {
+    "employee_name": "employee.employee_name"
+  },
+  "select_time": "Select time"
 }

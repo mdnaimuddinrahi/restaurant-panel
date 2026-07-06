@@ -1,4 +1,84 @@
 {
-  "title": "Employees",
-  "create": "Create Employee"
+  "employees": "Employees",
+  "add_employee": "Add Employee",
+  "personal_information": "Personal Information",
+  "create_employee": "Create Employee",
+  "employee_name": "Employee Name",
+  "email_address": "Email Address",
+  "phone_number": "Phone Number",
+  "date_of_birth": "Date of Birth",
+  "gender": "Gender",
+  "national_id": "National ID",
+  "passport_number": "Passport Number",
+  "address": "Address",
+  "placeholder": {
+    "employee_name": "Enter employee name",
+    "email_address": "Enter email address",
+    "phone_number": "Enter phone number",
+    "date_of_birth": "Select date of birth",
+    "gender": "Select gender",
+    "national_id": "Enter National ID",
+    "passport_number": "Enter passport number",
+    "address": "Enter full address",
+    "blood_group": "Select Blood Group",
+    "marital_status": "Select Marital Status"
+  },
+  "validation": {
+    "employee_name_required": "Employee name is required.",
+    "email_required": "Email address is required.",
+    "phone_required": "Phone number is required.",
+    "gender_required": "Please select a gender."
+  },
+  "message": {
+    "created": "Employee created successfully.",
+    "updated": "Employee updated successfully.",
+    "deleted": "Employee deleted successfully."
+  },
+  "section": {
+    "personal": {
+      "title": "Personal Information",
+      "description": "Basic employee information"
+    },
+    "employment": {
+      "title": "Employment Information",
+      "description": "Role and employment details"
+    },
+    "identity": {
+      "title": "Identity Information",
+      "description": "National ID and passport information"
+    },
+    "emergency": {
+      "title": "Emergency Contact",
+      "description": "Emergency contact details"
+    },
+    "bank": {
+      "title": "Bank Information",
+      "description": "Bank account details"
+    },
+    "address": {
+      "title": "Address Information",
+      "description": "Present and permanent address"
+    },
+    "documents": {
+      "title": "Documents",
+      "description": "Attachments and uploaded files"
+    },
+    "permissions": {
+      "title": "Permissions",
+      "description": "Roles and access control"
+    },
+    "system": {
+      "title": "System Information",
+      "description": "Internal system settings"
+    }
+  },
+  "add_new_employee": "Add New Employee",
+  "identity_information": "Identity Information",
+  "employement_information": "Employment Information",
+  "basic_salary": "Basic Salary",
+  "date_of_joining": "Joining Date",
+  "blood_group": "Blood Group",
+  "marital_status": "Marital Status",
+  "start_time": "Start time",
+  "end_time": "End Time"
 }

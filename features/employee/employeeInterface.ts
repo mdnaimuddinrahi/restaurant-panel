@@ -14,7 +14,7 @@ export interface Employee {
   address: string;
 
   date_of_birth: string;
-  date_of_joining: string;
+  date_of_joining: string; //ok
 
   is_active: boolean;
 
@@ -31,12 +31,12 @@ export interface Employee {
 
   documents: any[]; // you can refine later if structure is known
 
-  basic_salary: string;
+  basic_salary: number; //ok
 
   termination_date: string | null;
 
-  blood_group: number;
-  marital_status: number;
+  blood_group: number; //ok
+  marital_status: number; //ok
 
   shift_start: string;
   shift_end: string;

@@ -49,7 +49,7 @@ export default function EmployeeSection({
                             duration: 0.3,
                             ease: "easeInOut",
                         }}
-                        className="overflow-hidden"
+                        // className="overflow-hidden"
                     >
                         <div className="px-6 pb-6">
                             {children}

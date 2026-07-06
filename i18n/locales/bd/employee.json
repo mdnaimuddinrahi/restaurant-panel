@@ -1,0 +1,84 @@
+{
+  "employees": "কর্মচারী",
+  "personal_information": "ব্যক্তিগত তথ্য",
+  "create_employee": "নতুন কর্মচারী",
+  "employee_name": "কর্মচারীর নাম",
+  "email_address": "ইমেইল ঠিকানা",
+  "phone_number": "মোবাইল নম্বর",
+  "date_of_birth": "জন্ম তারিখ",
+  "gender": "লিঙ্গ",
+  "national_id": "এনআইডি নম্বর",
+  "passport_number": "পাসপোর্ট নম্বর",
+  "address": "ঠিকানা",
+  "placeholder": {
+    "employee_name": "কর্মচারীর নাম লিখুন",
+    "email_address": "ইমেইল ঠিকানা লিখুন",
+    "phone_number": "মোবাইল নম্বর লিখুন",
+    "date_of_birth": "জন্ম তারিখ নির্বাচন করুন",
+    "gender": "লিঙ্গ নির্বাচন করুন",
+    "national_id": "এনআইডি নম্বর লিখুন",
+    "passport_number": "পাসপোর্ট নম্বর লিখুন",
+    "address": "সম্পূর্ণ ঠিকানা লিখুন",
+    "blood_group": "রক্তের গ্রুপ নির্বাচন করুন",
+    "marital_status": "বৈবাহিক অবস্থা নির্বাচন করুন"
+  },
+  "validation": {
+    "employee_name_required": "কর্মচারীর নাম আবশ্যক।",
+    "email_required": "ইমেইল ঠিকানা আবশ্যক।",
+    "phone_required": "মোবাইল নম্বর আবশ্যক।",
+    "gender_required": "অনুগ্রহ করে লিঙ্গ নির্বাচন করুন।"
+  },
+  "message": {
+    "created": "কর্মচারী সফলভাবে তৈরি হয়েছে।",
+    "updated": "কর্মচারীর তথ্য সফলভাবে হালনাগাদ করা হয়েছে।",
+    "deleted": "কর্মচারী সফলভাবে মুছে ফেলা হয়েছে।"
+  },
+  "section": {
+    "personal": {
+      "title": "ব্যক্তিগত তথ্য",
+      "description": "কর্মচারীর মৌলিক তথ্য"
+    },
+    "employment": {
+      "title": "চাকরির তথ্য",
+      "description": "পদবি ও চাকরির বিস্তারিত তথ্য"
+    },
+    "identity": {
+      "title": "পরিচয় সংক্রান্ত তথ্য",
+      "description": "এনআইডি ও পাসপোর্টের তথ্য"
+    },
+    "emergency": {
+      "title": "জরুরি যোগাযোগ",
+      "description": "জরুরি যোগাযোগের বিস্তারিত তথ্য"
+    },
+    "bank": {
+      "title": "ব্যাংক তথ্য",
+      "description": "ব্যাংক অ্যাকাউন্টের বিস্তারিত তথ্য"
+    },
+    "address": {
+      "title": "ঠিকানার তথ্য",
+      "description": "বর্তমান ও স্থায়ী ঠিকানা"
+    },
+    "documents": {
+      "title": "ডকুমেন্টসমূহ",
+      "description": "সংযুক্তি ও আপলোড করা ফাইলসমূহ"
+    },
+    "permissions": {
+      "title": "অনুমতিসমূহ",
+      "description": "ভূমিকা ও প্রবেশাধিকার নিয়ন্ত্রণ"
+    },
+    "system": {
+      "title": "সিস্টেম তথ্য",
+      "description": "অভ্যন্তরীণ সিস্টেম সেটিংস"
+    }
+  },
+  "add_employee": "কর্মচারী যোগ করুন",
+  "add_new_employee": "নতুন কর্মচারী যোগ করুন",
+  "identity_information": "পরিচয় তথ্য",
+  "employement_information": "কর্মসংস্থান তথ্য",
+  "basic_salary": "বেসিক বেতন",
+  "date_of_joining": "যোগদানের তারিখ",
+  "blood_group": "রক্তের গ্রুপ",
+  "marital_status": "বৈবাহিক অবস্থা",
+  "start_time": "শুরুর সময়",
+  "end_time": "শেষ সময়"
+}

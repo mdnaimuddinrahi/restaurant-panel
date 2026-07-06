@@ -5,6 +5,10 @@ import { useGetEmployeeResourcesQuery } from '@/features/employee/employeeApi';
 import { ResourceOption } from '@/store/commonInterface';
 import React, { useState } from 'react'
 import EmployeeFormLayout from './EmployeeFormLayout';
+import { useTranslation } from 'react-i18next';
+import FormSelect from '@/components/ui/input/FormSelect';
+import AppSelect from '@/components/ui/input/AppSelect';
+import AppModal from '@/components/ui/AppModal';
 
 type EmployeeCreateProps = {
   onClose: () => void;
@@ -50,84 +54,94 @@ export default function EmployeeCreate({onClose}: EmployeeCreateProps) {
     const genderOption = resourceResponse?.data?.genders;
     const maritalStatusOption = resourceResponse?.data?.marital_status;
 
-    const [form, setForm] = useState<EmployeeForm>({
-        name: "",
-        email: "",
-        phone: "",
-        address: "",
-        dateOfBirth: "",
-        dateOfJoining: "",
+    // const [form, setForm] = useState<EmployeeForm>({
+    //     name: "",
+    //     email: "",
+    //     phone: "",
+    //     address: "",
+    //     dateOfBirth: "",
+    //     dateOfJoining: "",
 
-        employeeType: null,
-        employeeDesignation: null,
-        gender: null,
-        bloodGroup: null,
-        maritalStatus: null,
+    //     employeeType: null,
+    //     employeeDesignation: null,
+    //     gender: null,
+    //     bloodGroup: null,
+    //     maritalStatus: null,
 
-        basicSalary: "",
-        nationalId: "",
-        passportNumber: "",
+    //     basicSalary: "",
+    //     nationalId: "",
+    //     passportNumber: "",
 
-        shiftStart: "",
-        shiftEnd: "",
+    //     shiftStart: "",
+    //     shiftEnd: "",
 
-        emergencyContactName: "",
-        emergencyContactPhone: "",
-        emergencyContactRelation: "",
+    //     emergencyContactName: "",
+    //     emergencyContactPhone: "",
+    //     emergencyContactRelation: "",
 
-        isActive: true,
+    //     isActive: true,
 
-        profileImg: null,
-        documents: [],
-        terminationDate: "",
-    });
-    // Personal Information
-    const [name, setName] = useState<string>("");
-    const [email, setEmail] = useState<string>("");
-    const [phone, setPhone] = useState<string>("");
-    const [address, setAddress] = useState<string>("");
-    const [dateOfBirth, setDateOfBirth] = useState<string>("");
+    //     profileImg: null,
+    //     documents: [],
+    //     terminationDate: "",
+    // });
+    // // Personal Information
+    // const [name, setName] = useState<string>("");
+    // const [email, setEmail] = useState<string>("");
+    // const [phone, setPhone] = useState<string>("");
+    // const [address, setAddress] = useState<string>("");
+    // const [dateOfBirth, setDateOfBirth] = useState<string>("");
 
-    // Employment Information
-    const [employeeType, setEmployeeType] = useState<number | null>(null);
-    const [employeeDesignation, setEmployeeDesignation] = useState<number | null>(null);
-    const [dateOfJoining, setDateOfJoining] = useState<string>("");
-    const [basicSalary, setBasicSalary] = useState<string>("");
+    // // Employment Information
+    // const [employeeType, setEmployeeType] = useState<number | null>(null);
+    // const [employeeDesignation, setEmployeeDesignation] = useState<number | null>(null);
+    // const [dateOfJoining, setDateOfJoining] = useState<string>("");
+    // const [basicSalary, setBasicSalary] = useState<string>("");
 
 
-    // Profile Information
-    const [gender, setGender] = useState<number | null>(null);
-    const [bloodGroup, setBloodGroup] = useState<number | null>(null);
-    const [maritalStatus, setMaritalStatus] = useState<number | null>(null);
-    const [isActive, setIsActive] = useState<boolean>(true);
+    // // Profile Information
+    // const [gender, setGender] = useState<number | null>(null);
+    // const [bloodGroup, setBloodGroup] = useState<number | null>(null);
+    // const [maritalStatus, setMaritalStatus] = useState<number | null>(null);
+    // const [isActive, setIsActive] = useState<boolean>(true);
 
-    // Identification
-    const [nationalId, setNationalId] = useState<string>("");
-    const [passportNumber, setPassportNumber] = useState<string>("");
+    // // Identification
+    // const [nationalId, setNationalId] = useState<string>("");
+    // const [passportNumber, setPassportNumber] = useState<string>("");
 
-    // Shift Information
-    const [shiftStart, setShiftStart] = useState<string>("");
-    const [shiftEnd, setShiftEnd] = useState<string>("");
+    // // Shift Information
+    // const [shiftStart, setShiftStart] = useState<string>("");
+    // const [shiftEnd, setShiftEnd] = useState<string>("");
 
-    // Emergency Contact
-    const [emergencyContactName, setEmergencyContactName] = useState<string>("");
-    const [emergencyContactPhone, setEmergencyContactPhone] = useState<string>("");
-    const [emergencyContactRelation, setEmergencyContactRelation] = useState<string>("");
+    // // Emergency Contact
+    // const [emergencyContactName, setEmergencyContactName] = useState<string>("");
+    // const [emergencyContactPhone, setEmergencyContactPhone] = useState<string>("");
+    // const [emergencyContactRelation, setEmergencyContactRelation] = useState<string>("");
 
-    // Optional Fields
-    const [profileImg, setProfileImg] = useState<File | null>(null);
-    const [terminationDate, setTerminationDate] = useState<string>("");
+    // // Optional Fields
+    // const [profileImg, setProfileImg] = useState<File | null>(null);
+    // const [terminationDate, setTerminationDate] = useState<string>("");
 
-    // Documents
-    const [documents, setDocuments] = useState<File[]>([]);
+    // // Documents
+    // const [documents, setDocuments] = useState<File[]>([]);
+    
+    const { t } = useTranslation("employee");
+    console.log('genderOption', genderOption)
+    const [open, setOpen] = useState(false);
+
     return (
-        <FormModal
-            modalTitle="Add New Employee" 
-            buttonText="Create Employee" 
-            onClose={onClose} 
-            size="full"
+        <>
+        <button onClick={() => setOpen(true)}>
+            Open
+        </button>
+        <AppModal
+            onClose={onClose}
+            modalTitle={t("add_new_employee")} 
+            size='full'
         >
             <EmployeeFormLayout/>
-        </FormModal>
+        </AppModal>
+       
+    </>
     )
 }

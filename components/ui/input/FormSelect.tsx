@@ -22,10 +22,6 @@ export default function FormSelect<T extends FieldValues>({
     name,
     control,
   });
-//   const options = options as SelectOption[];
-
-//   const selected =
-//     options?.find((o) => o.value === field.value) ?? null;
 const opts = options as SelectOption[];
 
 const selected =

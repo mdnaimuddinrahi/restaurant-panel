@@ -29,11 +29,8 @@ export default function page() {
     console.log("Navigate to", url);
     // router.push(url);
   }
-  const { t, i18n } = useTranslation("common");
-    console.log("🔥 i18n fil");
+  const { t } = useTranslation("common");
 
-  console.log("Current Language:", i18n.language);
-  console.log("Translation:", t("admin_dad"));
   return (
     <>
       <Heading title={t("admin_dad")} subtitle="Manage your restaurant settings" />

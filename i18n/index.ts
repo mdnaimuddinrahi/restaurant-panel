@@ -6,16 +6,15 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import { resources } from "./resources";
 import { defaultLanguage } from "./config";
 
-console.log("🔥 i18n file loaded");
 i18n
-    .use(LanguageDetector)
+    // .use(LanguageDetector)
     .use(initReactI18next)
     .init({
         resources,
 
         fallbackLng: defaultLanguage,
 
-        supportedLngs: ["en", "bn"],
+        supportedLngs: ["en", "bd"],
 
         defaultNS: "common",
 
