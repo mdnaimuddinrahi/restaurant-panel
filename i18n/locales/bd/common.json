@@ -2,6 +2,14 @@
   "save": "Save",
   "cancel": "Cancel",
   "admin_dad": "Fudani Board",
-  "creating": "tairi",
-  "select_time": "সময় নির্বাচন করুন"
+  "creating": "অপেক্ষা করুন",
+  "select_time": "সময় নির্বাচন করুন",
+  "drag_drop": "{{fileType}} এখানে টেনে এনে ছেড়ে দিন",
+  "file": "একটি ফাইল",
+  "files": "ফাইলগুলো",
+  "click_to_browse": "অথবা ব্রাউজ করতে ক্লিক করুন",
+  "reset": "পুন:স্থাপন",
+  "placeholder": {
+    "date": "বছর-মাস-দিন"
+  }
 }

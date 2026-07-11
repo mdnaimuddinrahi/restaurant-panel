@@ -5,9 +5,10 @@ import { useState } from 'react'
 import EmployeeCreate from './EmployeeCreate';
 import EmployeeList from './EmployeeList';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 export default function page() {
-  const [activeModal, setActiveModal] = useState<string | null>("form-modal");
+  const [activeModal, setActiveModal] = useState<string | null>("");
 
   function showModal(id: string) {
     setActiveModal(id);
@@ -24,7 +25,7 @@ export default function page() {
         buttonText={t("add_employee")} 
         onAddClick={() => showModal("form-modal")}
       />
-      {/* <EmployeeList/> */}
+      <EmployeeList/>
       
 
       {activeModal === 'form-modal' && (

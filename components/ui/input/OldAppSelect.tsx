@@ -11,6 +11,7 @@ import Select, {
   SingleValue,
 } from "react-select";
 import Label from "../Label";
+import { useEffect, useState } from "react";
 
 function DropdownIndicator<
   Option,
@@ -20,7 +21,8 @@ function DropdownIndicator<
   return (
     <components.DropdownIndicator {...props}>
       <FaAngleDown
-        size={16}
+
+        size={18}
         className={`transition-transform duration-300 ease-in-out ${
           props.selectProps.menuIsOpen ? "rotate-180" : "rotate-0"
         }`}
@@ -32,6 +34,17 @@ export interface SelectOption {
   value: string | number;
   label: string;
 }
+
+// export interface AppSelectProps<
+//   Option,
+//   IsMulti extends boolean = false,
+//   Group extends GroupBase<Option> = GroupBase<Option>
+// > extends Props<Option, IsMulti, Group> {
+//   label?: string;
+//   name?: string;
+//   error?: string;
+//   accentColor?: string;
+// }
 
 export interface AppSelectProps<
   Option,
@@ -60,14 +73,14 @@ export default function AppSelect<
   required,
   ...props
 }: AppSelectProps<Option, IsMulti, Group>) {
-  // const isDark = document.documentElement.classList.contains("dark");
+  const isDark = document.documentElement.classList.contains("dark");
   // const [isDark, setIsDark] = useState(false);
 
   // useEffect(() => {
   //   setIsDark(localStorage.getItem("darkMode") === "true");
   // }, []);
 
-  const {accentColor, darkMode: isDark} = useTheme();
+  const {accentColor} = useTheme();
   const isError = !!error;
 
   return (
@@ -82,7 +95,6 @@ export default function AppSelect<
       )}
 
       <Select
-        instanceId={name ?? "app-select"}
         inputId={name}
         {...props}
         components={{

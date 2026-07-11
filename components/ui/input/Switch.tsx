@@ -2,16 +2,19 @@
 
 import { InputHTMLAttributes } from "react";
 import { useTheme } from "@/theme";
+import Label from "../Label";
 
 interface AppSwitchProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
   label?: string;
+  name?: string;
   required?: boolean;
   error?: string;
 }
 
 export default function Switch({
   label,
+  name,
   required,
   error,
   checked,
@@ -24,20 +27,17 @@ export default function Switch({
     <div className="w-full">
       <div className="flex items-center justify-between gap-4">
         {label && (
-          <label
-            className={`text-sm font-medium transition-colors duration-300 ${
-              error
-                ? "text-red-500"
-                : "text-slate-700 dark:text-slate-300"
-            }`}
-          >
-            {label}
-            {required && <span className="ml-1 text-red-500">*</span>}
-          </label>
+          <Label
+            htmlFor={name}
+            label={label}
+            required={required}
+            isError={!!error}
+          />
         )}
 
         <label className="relative inline-flex cursor-pointer items-center">
           <input
+            id={name}
             type="checkbox"
             checked={checked}
             {...props}

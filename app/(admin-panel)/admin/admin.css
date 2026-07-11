@@ -22,6 +22,17 @@
     --color-text: #0f172a;
     --color-muted: #64748b;
     --color-border: #e2e8f0;
+    --toastify-color-progress-light: linear-gradient(
+      to right,
+      var(--accent-color),
+      var(--accent-color)
+    );
+
+    --toastify-color-progress-dark: linear-gradient(
+      to right,
+      var(--accent-color),
+      var(--accent-color)
+    );
   }
 
   .dark {

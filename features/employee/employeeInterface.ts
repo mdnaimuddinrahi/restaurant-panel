@@ -1,5 +1,7 @@
 import { DEFAULT_TAG } from "@/store/commonConstants";
 import { CommonResponse, MetaData, RequestParams, ResourceOption } from "@/store/commonInterface";
+import z from "zod";
+import { employeeSchema } from "./employeeConstant";
 
 export interface Employee {
   id: number;
@@ -129,13 +131,15 @@ export interface EmployeeFIlterPanelProps {
   onSearch: () => void;
 }
 
-export type CreateEmployeeRequest = {
- name: string
- email: string
- phone: string
- gender: string
- address: string
- date_of_birth: Date
- national_id?: string | null
- passport_number?: string | null
-}
+
+export type EmployeeFormData = z.infer<
+  ReturnType<typeof employeeSchema>
+>;
+
+export type CreateEmployeeRequest = Omit<
+  EmployeeFormData,
+  "date_of_birth" | "date_of_joining"
+> & {
+  date_of_birth: string;
+  date_of_joining: string;
+};

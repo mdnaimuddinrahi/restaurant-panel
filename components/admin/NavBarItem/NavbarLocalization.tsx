@@ -58,7 +58,17 @@ export default function NavbarLocalization() {
     };
   }, []);
 
+  useEffect(() => {
+    const savedLanguage =
+      typeof window !== "undefined"
+        ? localStorage.getItem("language") || "en"
+        : "en";
+    i18n.changeLanguage(savedLanguage);
+    console.log('first')
+  }, [i18n]);
+
   const changeLanguage = (lng: (typeof languages)[number]["code"]) => {
+    localStorage.setItem("language", lng);
     i18n.changeLanguage(lng);
     setOpen(false);
   };

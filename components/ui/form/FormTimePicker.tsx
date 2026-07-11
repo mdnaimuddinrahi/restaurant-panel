@@ -5,23 +5,23 @@ import {
   useFormContext,
 } from "react-hook-form";
 
-import DatePicker, {
-  AppDatePickerProps,
-} from "./DatePicker";
+import AppTimePicker, {
+  AppTimePickerProps,
+} from "../input/AppTimePicker";
 
-type FormDatePickerProps<T extends FieldValues> = Omit<
-  AppDatePickerProps,
+type FormTimePickerProps<T extends FieldValues> = Omit<
+  AppTimePickerProps,
   "value" | "onChange" | "error"
 > & {
   name: Path<T>;
 };
 
-export default function FormDatePicker<
+export default function FormTimePicker<
   T extends FieldValues
 >({
   name,
   ...props
-}: FormDatePickerProps<T>) {
+}: FormTimePickerProps<T>) {
   const { control } = useFormContext<T>();
 
   const {
@@ -31,12 +31,13 @@ export default function FormDatePicker<
     name,
     control,
   });
+  // console.log('field.value', typeof field.value)
 
   return (
-    <DatePicker
+    <AppTimePicker
       {...props}
-      value={field.value ?? null}
-      onChange={(date) => field.onChange(date)}
+      value={field.value ?? ""}
+      onChange={field.onChange}
       error={error?.message}
     />
   );

@@ -73,7 +73,9 @@ export interface PaginationProps {
 
 export interface AppInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
+  name?:string;
   required?: boolean;
   error?: string;
+  type?: string;
   icon?: ReactNode;
 }

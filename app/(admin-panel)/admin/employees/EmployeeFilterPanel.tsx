@@ -1,12 +1,14 @@
 import SkeletonSelect from '@/components/ui/SkeletonSelect';
 import { useGetEmployeeResourcesQuery } from '@/features/employee/employeeApi';
-import AppSelect from '@/components/ui/select/AppReactSelect';
 import AppInput from '@/components/ui/input/AppInput';
 import AppButton from '@/components/ui/button/AppButton';
 import { EmployeeFIlterPanelProps } from '@/features/employee/employeeInterface';
 import { ResourceOption } from '@/store/commonInterface';
 import { useState } from 'react';
 import { hexToRgba, useTheme } from "@/theme";  
+import AppSelect from '@/components/ui/input/AppSelect';
+import { SingleValue } from 'react-select';
+import AppTimePicker from '@/components/ui/input/AppTimePicker';
 
 export default function EmployeeFilterPanel({
     resourceIsLoading,
@@ -50,7 +52,10 @@ export default function EmployeeFilterPanel({
                         placeholder="Blood Group"
                         isClearable={true}
                         value={bloodGroupOption?.find(o => o.value === bloodGroup)}
-                        onChange={(option: ResourceOption) => setBloodGroup(option?.value ?? -1)}
+                        // onChange={(option: ResourceOption) => setBloodGroup(option?.value ?? -1)}
+                        onChange={(option: SingleValue<ResourceOption>) => {
+                            setBloodGroup(option?.value ?? -1);
+                        }}
                     />
 
                     <AppSelect
@@ -58,7 +63,7 @@ export default function EmployeeFilterPanel({
                         placeholder="Employee Designation"
                         isClearable={true}
                         value={employeeDesignationOption?.find(o => o.value ===employeeDesignation)}
-                        onChange={(option: ResourceOption) => setEmployeeDesignation(option?.value ?? -1)}
+                        onChange={(option: SingleValue<ResourceOption>) => setEmployeeDesignation(option?.value ?? -1)}
                     />
 
                     <AppSelect
@@ -66,7 +71,7 @@ export default function EmployeeFilterPanel({
                         placeholder="Employee Type"
                         isClearable={true}
                         value={employeeTypeOption?.find(o => o.value ===employeeType)}
-                        onChange={(option: ResourceOption) => setEmployeeType(option?.value ?? -1)}
+                        onChange={(option: SingleValue<ResourceOption>) => setEmployeeType(option?.value ?? -1)}
                     />
 
                     <AppSelect
@@ -74,7 +79,7 @@ export default function EmployeeFilterPanel({
                         placeholder="Gender"
                         isClearable={true}
                         value={genderOption?.find(o => o.value ===gender)}
-                        onChange={(option: ResourceOption) => setGender(option?.value ?? -1)}
+                        onChange={(option: SingleValue<ResourceOption>) => setGender(option?.value ?? -1)}
                     />
 
                     <AppSelect
@@ -82,7 +87,7 @@ export default function EmployeeFilterPanel({
                         placeholder="Marital Status"
                         isClearable={true}
                         value={maritalStatusOption?.find(o => o.value ===maritalStatus)}
-                        onChange={(option: ResourceOption) => setMaritalStatus(option?.value ?? -1)}
+                        onChange={(option: SingleValue<ResourceOption>) => setMaritalStatus(option?.value ?? -1)}
                     />
                     <div
                         className="relative w-full"

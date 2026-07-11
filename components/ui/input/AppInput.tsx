@@ -17,7 +17,7 @@ export default function AppInput(props: any) {
           transition-all duration-300 ease-in-out
           ${
             focused
-              ? "scale-110 text-[var(--accent)]"
+              ? "scale-110 text-(--accent)"
               : "scale-100 text-slate-400"
           }
         `}

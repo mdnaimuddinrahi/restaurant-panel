@@ -216,7 +216,9 @@ export default function AppTimePicker({
 
           <span
             className={`text-sm ${
-              value
+              isError
+                ? "text-red-500"
+                : value
                 ? isDark
                   ? "text-slate-100"
                   : "text-slate-900"

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTheme } from "@/theme";
 import { AppInputProps } from "@/store/commonInterface";
+import Label from "../Label";
 
 
 {/* <FormInput
@@ -31,6 +32,7 @@ import { AppInputProps } from "@/store/commonInterface";
 
 export default function Input({
   label,
+  name,
   required,
   error,
   icon,
@@ -46,22 +48,12 @@ export default function Input({
     <div className="w-full">
       {/* LABEL */}
       {label && (
-        <label
-          className={`
-            mb-1.5 block text-xs font-medium transition-colors duration-300
-            ${
-              isError
-                ? "text-red-500"
-                : "text-slate-500 dark:text-slate-200"
-            }
-          `}
-        >
-          {label}
-
-          {required && (
-            <span className="ml-1 text-red-500">*</span>
-          )}
-        </label>
+        <Label
+          htmlFor={name}
+          label={label}
+          required={required}
+          isError={!!error}
+        />
       )}
 
       {/* INPUT WRAPPER */}
@@ -95,7 +87,9 @@ export default function Input({
 
         {/* INPUT */}
         <input
+          id={name}
           {...props}
+          
           onFocus={(e) => {
             setFocused(true);
 

@@ -57,7 +57,7 @@ export default function EmployeeTableBody<T>({
                         border-t border-slate-100 dark:border-slate-900
                         
                         transition-colors
-                        hover:bg-[var(--row-hover)]
+                        hover:bg-(--row-hover)
                     "
                 >
                     <td className='px-4 py-3 text-slate-500 border-left-1 border-r border-gray-200 dark:border-gray-900'>{employee.id}</td>
@@ -66,23 +66,24 @@ export default function EmployeeTableBody<T>({
                         
                         if (column.key === 'name') {
                             return (
-                            <td className="px-4 py-3">
-                                <div className="flex items-center gap-2.5">
-                                <div 
-                                    className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0" 
-                                    style={{ background: hexToRgba(accentColor, 0.8) }}
-                                    // style={}
-                                >
-                                    {initials(employee.name)}
-                                </div>
-                                <span className="font-medium">{employee.name}</span>
-                                </div>
-                            </td>
-                        )}
+                                <td key={column.key} className="px-4 py-3">
+                                    <div className="flex items-center gap-2.5">
+                                    <div 
+                                        className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0" 
+                                        style={{ background: hexToRgba(accentColor, 0.8) }}
+                                        // style={}
+                                    >
+                                        {initials(employee.name)}
+                                    </div>
+                                    <span className="font-medium">{employee.name}</span>
+                                    </div>
+                                </td>
+                            )
+                        }
 
                         if (column.key === 'email') {
                             return (
-                                <td className="px-4 py-3 text-slate-500">
+                                <td key={column.key} className="px-4 py-3 text-slate-500">
                                     <div className="flex items-center gap-2">
                                         <a
                                             href={`mailto:${employee.email}`}
@@ -133,13 +134,13 @@ export default function EmployeeTableBody<T>({
 
                         if (column.key === 'phone') {
                             return (
-                                <td className="px-4 py-3 text-slate-500">{employee.phone}</td>
+                                <td key={column.key} className="px-4 py-3 text-slate-500">{employee.phone}</td>
                             )
                         }
 
                         if (column.key === 'blood_group') {
                             return (
-                                <td className="px-4 py-3 text-slate-500">
+                                <td key={column.key} className="px-4 py-3 text-slate-500">
                                     {
                                     bloodGroupOption?.find(
                                         option => Number(option.value) === Number(employee.blood_group)
@@ -151,13 +152,13 @@ export default function EmployeeTableBody<T>({
 
                         if (column.key === 'date_of_joining') {
                             return (
-                                <td className="px-4 py-3 text-slate-500">{employee.date_of_joining}</td>
+                                <td key={column.key} className="px-4 py-3 text-slate-500">{employee.date_of_joining}</td>
                             )
                         }
 
                         if (column.key === 'employee_designation_id') {
                             return (
-                                <td className="px-4 py-3 text-slate-500">
+                                <td key={column.key} className="px-4 py-3 text-slate-500">
                                     {
                                         employeeDesignationOption?.find(
                                             option => Number(option.value) === Number(employee.employee_designation_id)
@@ -169,7 +170,7 @@ export default function EmployeeTableBody<T>({
 
                         if (column.key === 'employee_type_id') {
                             return (
-                                <td className="px-4 py-3 text-slate-500">
+                                <td key={column.key} className="px-4 py-3 text-slate-500">
                                     {
                                         employeeTypeOption?.find(
                                             option => Number(option.value) === Number(employee.employee_type_id)
@@ -181,7 +182,7 @@ export default function EmployeeTableBody<T>({
 
                         if (column.key === 'gender') {
                             return (
-                                <td className="px-4 py-3 text-slate-500">
+                                <td key={column.key} className="px-4 py-3 text-slate-500">
                                     {
                                         genderOption?.find(
                                             option => Number(option.value) === Number(employee.gender)
@@ -193,7 +194,7 @@ export default function EmployeeTableBody<T>({
 
                         if (column.key === 'marital_status') {
                             return (
-                                <td className="px-4 py-3 text-slate-500">
+                                <td key={column.key} className="px-4 py-3 text-slate-500">
                                     {
                                         maritalStatusOption?.find(
                                             option => Number(option.value) === Number(employee.marital_status)
@@ -205,31 +206,31 @@ export default function EmployeeTableBody<T>({
 
                         if (column.key === 'emergency_contact_name') {
                             return (
-                                <td className="px-4 py-3 text-slate-500">{employee.emergency_contact_name}</td>
+                                <td key={column.key} className="px-4 py-3 text-slate-500">{employee.emergency_contact_name}</td>
                             )
                         }
                         
                         if (column.key === 'emergency_contact_phone') {
                             return (
-                                <td className="px-4 py-3 text-slate-500">{employee.emergency_contact_phone}</td>
+                                <td key={column.key} className="px-4 py-3 text-slate-500">{employee.emergency_contact_phone}</td>
                             )
                         }
                         
                         if (column.key === 'emergency_contact_relation') {
                             return (
-                                <td className="px-4 py-3 text-slate-500">{employee.emergency_contact_relation}</td>
+                                <td key={column.key} className="px-4 py-3 text-slate-500">{employee.emergency_contact_relation}</td>
                             )
                         }
                         
                         if (column.key === 'shift_start') {
                             return (
-                                <td className="px-4 py-3 text-slate-500">{employee.shift_start}</td>
+                                <td key={column.key} className="px-4 py-3 text-slate-500">{employee.shift_start}</td>
                             )
                         }
                         
                         if (column.key === 'shift_end') {
                             return (
-                                <td className="px-4 py-3 text-slate-500">{employee.shift_end}</td>
+                                <td key={column.key} className="px-4 py-3 text-slate-500">{employee.shift_end}</td>
                             )
                         }
                     })}
@@ -240,7 +241,7 @@ export default function EmployeeTableBody<T>({
                             <div className="relative group">
                                 <AppCustomButton
                                     variant="outline"
-                                    className="!p-1.5 transition-transform duration-200 hover:scale-110"
+                                    className="p-1.5! transition-transform duration-200 hover:scale-110"
                                 >
                                     <BiEditAlt className="text-base text-blue-900 dark:text-blue-400" />
                                 </AppCustomButton>
@@ -255,7 +256,7 @@ export default function EmployeeTableBody<T>({
                             <div className="relative group">
                                 <AppCustomButton
                                     variant="ghost"
-                                    className="!p-1.5 transition-transform duration-200 hover:scale-110"
+                                    className="p-1.5! transition-transform duration-200 hover:scale-110"
                                 >
                                     <RxTrash className="text-base text-red-700"/>
                                 </AppCustomButton>

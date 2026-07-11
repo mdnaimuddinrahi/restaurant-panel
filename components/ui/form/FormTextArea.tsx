@@ -1,5 +1,5 @@
 import { FieldValues, Path, useController, useFormContext } from "react-hook-form";
-import TextArea from "./TextArea";
+import TextArea from "../input/TextArea";
 
 interface FormTextAreaProps<T extends FieldValues> {
   name: Path<T>;

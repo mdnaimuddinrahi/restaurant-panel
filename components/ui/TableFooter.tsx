@@ -1,8 +1,8 @@
 import { FiChevronsLeft, FiChevronsRight } from 'react-icons/fi';
 import AppCustomButton from './button/AppCustomButton';
-import AppReactSelect from './select/AppReactSelect';
 import { DEFAULT_PAGINATION } from '@/store/commonConstants';
 import { PaginationProps } from '@/store/commonInterface';
+import AppSelect from './input/AppSelect';
 
 
 
@@ -49,7 +49,7 @@ export default function TableFooter({
           </div>
           <div className="">
               {/* Page size dropdown */}
-              <AppReactSelect
+              <AppSelect
                   options={pageOptions}
                   placeholder="Page Limit"
                   value={pageOptions.find(opt => opt.value === tablePageSize)}

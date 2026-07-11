@@ -36,6 +36,7 @@ export const ThemeProvider = ({ children }: any) => {
       "--color-primary",
       accentColor
     );
+    
     localStorage.setItem("accentColor", accentColor);
   }, [accentColor]);
 
@@ -47,7 +48,11 @@ export const ThemeProvider = ({ children }: any) => {
 
   return (
     <ThemeContext.Provider
-      value={{ accentColor, setAccentColor, darkMode, toggleDarkMode }}
+      value={
+        { accentColor, 
+          setAccentColor, 
+          darkMode, 
+          toggleDarkMode }}
     >
       {children}
     </ThemeContext.Provider>

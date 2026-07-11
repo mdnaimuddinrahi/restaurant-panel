@@ -1,5 +1,5 @@
 import { baseApi } from "@/services/baseApi";
-import { CreateEmployeeRequest, Employee, EmployeeResourceResponse, EmployeeTag, GetEmployeesRequests, GetEmployeesResponse } from "./employeeInterface";
+import { CreateEmployeeRequest, Employee, EmployeeFormData, EmployeeResourceResponse, EmployeeTag, GetEmployeesRequests, GetEmployeesResponse } from "./employeeInterface";
 import { CreateEmployeeDTO, UpdateEmployeeDTO } from "./employeeDTOs";
 import { DEFAULT_SEGMENT_URL, DEFAULT_TAG, DEFAULT_TAG_SCOPE } from "@/store/commonConstants";
 

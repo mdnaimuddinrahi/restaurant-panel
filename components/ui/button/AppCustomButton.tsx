@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useButtonTheme } from "@/hooks/useButtonTheme";
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "solid" | "outline" | "ghost";
+  variant?: "solid" | "outline" | "ghost" | "danger";
 };
 
 export default function AppCustomButton({
@@ -20,13 +20,24 @@ export default function AppCustomButton({
   return (
     <button
       {...props}
-      className={`${theme.classNames.base} ${className}`}
-      style={
-        theme.styles[variant]({
-          isHovered: hover,
-          isActive: active,
-        })
-      }
+      // className={`${theme.classNames.base} ${className}`}
+      // style={
+      //   theme.styles[variant]({
+      //     isHovered: hover,
+      //     isActive: active,
+      //   })
+      // }
+      className={`
+        ${theme.classNames.base}
+        
+        transition-transform duration-150 ease-out
+        active:scale-95
+        ${className}
+      `}
+      style={theme.styles[variant]({
+        isHovered: hover,
+        isActive: active,
+      })}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => {
         setHover(false);

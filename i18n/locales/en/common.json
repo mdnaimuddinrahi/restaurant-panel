@@ -7,5 +7,12 @@
   "employee": {
     "employee_name": "employee.employee_name"
   },
-  "select_time": "Select time"
+  "select_time": "Select time",
+  "drag_drop": "Drag & drop {{fileType}} here.",
+  "file": "a file",
+  "files": "files",
+  "click_to_browse": "or click to browse",
+  "placeholder": {
+    "date": "yyyy-mm-dd"
+  }
 }

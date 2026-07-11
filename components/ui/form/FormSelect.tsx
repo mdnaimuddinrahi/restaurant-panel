@@ -1,5 +1,5 @@
 import { useController, useFormContext, FieldValues, Path } from "react-hook-form";
-import AppSelect, { AppSelectProps, SelectOption } from "./AppSelect";
+import AppSelect, { AppSelectProps, SelectOption } from "../input/AppSelect";
 
 type FormSelectProps<T extends FieldValues> = Omit<
   AppSelectProps<SelectOption>,
@@ -30,6 +30,7 @@ const selected =
   return (
     <AppSelect<SelectOption>
       {...props}
+      name={name}
       options={options}
       value={selected}
       onChange={(option) => field.onChange(option?.value)}

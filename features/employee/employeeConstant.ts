@@ -25,93 +25,282 @@ export const EMPLOYEE_SECTIONS = [
   { id: "employment" },
   { id: "identity" },
   { id: "emergency" },
-  { id: "bank" },
-  { id: "address" },
   { id: "documents" },
-  { id: "permissions" },
-  { id: "system" },
 ] as const;
-
-// employee.schema.ts
 
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
 
-export const employeeSchema = z.object({
-  name: z
-    .string()
-    .min(1, "Employee name is required"),
+const phoneRegex = /^01[3-9]\d{8}$/;
+const nidRegex = /^(\d{10}|\d{13}|\d{17})$/;
+const passportRegex = /^[A-Za-z0-9]{5,20}$/;
+const time12Regex =
+  /^(0?[1-9]|1[0-2]):[0-5][0-9]:?\s?(AM|PM)$/i;
 
-  email: z
-    .email("Invalid email address"),
+// const { t } = useTranslation(["employee", "common"]);
 
-  phone: z
-    .string()
-    .min(11, "Phone number must be 11 digits"),
+export const employeeSchema = (t: (key: string) => string) => 
+  z.object({
+    name: z
+      .string({
+        error: t('validation.employee_name_required')
+      })
+      .trim()
+      .min(2, t("validation.name_contain_must_2_characters"))
+      .max(100, t('validation.name_maximum_100'))
+      .regex(
+        /^[A-Za-z\s.'-]+$/,
+        t('validation.name_invalid_character')
+      ),
+      
+    email: z
+      .string({
+        error: t("validation.email_required"),
+      })
+      .trim()
+      .min(1, {
+        error: t("validation.email_required"),
+      })
+      .pipe(
+        z.email({
+          error: t("validation.invalid_email"),
+        })
+      ),
 
-  gender: z
-    .number()
-    .min(1, "Gender is required"),
+    phone: z
+      .string({
+        error: t('validation.phone_required')
+      })
+      .trim()
+      .regex(phoneRegex, t('validation.valid_phone')),
 
-  address: z
-    .string()
-    .min(1, "Address is required"),
+    gender: z
+      .number({
+        error: t("validation.gender_required"),
+      })
+      .int()
+      .positive(),
 
-  national_id: z
-    .string()
-    .optional(),
+    blood_group: z
+      .number({
+        error: t('validation.blood_group_required'),
+      })
+      .int()
+      .positive(),
 
-  passport_number: z
-    .string()
-    .min(1, "Passport Number is Required."),
+    marital_status: z
+      .number({
+        error: t('validation.marital_status_required'),
+      })
+      .int()
+      .positive(),
 
-  date_of_birth: z.date({
-    error: "Date of birth is required",
-  }),
-  basic_salary: z
-    .number({
-      error: "Basic salary is required.",
-    })
-    .positive("Basic salary must be greater than 0.")
-    .refine(
-      (value) => Number.isInteger(value * 100),
-      {
-        message: "Basic salary can have at most 2 decimal places.",
-      }
+    address: z
+      .string({
+        error: t('validation.address_required')
+      })
+      .trim()
+      .min(5, t('validation.address_required'))
+      .max(500, t("validation.address_max_500")),
+
+    date_of_birth: z
+      .date({
+        error: t("validation.date_of_birth_required"),
+      })
+      .refine(
+        (date) => date < new Date(),
+        {
+          error: t("validation.date_of_birth_cannot_be_future"),
+        }
+      )
+      .refine(
+        (date) => {
+          const today = new Date();
+          const minDate = new Date(
+            today.getFullYear() - 18,
+            today.getMonth(),
+            today.getDate()
+          );
+
+          return date <= minDate;
+        },
+        {
+          error: t("validation.minimum_age_18"),
+        }
+      )
+      .refine(
+        (date) => {
+          const today = new Date();
+          const oldestAllowed = new Date(
+            today.getFullYear() - 120,
+            today.getMonth(),
+            today.getDate()
+          );
+
+          return date >= oldestAllowed;
+        },
+        {
+          error: t("validation.invalid_date_of_birth"),
+        }
+      ),
+
+    // =========================
+    // Employment Information
+    // =========================
+    basic_salary: z
+      .number({
+        error: t('validation.basic_salary_required'),
+      })
+      .positive(t('basic_salary_min'))
+      .max(10000000, t('validation.basic_salary_max'))
+      .refine(
+        (value) => Number.isInteger(value * 100),
+        {
+          message: t('validation.basic_salary_2_decimal'),
+        }
     ),
-});
+    date_of_joining: z
+      .date({
+        error: t("validation.date_of_join_requrired"),
+      })
+      .refine(
+        (date) => date.getFullYear() >= 1900,
+        {
+          error: t("validation.invalid_date_of_join"),
+        }
+      ),
 
-export type EmployeeFormData = z.infer<typeof employeeSchema>;
-// {
-//     "id": 1,
-//     "employee_type_id": 3,
-//     "employee_designation_id": 2,
-//     "user_id": null,
-//     "name": "John Smith",
-//     "email": "john.smith@example.com",
-//     "phone": "1000000001",
-//     "address": "Global Office Location 1",
-//     "date_of_birth": "2003-06-09",
-//     "date_of_joining": "2025-08-14",
-//     "is_active": true,
-//     "gender": 3,
-//     "profile_img": null,
-//     "national_id": "NID-G-00001",
-//     "passport_number": "PPT-G-00001",
-//     "emergency_contact_name": "Emergency Contact 1",
-//     "emergency_contact_phone": "9000000001",
-//     "emergency_contact_relation": "Family",
-//     "documents": [],
-//     "basic_salary": "18459.00",
-//     "termination_date": null,
-//     "blood_group": 1,
-//     "marital_status": 1,
-//     "shift_start": "09:00:00",
-//     "shift_end": "17:00:00",
-//     "created_at": "2026-06-09 17:06:54",
-//     "updated_at": null,
-//     "created_by": 1,
-//     "updated_by": null
-// }
+    employee_designation_id: z
+      .number({
+        error: t('validation.designation_required'),
+      })
+      .int({
+        error: t("validation.employee_designation_invalid")
+      })
+      .positive({
+        error: t('validation.employee_designation_invalid')
+      }),
 
-  
+    employee_type_id: z
+      .number({
+        error: t("validation.employee_type_required"),
+      })
+      .int({
+        error: t('validation.employee_type_invalid')
+      })
+      .positive({
+        error: t("validation.employee_type_invalid")
+      }),
+
+    shift_start: z
+      .string({
+        error: t("validation.shift_start_required"),
+      })
+      .trim()
+      .regex(time12Regex, t('validation.shift_start_invalid')),
+
+    shift_end: z
+      .string({
+        error: t("validation.shift_end_required"),
+      })
+      .trim()
+      .regex(time12Regex, t("validation.shift_end_invalid")),
+
+    // =========================
+    // Identity Information
+    // =========================
+    national_id: z
+      .string()
+      .trim()
+      .refine(
+        (value) => value === "" || nidRegex.test(value),
+        t('validation.nid_invalid')
+      )
+      .optional(),
+
+    passport_number: z
+      .string({
+        error: t("validation.passport_required"),
+      })
+      .trim()
+      .min(1, t('validation.passport_required'))
+      .min(5, t('validation.passport_minimum'))
+      .max(20, t('validation.passport_max'))
+      .regex(
+        passportRegex,
+        t('validation.passport_invalid')
+      ),
+    // =========================
+    // Emergency Contact
+    // =========================
+    emergency_contact_name: z
+      .string({
+        error: t('validation.emergency_contact_name_required')
+      })
+      .trim()
+      .min(2, t('validation.emergency_contact_name_required'))
+      .max(100, t('validation.emergency_contact_name_max')),
+
+    emergency_contact_phone: z
+      .string({
+        error: t('validation.emergency_contact_phone_required')
+      })
+      .trim()
+      .regex(
+        phoneRegex,
+        t('validation.emergency_contact_phone_invalid')
+      ),
+
+      emergency_contact_email: z
+        .string({
+          error: t("validation.emergency_contact_email_required"),
+        })
+        .trim()
+        .min(1, {
+          error: t("validation.emergency_contact_email_required"),
+        })
+        .pipe(
+          z.email({
+            error: t("validation.emergency_contact_email_invalid"),
+          })
+        ),
+
+      emergency_contact_relation: z
+        .string()
+        .trim()
+        .max(50, t("validation.emergency_contact_relation_max"))
+        .optional()
+        .or(z.literal("")),
+
+    // =========================
+    // Documents
+    // =========================
+    // documents: z
+    //   .array(z.instanceof(File))
+    //   .min(
+    //     1,
+    //     t("validation.documents_required")
+    //   ),
+    documents: z
+      .array(z.instanceof(File), {
+        error: (issue) => {
+          if (issue.input === undefined) {
+            return t("validation.documents_required");
+          }
+
+          return t("validation.invalid_documents");
+        },
+      })
+      .min(1, {
+        error: t("validation.documents_required"),
+      }),
+
+    profile_img: z
+      .array(z.instanceof(File))
+      .optional(),
+
+    resume: z
+      .array(z.instanceof(File))
+      .optional(),
+  });
+

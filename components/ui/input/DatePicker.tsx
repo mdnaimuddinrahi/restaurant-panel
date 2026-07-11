@@ -31,6 +31,8 @@ import {
 import { hexToRgba, useTheme } from "@/theme";
 import AppCustomButton from "../button/AppCustomButton";
 import AppSelect from "./AppSelect";
+import Label from "../Label";
+import { useTranslation } from "react-i18next";
 
 
 export interface AppDatePickerProps
@@ -39,6 +41,7 @@ export interface AppDatePickerProps
     "value" | "onChange" | "type"
   > {
   label?: string;
+  name?: string;
   required?: boolean;
   error?: string;
   value?: Date | null;
@@ -48,10 +51,11 @@ export interface AppDatePickerProps
 
 export default function DatePicker({
   label,
+  name,
   required,
   error,
   value,
-  placeholder = "yyyy-mm-dd",
+  placeholder,
   className = "",
   onChange,
 }: AppDatePickerProps) {
@@ -230,48 +234,50 @@ export default function DatePicker({
 
   // Add this
 
-const handleInputChange = (
-  e: React.ChangeEvent<HTMLInputElement>
-) => {
-  let value = e.target.value;
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    let value = e.target.value;
 
-  // Allow only digits and hyphens
-  value = value.replace(/[^\d-]/g, "");
+    // Allow only digits and hyphens
+    value = value.replace(/[^\d-]/g, "");
 
-  const digits = value.replace(/-/g, "").slice(0, 8);
+    const digits = value.replace(/-/g, "").slice(0, 8);
 
-  let formatted = digits;
+    let formatted = digits;
 
-  if (digits.length > 4) {
-    formatted = `${digits.slice(0, 4)}-${digits.slice(4)}`;
-  }
-
-  if (digits.length > 6) {
-    formatted = `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6, 8)}`;
-  }
-
-  setInputValue(formatted);
-
-  // ✅ User cleared the input
-  if (formatted === "") {
-    setCurrentMonth(new Date());
-    onChange?.(null); // or "" if your component uses string values
-    return;
-  }
-
-  // Only validate complete dates
-  if (formatted.length === 10) {
-    const parsed = parse(formatted, "yyyy-MM-dd", new Date());
-
-    if (
-      isValid(parsed) &&
-      format(parsed, "yyyy-MM-dd") === formatted
-    ) {
-      setCurrentMonth(parsed);
-      onChange?.(parsed);
+    if (digits.length > 4) {
+      formatted = `${digits.slice(0, 4)}-${digits.slice(4)}`;
     }
-  }
-};
+
+    if (digits.length > 6) {
+      formatted = `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6, 8)}`;
+    }
+
+    setInputValue(formatted);
+
+    // ✅ User cleared the input
+    if (formatted === "") {
+      setCurrentMonth(new Date());
+      onChange?.(null); // or "" if your component uses string values
+      return;
+    }
+
+    // Only validate complete dates
+    if (formatted.length === 10) {
+        const parsed = parse(formatted, "yyyy-MM-dd", new Date());
+
+        if (
+          isValid(parsed) &&
+          format(parsed, "yyyy-MM-dd") === formatted
+        ) {
+          setCurrentMonth(parsed);
+          onChange?.(parsed);
+        }
+      }
+    };
+  
+  const {t} = useTranslation(['common'])
 
   return (
     <div
@@ -280,22 +286,12 @@ const handleInputChange = (
     >
       {/* LABEL */}
       {label && (
-        <label
-          className={`
-            mb-1.5 block text-xs font-medium transition-colors duration-300
-            ${
-              isError
-                ? "text-red-500"
-                : "text-slate-500 dark:text-slate-200"
-            }
-          `}
-        >
-          {label}
-
-          {required && (
-            <span className="ml-1 text-red-500">*</span>
-          )}
-        </label>
+        <Label
+          htmlFor={name}
+          label={label}
+          required={required}
+          isError={!!error}
+        />
       )}
 
       {/* INPUT */}
@@ -322,9 +318,10 @@ const handleInputChange = (
         />
 
         <input
+          id={name}
           type="text"
           value={inputValue}
-          placeholder={placeholder}
+          placeholder={placeholder ?? t("common:placeholder.date")}
           onFocus={() => {
             setOpen(true);
             setFocused(true);

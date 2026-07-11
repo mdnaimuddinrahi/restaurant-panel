@@ -2,16 +2,19 @@
 
 import { TextareaHTMLAttributes, useState } from "react";
 import { useTheme } from "@/theme";
+import Label from "../Label";
 
 interface AppTextareaProps
   extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
+  name?:string;
   required?: boolean;
   error?: string;
 }
 
 export default function TextArea({
   label,
+  name,
   required,
   error,
   className = "",
@@ -26,27 +29,18 @@ export default function TextArea({
     <div className="w-full">
       {/* LABEL */}
       {label && (
-        <label
-          className={`
-            mb-1.5 block text-xs font-medium transition-colors duration-300
-            ${
-              isError
-                ? "text-red-500"
-                : "text-slate-500 dark:text-slate-400"
-            }
-          `}
-        >
-          {label}
-
-          {required && (
-            <span className="ml-1 text-red-500">*</span>
-          )}
-        </label>
+        <Label
+          htmlFor={name}
+          label={label}
+          required={required}
+          isError={!!error}
+        />
       )}
 
       {/* TEXTAREA */}
       <textarea
         {...props}
+        id={name}
         onFocus={(e) => {
           setFocused(true);
 
