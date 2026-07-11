@@ -9,6 +9,7 @@ import { hexToRgba, useTheme } from "@/theme";
 import AppSelect from '@/components/ui/input/AppSelect';
 import { SingleValue } from 'react-select';
 import AppTimePicker from '@/components/ui/input/AppTimePicker';
+import { t } from 'i18next';
 
 export default function EmployeeFilterPanel({
     resourceIsLoading,
@@ -34,7 +35,6 @@ export default function EmployeeFilterPanel({
 }: EmployeeFIlterPanelProps) {
     
     const [showSearchHint, setShowSearchHint] = useState(false)
-    const searchFieldList = searchFields.split(",").map(f => f.trim()).filter(Boolean);
     const { accentColor } = useTheme();
       
     return (
@@ -49,10 +49,9 @@ export default function EmployeeFilterPanel({
                 <div className="grid grid-cols-3 md:grid-cols-4 xl:grid-cols-4 gap-3 mt-1 p-3">
                     <AppSelect
                         options={bloodGroupOption}
-                        placeholder="Blood Group"
+                        placeholder={t('employee:blood_group')}
                         isClearable={true}
                         value={bloodGroupOption?.find(o => o.value === bloodGroup)}
-                        // onChange={(option: ResourceOption) => setBloodGroup(option?.value ?? -1)}
                         onChange={(option: SingleValue<ResourceOption>) => {
                             setBloodGroup(option?.value ?? -1);
                         }}
@@ -60,7 +59,7 @@ export default function EmployeeFilterPanel({
 
                     <AppSelect
                         options={employeeDesignationOption}
-                        placeholder="Employee Designation"
+                        placeholder={t('employee:employee_designation')}
                         isClearable={true}
                         value={employeeDesignationOption?.find(o => o.value ===employeeDesignation)}
                         onChange={(option: SingleValue<ResourceOption>) => setEmployeeDesignation(option?.value ?? -1)}
@@ -68,7 +67,7 @@ export default function EmployeeFilterPanel({
 
                     <AppSelect
                         options={employeeTypeOption}
-                        placeholder="Employee Type"
+                        placeholder={t('employee:employee_type')}
                         isClearable={true}
                         value={employeeTypeOption?.find(o => o.value ===employeeType)}
                         onChange={(option: SingleValue<ResourceOption>) => setEmployeeType(option?.value ?? -1)}
@@ -76,7 +75,7 @@ export default function EmployeeFilterPanel({
 
                     <AppSelect
                         options={genderOption}
-                        placeholder="Gender"
+                        placeholder={t('employee:gender')}
                         isClearable={true}
                         value={genderOption?.find(o => o.value ===gender)}
                         onChange={(option: SingleValue<ResourceOption>) => setGender(option?.value ?? -1)}
@@ -84,7 +83,7 @@ export default function EmployeeFilterPanel({
 
                     <AppSelect
                         options={maritalStatusOption}
-                        placeholder="Marital Status"
+                        placeholder={t('employee:marital_status')}
                         isClearable={true}
                         value={maritalStatusOption?.find(o => o.value ===maritalStatus)}
                         onChange={(option: SingleValue<ResourceOption>) => setMaritalStatus(option?.value ?? -1)}
@@ -95,7 +94,7 @@ export default function EmployeeFilterPanel({
                         onMouseLeave={() => setShowSearchHint(false)}
                     >
                         <AppInput
-                            placeholder="Search..."
+                            placeholder={t('common:placeholder.search')}
                             onFocus={() => setShowSearchHint(true)}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
                         />
@@ -103,44 +102,37 @@ export default function EmployeeFilterPanel({
                         {/* Tooltip */}
                         <div
                         
-                        style={{ background: hexToRgba(accentColor, 0.9) }}
-                        className={`
-                            absolute left-0 top-full mt-2
-                            z-50
-
-                            w-max max-w-xs
-
-                            rounded-lg
-                            text-white text-xs
-
-                            px-3 py-2
-
-                            shadow-xl
-
-                            transition-all duration-200
-
-                            ${showSearchHint ? "opacity-100 scale-100" : "opacity-0 scale-95"}
-
-                            pointer-events-none
-                        `}
+                            style={{ background: hexToRgba(accentColor, 0.9) }}
+                            className={`
+                                absolute left-0 top-full mt-2
+                                z-50
+                                w-max max-w-xs
+                                rounded-lg
+                                text-white text-xs
+                                px-3 py-3
+                                shadow-xl
+                                transition-all duration-200
+                                ${showSearchHint ? "opacity-100 scale-100" : "opacity-0 scale-95"}
+                                pointer-events-none
+                            `}
                         >
-                            <div className="font-medium mb-1">Search enabled for:</div>
+                            <div className="font-medium mb-1">{t('common:search_enable_for')}:</div>
 
                             <div className="flex flex-wrap gap-1 text-slate-300">
-                            {searchFieldList.map((field) => (
-                                <span
-                                key={field}
-                                className="text-white px-2 py-0.5 rounded-md border border-gray-300"
-                                 style={{ backgroundColor: accentColor }}
-                                >
-                                {field}
-                                </span>
-                            ))}
+                                {searchFields.map((field) => (
+                                    <span
+                                        key={field}
+                                        className="text-white px-2 py-0.5 rounded-md border border-gray-300"
+                                        style={{ backgroundColor: accentColor }}
+                                    >
+                                        {t(field)}
+                                    </span>
+                                ))}
                             </div>
                         </div>
                     </div>
                     <AppButton onClick={onSearch}>
-                        Search
+                        {t('common:search')}
                     </AppButton>
                 </div>
             }

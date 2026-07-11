@@ -13,6 +13,21 @@
   "files": "files",
   "click_to_browse": "or click to browse",
   "placeholder": {
-    "date": "yyyy-mm-dd"
-  }
+    "date": "yyyy-mm-dd",
+    "search": "Search..."
+  },
+  "search": "Search",
+  "action": "Action",
+  "previous": "Previous",
+  "next": "Next",
+  "showing": "Showing",
+  "tableInfo": "Showing {{from}}–{{to}} of {{total}}",
+  "filter_columns": "Filter Columns",
+  "visibleColumns": "{{visible}} of {{total}} visible",
+  "manage_columns": "Manage Columns",
+  "columnsVisible": "{{visible}} of {{total}} columns visible",
+  "select_all": "Select All",
+  "clear_all": "Clear All",
+  "columnRange": "Columns {{from}} - {{to}}",
+  "search_enable_for": "Search enabled for"
 }

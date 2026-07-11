@@ -1,6 +1,6 @@
 import { useTheme } from '@/theme';
 import { ReactNode, useRef } from 'react'
-import AppCustomButton from './button/AppCustomButton';
+import AppCustomButton from '../button/AppCustomButton';
 import { RxCross2 } from 'react-icons/rx';
 
 type ModalSize = "sm" | "md" | "lg" | "xl" | "full";

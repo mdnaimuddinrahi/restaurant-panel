@@ -121,7 +121,7 @@ export interface EmployeeFIlterPanelProps {
   gender: number,
   maritalStatus: number,
   searchTerm: string,
-  searchFields: string,
+  searchFields: string[],
   setBloodGroup: (blood_group: number) => void,
   setEmployeeDesignation: (employee_designation: number) => void,
   setEmployeeType: (employee_type: number) => void,

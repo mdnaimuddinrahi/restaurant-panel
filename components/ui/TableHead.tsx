@@ -4,6 +4,8 @@ import { HiDotsHorizontal } from "react-icons/hi";
 import { IoMdArrowRoundDown, IoMdArrowRoundUp } from "react-icons/io";
 import { RiBarChartHorizontalLine } from "react-icons/ri";
 import { hexToRgba, useTheme } from "@/theme";  
+import { t } from "i18next";
+import useNumberFormatter from "@/hooks/useNumberFormatter";
 
 interface TableHeadProps<T> {
   sortState: SortState<T>;
@@ -29,6 +31,7 @@ export default function TableHead<T>({
     });
   }
   const { accentColor } = useTheme();
+  const formatNumber = useNumberFormatter();
 
   return (
     <thead>
@@ -64,7 +67,7 @@ export default function TableHead<T>({
                       flex items-center justify-center
                     "
                   >
-                    {columns.filter(c => c.isVisible).length}
+                    { formatNumber(columns.filter(c => c.isVisible).length)}
                   </span>
             </button>
 
@@ -76,7 +79,7 @@ export default function TableHead<T>({
               className="
                 absolute left-full top-1/2 ml-3
                 -translate-y-1/2
-                z-[9999]
+                z-9999
 
                 rounded-xl
                 text-white
@@ -100,11 +103,15 @@ export default function TableHead<T>({
               "
             >
               <div className="font-medium">
-                Filter Columns
+                {t('common:filter_columns')}
               </div>
 
               <div className="text-xs text-white/80 mt-1">
-                {columns.filter(c => c.isVisible).length} of {columns.length} visible
+              {t("common:visibleColumns", {
+                visible: formatNumber(columns.filter(c => c.isVisible).length),
+                total: formatNumber(columns.length),
+              })}
+                {/* {columns.filter(c => c.isVisible).length} of {columns.length} visible */}
               </div>
             </div>
           </div>
@@ -124,7 +131,7 @@ export default function TableHead<T>({
               }}
             >
               <div className="flex items-center gap-1">
-                <span>{column.label}</span>
+                <span>{t(column.label)}</span>
 
                 {column.isSort &&
                   sortState.col === column.key &&
@@ -138,7 +145,7 @@ export default function TableHead<T>({
           ))}
 
         <th className="px-4 py-3 text-left font-semibold">
-          Actions
+          {t('common:action')}
         </th>
       </tr>
     </thead>

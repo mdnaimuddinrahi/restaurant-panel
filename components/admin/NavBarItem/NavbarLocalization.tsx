@@ -101,35 +101,35 @@ export default function NavbarLocalization() {
                   </p>
                 </div>
                 {languages.map((language) => {
-        const active = i18n.language === language.code;
-        const hovered = hoveredLanguage === language.code;
+                    const active = i18n.language === language.code;
+                    const hovered = hoveredLanguage === language.code;
 
-        return (
-          <button
-            key={language.code}
-            onClick={() => changeLanguage(language.code)}
-            onMouseEnter={() => setHoveredLanguage(language.code)}
-            onMouseLeave={() => setHoveredLanguage(null)}
-            className={`w-full flex items-center justify-between px-4 py-3 text-left transition-colors ${
-              active ? "font-semibold" : ""
-            }`}
-            style={{
-              color: active ? accentColor : undefined,
-              backgroundColor: hovered
-                ? hexToRgba(accentColor, 0.08)
-                : undefined,
-            }}
-          >
-            <span>
-              {language.flag} {language.label}
-            </span>
+                  return (
+                    <button
+                      key={language.code}
+                      onClick={() => changeLanguage(language.code)}
+                      onMouseEnter={() => setHoveredLanguage(language.code)}
+                      onMouseLeave={() => setHoveredLanguage(null)}
+                      className={`w-full flex items-center justify-between px-4 py-3 text-left transition-colors ${
+                        active ? "font-semibold" : ""
+                      }`}
+                      style={{
+                        color: active ? accentColor : undefined,
+                        backgroundColor: hovered
+                          ? hexToRgba(accentColor, 0.08)
+                          : undefined,
+                      }}
+                    >
+                      <span>
+                        {language.flag} {language.label}
+                      </span>
 
-            {active && (
-              <IoIosCheckmarkCircleOutline className="text-lg" />
-            )}
-          </button>
-        );
-      })}
+                      {active && (
+                        <IoIosCheckmarkCircleOutline className="text-lg" />
+                      )}
+                    </button>
+                  );
+                })}
         </div>
       )}
     </div>

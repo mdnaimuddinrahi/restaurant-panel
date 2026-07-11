@@ -4,6 +4,8 @@ import { TableColumn } from "@/store/commonInterface";
 import AppInput from "../input/AppInput";
 import AppCustomButton from "../button/AppCustomButton";
 import { RxCross2 } from "react-icons/rx";
+import { t } from "i18next";
+import useNumberFormatter from "@/hooks/useNumberFormatter";
 
 interface Props<T> {
   open: boolean;
@@ -30,18 +32,6 @@ export default function ColumnSelectorModal<T>({
   const filtered = columns.filter(col =>
     col.label.toLowerCase().includes(search.toLowerCase())
   );
-
-  // const groupCount = Math.ceil(filtered.length / 10);
-
-  // const modalWidth = useMemo(() => {
-  //   const basePerGroup = 260;
-  //   const min = 420;
-  //   const max = 1100;
-
-  //   const width = groupCount * basePerGroup;
-
-  //   return Math.min(Math.max(width, min), max);
-  // }, [groupCount]);
 
   const chunkArray = <T,>(arr: T[], size: number) => {
     const res: T[][] = [];
@@ -79,6 +69,8 @@ export default function ColumnSelectorModal<T>({
   const checkboxStyle = {
     accentColor: accentColor,
   };
+  const formatNumber = useNumberFormatter();
+  const visibleColumns = columns.filter(col => col.isVisible).length;
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center">
@@ -92,24 +84,17 @@ export default function ColumnSelectorModal<T>({
       <div
         className="relative bg-gray-50 dark:bg-slate-800 rounded-2xl shadow-2xl mx-4 overflow-hidden animate-fadeIn"
       >
-
-        {/* Header */}
-        {/* <div className="px-6 py-4 border-b border-gray-300 dark:border-slate-700 flex items-center justify-between">
-          <h3 className=" text-base text-gray-800">
-            Manage Columns
-          </h3>
-          <AppCustomButton onClick={onClose} variant="ghost" className="text-xl ">
-            <RxCross2 className="stroke-current" />
-          </AppCustomButton>
-        </div> */}
         <div className="px-6 py-4 border-b border-gray-300 dark:border-slate-700 flex items-center justify-between">
           <div>
             <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
-              Manage Columns
+              {t('common:manage_columns')}
             </h3>
 
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              {columns.filter(col => col.isVisible).length} of {columns.length} columns visible
+              {t("common:columnsVisible", {
+                visible: formatNumber(visibleColumns),
+                total: formatNumber(columns.length),
+              })}
             </p>
           </div>
 
@@ -127,14 +112,14 @@ export default function ColumnSelectorModal<T>({
 
           {/* Search */}
           <div>
-            <AppInput value={search} onChange={(e: any) => setSearch(e.target.value)} placeholder="Search..." />
+            <AppInput value={search} onChange={(e: any) => setSearch(e.target.value)} placeholder={t('common:placeholder.search')} />
           </div>
 
           {/* Actions */}
           <div className="flex flex-wrap gap-2">
 
             <AppCustomButton variant="outline" onClick={selectAll} className="text-xs">
-              Select All
+              {t('common:select_all')}
             </AppCustomButton>
 
             <AppCustomButton
@@ -142,7 +127,7 @@ export default function ColumnSelectorModal<T>({
               onClick={clearAll}
               className="text-xs"
               >
-              Clear All
+              {t('common:clear_all')}
             </AppCustomButton>
 
           </div>
@@ -154,21 +139,29 @@ export default function ColumnSelectorModal<T>({
           <div className="flex gap-6">
 
             {groups.map((group, gi) => (
-              <div key={gi} className="min-w-[220px]">
+              <div key={gi} className="min-w-55">
 
                 <div className="text-xs text-slate-500 mb-3">
-                  Columns {gi * 5 + 1} -{" "}
-                  {gi * 5 + group.length}
+                  {/* Columns {gi * 5 + 1} -{" "}
+                  {gi * 5 + group.length} */}
+                  {t("common:columnRange", {
+                      from: formatNumber(gi * 5 + 1),
+                      to: formatNumber(gi * 5 + group.length),
+                    })}
                 </div>
 
                 <div className="space-y-2">
                   {group.map(col => (
                     <label
                       key={String(col.key)}
-                      className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer transition"
+                      className="
+                        flex items-center justify-between px-3
+                        py-2 rounded-xl hover:bg-slate-200
+                      dark:hover:bg-slate-700 cursor-pointer 
+                        transition"
                     >
                       <span className="text-sm">
-                        {col.label}
+                        {t(col.label)}
                       </span>
 
                       <input

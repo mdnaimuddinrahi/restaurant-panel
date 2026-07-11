@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "@/theme";
-import { hexToRgba } from "@/theme/colorUtils";
+import { hexToRgba } from "@/utils/colorUtils";
 
 export function useSelectTheme() {
   const { accentColor } = useTheme();

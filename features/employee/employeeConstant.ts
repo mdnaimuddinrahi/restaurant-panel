@@ -3,21 +3,39 @@ import { EmployeeTableHead } from "./employeeInterface";
 
 
 export const EMPLOYEE_COLUMNS: TableColumn<EmployeeTableHead>[] = [
-    { isVisible: true, isSort:true, key: "name", label: "Name"},
-    { isVisible: true, isSort:true, key: "email", label: "Email"},
-    { isVisible: true, isSort:true, key: "phone", label: "Phone"},
-    { isVisible: true, isSort:false, key: "blood_group", label: "Blood Group"},
-    { isVisible: true, isSort:true, key: "date_of_joining", label: "Joined"},
-    { isVisible: false, isSort:false, key: "employee_designation_id", label: "Employee Designation"},
-    { isVisible: false, isSort:false, key: "employee_type_id", label: "Employee Type"},
-    { isVisible: false, isSort:false, key: "gender", label: "Gender"},
-    { isVisible: false, isSort:false, key: "marital_status", label: "Marital Status"},
-    { isVisible: false, isSort:false, key: "emergency_contact_name", label: "Emergency Contact Name"},
-    { isVisible: false, isSort:false, key: "emergency_contact_phone", label: "Emergency Contact Phone"},
-    { isVisible: false, isSort:false, key: "emergency_contact_relation", label: "Emergency Contact Relation"},
-    { isVisible: false, isSort:false, key: "shift_start", label: "Shift Start"},
-    { isVisible: false, isSort:false, key: "shift_end", label: "Shift End"},
+    { isVisible: true, isSort:true, key: "name", label: "employee:employee_name"},
+    { isVisible: true, isSort:true, key: "email", label: "employee:email_address"},
+    { isVisible: true, isSort:true, key: "phone", label: "employee:phone_number"},
+    { isVisible: true, isSort:false, key: "blood_group", label: "employee:blood_group"},
+    { isVisible: true, isSort:true, key: "date_of_joining", label: "employee:date_of_joining"},
+    { isVisible: false, isSort:false, key: "employee_designation_id", label: "employee:employee_designation"},
+    { isVisible: false, isSort:false, key: "employee_type_id", label: "employee:employee_type"},
+    { isVisible: false, isSort:false, key: "gender", label: "employee:gender"},
+    { isVisible: false, isSort:false, key: "marital_status", label: "employee:marital_status"},
+    { isVisible: false, isSort:false, key: "emergency_contact_name", label: "employee:contact_person_name"},
+    { isVisible: false, isSort:false, key: "emergency_contact_phone", label: "employee:contact_person_phone"},
+    { isVisible: false, isSort:false, key: "emergency_contact_relation", label: "employee:contact_person_relation"},
+    { isVisible: false, isSort:false, key: "shift_start", label: "employee:start_time"},
+    { isVisible: false, isSort:false, key: "shift_end", label: "employee:end_time"},
 ]
+// export const getEmployeeColumns = (
+//   t: (key: string) => string
+// ): TableColumn<EmployeeTableHead>[] => [
+//     { isVisible: true, isSort:true, key: "name", label: t("employee:employee_name")},
+//     { isVisible: true, isSort:true, key: "email", label: t("employee:email_address")},
+//     { isVisible: true, isSort:true, key: "phone", label: t('employee:phone_number')},
+//     { isVisible: true, isSort:false, key: "blood_group", label: t("employee.blood_group")},
+//     { isVisible: true, isSort:true, key: "date_of_joining", label: t('employee:date_of_joining')},
+//     { isVisible: false, isSort:false, key: "employee_designation_id", label: t("employee.employee_designation")},
+//     { isVisible: false, isSort:false, key: "employee_type_id", label: t('employee.employee_type')},
+//     { isVisible: false, isSort:false, key: "gender", label: t('employee.gender')},
+//     { isVisible: false, isSort:false, key: "marital_status", label: t('employee.marital_status')},
+//     { isVisible: false, isSort:false, key: "emergency_contact_name", label: t('employee.contact_person_name')},
+//     { isVisible: false, isSort:false, key: "emergency_contact_phone", label: t('employee.contact_person_phone')},
+//     { isVisible: false, isSort:false, key: "emergency_contact_relation", label: t('employee.contact_person_relation')},
+//     { isVisible: false, isSort:false, key: "shift_start", label: t('employee.start_time')},
+//     { isVisible: false, isSort:false, key: "shift_end", label: t('employee.end_time')},
+// ]
 
 // export const EMPLOYEE_SECTIONS = [ { id: "personal", title: "Personal Information", description: "Basic employee information", }, { id: "employment", title: "Employment Information", description: "Role and employment details", }, { id: "identity", title: "Identity Information", description: "National ID and passport", }, { id: "emergency", title: "Emergency Contact", description: "Emergency contact details", }, { id: "bank", title: "Bank Information", description: "Bank account details", }, { id: "address", title: "Address Information", description: "Present and permanent address", }, { id: "documents", title: "Documents", description: "Attachments and uploaded files", }, { id: "permissions", title: "Permissions", description: "Roles and access control", }, { id: "system", title: "System Information", description: "Internal settings", }, ];
 export const EMPLOYEE_SECTIONS = [

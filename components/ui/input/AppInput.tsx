@@ -40,7 +40,7 @@ export default function AppInput(props: any) {
           e.target.style.boxShadow = "";
         }}
         className={`
-          w-full rounded-lg border px-3 py-2 text-sm pl-9
+          w-full rounded-lg border px-3 py-3 text-sm pl-9
           bg-white dark:bg-slate-800
           text-slate-900 dark:text-slate-100
           border-slate-300 dark:border-slate-700

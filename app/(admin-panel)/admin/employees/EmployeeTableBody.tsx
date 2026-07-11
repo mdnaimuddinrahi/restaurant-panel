@@ -1,5 +1,6 @@
 import AppCustomButton from '@/components/ui/button/AppCustomButton';
 import { Employee } from '@/features/employee/employeeInterface';
+import useNumberFormatter from '@/hooks/useNumberFormatter';
 import { ResourceOption, TableColumn } from '@/store/commonInterface';
 import { hexToRgba, useTheme } from '@/theme';
 import React, { useState } from 'react'
@@ -47,6 +48,7 @@ export default function EmployeeTableBody<T>({
     const { accentColor } = useTheme();
 
     const rowHoverStyle = { "--row-hover": hexToRgba(accentColor, 0.08) } as React.CSSProperties;
+    const formatNumber = useNumberFormatter();
     return (
         <tbody id="employee-table-body">
             {employees.map((employee, index) => (

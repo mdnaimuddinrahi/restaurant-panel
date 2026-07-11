@@ -90,7 +90,7 @@ export default function AppSelect<
         }}
         menuPosition="fixed"
         classNamePrefix="app-select"
-        className="text-xs"
+        className="text-sm"
         styles={{
           control: (base, state) => ({
             ...base,

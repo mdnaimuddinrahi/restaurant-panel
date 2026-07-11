@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState } from 'react'
-import AppModal from '@/components/ui/AppModal';
+import AppModal from '@/components/ui/modal/AppModal';
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import EmployeeSection from "./EmployeeSection";
@@ -19,7 +19,7 @@ import z from 'zod';
 import { formatDate } from '@/store/commonFunction';
 import { CreateEmployeeRequest } from '@/features/employee/employeeInterface';
 import { toast } from "react-toastify";
-import { appToast } from '@/theme/toastUtils';
+import { appToast } from '@/utils/toastUtils';
 
 type EmployeeCreateProps = {
   onClose: () => void;

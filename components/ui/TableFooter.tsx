@@ -1,8 +1,9 @@
 import { FiChevronsLeft, FiChevronsRight } from 'react-icons/fi';
 import AppCustomButton from './button/AppCustomButton';
-import { DEFAULT_PAGINATION } from '@/store/commonConstants';
 import { PaginationProps } from '@/store/commonInterface';
 import AppSelect from './input/AppSelect';
+import { t } from 'i18next';
+import useNumberFormatter from '@/hooks/useNumberFormatter';
 
 
 
@@ -13,7 +14,14 @@ export default function TableFooter({
     setTablePage,
     setTablePageSize,
 }: PaginationProps) {
-  const pageOptions = DEFAULT_PAGINATION.PAGE_OPTIONS;
+  
+ const formatNumber = useNumberFormatter();
+
+  const pageOptions = [
+    { label: formatNumber(5), value: 5 },
+    { label: formatNumber(10), value: 10 },
+    { label: formatNumber(100), value: 100 },
+  ];
   const pagesCount = Math.ceil(totalDataCount / tablePageSize);
 
   const getVisiblePages = () => {
@@ -30,22 +38,31 @@ export default function TableFooter({
 
     return range;
   };
+  const from =
+    totalDataCount === 0
+      ? 0
+      : Math.min(
+          (tablePage - 1) * tablePageSize + 1,
+          totalDataCount
+        );
 
+  const to = Math.min(
+    tablePage * tablePageSize,
+    totalDataCount
+  );
   const visiblePages = getVisiblePages();
       return (
           <div className="p-4 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between text-sm text-slate-500">
 
           {/* LEFT: info + page size */}
           <div className="flex items-center gap-4">
-              <span id="table-info">
-                Showing{" "}
-                {totalDataCount === 0
-                    ? 0
-                    : Math.min((tablePage - 1) * tablePageSize + 1, totalDataCount)}
-                –
-                {Math.min(tablePage * tablePageSize, totalDataCount)} of{" "}
-                {totalDataCount}
-              </span>
+            <span id="table-info">
+              {t("common:tableInfo", {
+                from: formatNumber(from),
+                to: formatNumber(to),
+                total: formatNumber(totalDataCount),
+              })}
+            </span>
           </div>
           <div className="">
               {/* Page size dropdown */}
@@ -77,14 +94,14 @@ export default function TableFooter({
               onClick={() => setTablePage(tablePage - 1)}
               disabled={tablePage === 1}
             >
-              Prev
+              {t('common:previous')}
             </AppCustomButton>
 
             {/* First page */}
             {visiblePages[0] > 1 && (
               <>
                 <AppCustomButton variant="outline" onClick={() => setTablePage(1)}>
-                  1
+                  {formatNumber(1)}
                 </AppCustomButton>
                 {visiblePages[0] > 2 && (
                   <span className="px-1 text-slate-400">...</span>
@@ -99,7 +116,7 @@ export default function TableFooter({
                 variant={page === tablePage ? "solid" : "outline"}
                 onClick={() => setTablePage(page)}
               >
-                {page}
+                {formatNumber(page)}
               </AppCustomButton>
             ))}
 
@@ -111,7 +128,7 @@ export default function TableFooter({
                 )}
 
                 <AppCustomButton variant="outline" onClick={() => setTablePage(pagesCount)}>
-                  {pagesCount}
+                  {formatNumber(pagesCount)}
                 </AppCustomButton>
               </>
             )}
@@ -122,7 +139,7 @@ export default function TableFooter({
               onClick={() => setTablePage(tablePage + 1)}
               disabled={tablePage === pagesCount}
             >
-              Next
+              {t('common:next')}
             </AppCustomButton>
 
             {/* Last */}

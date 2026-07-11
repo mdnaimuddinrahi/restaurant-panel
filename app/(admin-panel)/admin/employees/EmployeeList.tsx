@@ -8,7 +8,7 @@ import EmployeeFilterPanel from './EmployeeFilterPanel';
 import TableFooter from '@/components/ui/TableFooter';
 import { DEFAULT_PAGINATION, DEFAULT_SEARCH } from '@/store/commonConstants';
 import { useGetEmployeeResourcesQuery, useGetEmployeesQuery } from '@/features/employee/employeeApi';
-import ColumnSelectorModal from '@/components/ui/select/ColumnSelectorModal';
+import ColumnSelectorModal from '@/components/ui/modal/ColumnSelectorModal';
 import EmployeeTableBody from './EmployeeTableBody';
 
 export default function EmployeeList() {
@@ -23,7 +23,7 @@ export default function EmployeeList() {
   const [perPage, setPerPage] = useState(DEFAULT_PAGINATION.PER_PAGE)
   const [total, setTotal] = useState(DEFAULT_PAGINATION.TOTAL)
   const [searchTerm, setSearchTerm] = useState(DEFAULT_SEARCH.SEARCH_TERM)
-  const [searchFields, setSearchFields] = useState("name,email,phone")
+  const [searchFields, setSearchFields] = useState(["name","email","phone"])
   const [sortType, setSortType] = useState(DEFAULT_SEARCH.SORT_TYPE)
   const [sortBy, setSortBy] = useState(DEFAULT_SEARCH.SORT_BY)
   const [columns, setColumns] = useState<TableColumn<EmployeeTableHead>[]>(EMPLOYEE_COLUMNS);
@@ -49,7 +49,7 @@ export default function EmployeeList() {
       page: currentPage,
       per_page: perPage,
       search_term: searchTerm,
-      search_fields: searchFields,
+      search_fields: searchFields.join(','),
       sort_type: sortType,
       sort_by: sortBy,
       blood_group: bloodGroup,
@@ -109,6 +109,10 @@ export default function EmployeeList() {
   }, [employeesResponse?.data, sortState]);
 
   const [openColumnModal, setOpenColumnModal] = useState(false);
+  const withPrefix = (
+    fields: string[],
+    prefix: string
+  ) => fields.map(field => `${prefix}${field}`);
 
   return (
       <div className=" bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
@@ -140,7 +144,7 @@ export default function EmployeeList() {
               setCurrentPage(1);
               setSearchTerm(draftSearchTerm)
           }}
-          searchFields={searchFields}
+          searchFields = {withPrefix(searchFields, "employee:")}
         />
         <div className="overflow-x-auto">
           <table className="w-full text-sm">

@@ -1,4 +1,7 @@
 {
+  "name": "নাম",
+  "email": "ইমেইল",
+  "phone": "মোবাইল নম্বর",
   "employees": "কর্মচারী",
   "personal_information": "ব্যক্তিগত তথ্য",
   "create_employee": "নতুন কর্মচারী",
@@ -138,5 +141,6 @@
   "resume": "জীবনবৃত্তান্ত",
   "employee_designation": "কর্মচারী পদবি",
   "employee_type": "কর্মচারীর ধরন",
-  "basic_salary_min": "মূল বেতন অবশ্যই 0-এর বেশি হতে হবে।"
+  "basic_salary_min": "মূল বেতন অবশ্যই 0-এর বেশি হতে হবে।",
+  "emergency_contact_name": "জরুরি যোগাযোগের নাম"
 }

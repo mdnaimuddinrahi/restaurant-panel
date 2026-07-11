@@ -1,4 +1,7 @@
 {
+  "name": "Employee Name",
+  "email": "Employee Email",
+  "phone": "Employee Phone",
   "employees": "Employees",
   "add_employee": "Add Employee",
   "personal_information": "Personal Information",
@@ -139,5 +142,6 @@
   "resume": "Resume",
   "employee_designation": "Employee Designation",
   "employee_type": "Employee Type",
-  "basic_salary_min": "Basic salary must be greater than 0."
+  "basic_salary_min": "Basic salary must be greater than 0.",
+  "emergency_contact_name": "Emergency Contact Name"
 }
