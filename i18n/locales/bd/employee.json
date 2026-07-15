@@ -142,5 +142,6 @@
   "employee_designation": "কর্মচারী পদবি",
   "employee_type": "কর্মচারীর ধরন",
   "basic_salary_min": "মূল বেতন অবশ্যই 0-এর বেশি হতে হবে।",
-  "emergency_contact_name": "জরুরি যোগাযোগের নাম"
+  "emergency_contact_name": "জরুরি যোগাযোগের নাম",
+  "no_employee_found": "কোন কর্মচারী খুঁজে পাওয়া যায়নি"
 }

@@ -1,8 +1,10 @@
+import AppTooltip from '@/components/ui/AppTooltip';
 import AppCustomButton from '@/components/ui/button/AppCustomButton';
 import { Employee } from '@/features/employee/employeeInterface';
 import useNumberFormatter from '@/hooks/useNumberFormatter';
 import { ResourceOption, TableColumn } from '@/store/commonInterface';
 import { hexToRgba, useTheme } from '@/theme';
+import { t } from 'i18next';
 import React, { useState } from 'react'
 import { BiEditAlt } from 'react-icons/bi';
 import { IoMdCopy } from 'react-icons/io';
@@ -19,6 +21,7 @@ interface Props<T> {
     employeeTypeOption: ResourceOption[],
     genderOption: ResourceOption[],
     maritalStatusOption: ResourceOption[],
+    onEdit: (id: number) => void;
 //   setColumns: React.Dispatch<
 //     React.SetStateAction<TableColumn<T>[]>
 //   >;
@@ -31,9 +34,17 @@ export default function EmployeeTableBody<T>({
     employeeDesignationOption,
     employeeTypeOption,
     genderOption,
-    maritalStatusOption
+    maritalStatusOption,
+    onEdit,
     }: Props<T>) {
-    const initials = (n: string) => n.split(' ').map(p => p[0]).join('');
+    // const initials = (n: string) => n.split(' ').map(p => p[0]).join('');
+    const initials = (name: string) =>
+  name
+    ?.trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((word) => word[0]?.toUpperCase())
+    .join("");
     const [copiedEmail, setCopiedEmail] = useState<string | null>(null);
     
     const handleCopy = async (email: string) => {
@@ -70,14 +81,30 @@ export default function EmployeeTableBody<T>({
                             return (
                                 <td key={column.key} className="px-4 py-3">
                                     <div className="flex items-center gap-2.5">
-                                    <div 
-                                        className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0" 
-                                        style={{ background: hexToRgba(accentColor, 0.8) }}
-                                        // style={}
-                                    >
-                                        {initials(employee.name)}
-                                    </div>
-                                    <span className="font-medium">{employee.name}</span>
+                                        <div className="relative inline-block group">
+                                            {employee.profile_img ? (
+                                                <>
+                                                {/* Avatar */}
+                                                <img
+                                                    src={employee.profile_img}
+                                                    alt={employee.name}
+                                                    className="w-8 h-8 rounded-full object-cover border border-gray-200"
+                                                />
+
+                                                </>
+                                            ) : (
+                                                <div
+                                                className="w-8 h-8 rounded-full flex items-center justify-center
+                                                            text-white text-xs font-semibold select-none"
+                                                style={{
+                                                    background: hexToRgba(accentColor, 0.8),
+                                                }}
+                                                >
+                                                {initials(employee.name)}
+                                                </div>
+                                            )}
+                                        </div>
+                                        <span className="font-medium">{employee.name}</span>
                                     </div>
                                 </td>
                             )
@@ -109,8 +136,12 @@ export default function EmployeeTableBody<T>({
                                             <>
                                                 <IoCheckmarkDone className="text-green-500 text-lg animate-bounce" />
 
-                                                <div className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded bg-green-600 px-2 py-1 text-xs text-white opacity-0 transition-all duration-200 group-hover:opacity-100">
-                                                Copied!
+                                                <div className="absolute bottom-full left-1/2 
+                                                                    mb-2 -translate-x-1/2 whitespace-nowrap 
+                                                                    rounded bg-green-600 px-2 py-1 text-xs 
+                                                                    text-white opacity-0 transition-all 
+                                                                    duration-200 group-hover:opacity-100">
+                                                    {t('common:copied')}
                                                 </div>
                                             </>
                                             ) : (
@@ -121,10 +152,14 @@ export default function EmployeeTableBody<T>({
                                                 />
 
                                                 <div 
-                                                    className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded  px-2 py-1 text-xs text-white opacity-0 transition-all duration-200 group-hover:opacity-100"
+                                                    className="absolute bottom-full left-1/2 mb-2 
+                                                                -translate-x-1/2 whitespace-nowrap 
+                                                                rounded  px-2 py-1 text-xs text-white 
+                                                                opacity-0 transition-all duration-200 
+                                                                group-hover:opacity-100"
                                                     style={{ background: hexToRgba(accentColor, 0.9) }}
                                                     >
-                                                    Copy email
+                                                    {t("common:copy_email")}
                                                 </div>
                                             </>
                                             )}
@@ -208,19 +243,31 @@ export default function EmployeeTableBody<T>({
 
                         if (column.key === 'emergency_contact_name') {
                             return (
-                                <td key={column.key} className="px-4 py-3 text-slate-500">{employee.emergency_contact_name}</td>
+                                <td 
+                                    key={column.key} 
+                                    className="px-4 py-3 text-slate-500">
+                                        {employee.emergency_contact_name}
+                                </td>
                             )
                         }
                         
                         if (column.key === 'emergency_contact_phone') {
                             return (
-                                <td key={column.key} className="px-4 py-3 text-slate-500">{employee.emergency_contact_phone}</td>
+                                <td 
+                                    key={column.key} 
+                                    className="px-4 py-3 text-slate-500">
+                                        {employee.emergency_contact_phone}
+                                </td>
                             )
                         }
                         
                         if (column.key === 'emergency_contact_relation') {
                             return (
-                                <td key={column.key} className="px-4 py-3 text-slate-500">{employee.emergency_contact_relation}</td>
+                                <td 
+                                    key={column.key} 
+                                    className="px-4 py-3 text-slate-500">
+                                        {employee.emergency_contact_relation}
+                                </td>
                             )
                         }
                         
@@ -241,33 +288,28 @@ export default function EmployeeTableBody<T>({
 
                             {/* Edit */}
                             <div className="relative group">
-                                <AppCustomButton
-                                    variant="outline"
-                                    className="p-1.5! transition-transform duration-200 hover:scale-110"
-                                >
-                                    <BiEditAlt className="text-base text-blue-900 dark:text-blue-400" />
-                                </AppCustomButton>
-
-                                <div className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 rounded  px-2 py-1 text-xs text-white opacity-0 scale-95 transition-all duration-200 group-hover:opacity-100 group-hover:scale-100 pointer-events-none whitespace-nowrap"
-                                    style={{ background: hexToRgba(accentColor, 0.9) }}>
-                                    Edit
-                                </div>
+                                <AppTooltip title={t("common:edit")}>
+                                        <AppCustomButton
+                                             onClick={() => onEdit(employee.id)}
+                                            variant="outline"
+                                            className="p-1.5! transition-transform duration-200 hover:scale-110"
+                                        >
+                                            <BiEditAlt className="text-base text-blue-900 dark:text-blue-400" />
+                                        </AppCustomButton>
+                                </AppTooltip>
                             </div>
 
                             {/* Delete */}
                             <div className="relative group">
-                                <AppCustomButton
-                                    variant="ghost"
-                                    className="p-1.5! transition-transform duration-200 hover:scale-110"
-                                >
-                                    <RxTrash className="text-base text-red-700"/>
-                                </AppCustomButton>
-
-                                <div className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 rounded  px-2 py-1 text-xs text-white opacity-0 scale-95 transition-all duration-200 group-hover:opacity-100 group-hover:scale-100 pointer-events-none whitespace-nowrap"
-                                style={{ background: hexToRgba(accentColor, 0.9) }}
-                                >
-                                    Delete
-                                </div>
+                                <AppTooltip title={t('common:delete')}>
+                                        <AppCustomButton
+                                            variant="ghost"
+                                            className="p-1.5! transition-transform duration-200 hover:scale-110"
+                                        >
+                                            <RxTrash className="text-base text-red-700"/>
+                                        </AppCustomButton>
+                                </AppTooltip>
+                                
                             </div>
 
                         </div>
@@ -276,7 +318,7 @@ export default function EmployeeTableBody<T>({
             ))}
             {employees.length === 0 && (
                 <tr>
-                    <td colSpan={6} className="px-4 py-8 text-center text-slate-400 text-sm">No employees found</td>
+                    <td colSpan={6} className="px-4 py-8 text-center text-slate-400 text-sm">{t('employee:no_employee_found')}</td>
                 </tr>
             )}
         </tbody>

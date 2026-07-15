@@ -37,7 +37,7 @@ export const employeeApi = baseApi.injectEndpoints({
         { type: "Employee", id },
       ],
     }),
-    createEmployee: builder.mutation<Employee, CreateEmployeeRequest>({
+    createEmployee: builder.mutation<Employee, FormData>({
       query: (body) => ({
         url: "/employees",
         method: "POST",

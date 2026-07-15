@@ -1,10 +1,10 @@
+
 "use client";
 
 import {
   useState,
   useRef,
   useEffect,
-  ReactNode,
 } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -44,7 +44,7 @@ export default function AppTimePicker({
   const { accentColor } = useTheme();
 
   // const isDark = false; // update later
-  
+
   const darkMode = localStorage.getItem('darkMode'); // update later
   // console.log('isDark', isDark)
   const isDark = darkMode == "true" ? true : false
@@ -100,6 +100,41 @@ export default function AppTimePicker({
       window.removeEventListener("mousedown", click);
   }, []);
 
+  // NEW: like react-select, scroll the active option into view whenever
+  // the panel opens (instead of leaving the list wherever it last was)
+  useEffect(() => {
+    if (!open) return;
+
+    const scrollToSelected = (
+      container: HTMLDivElement | null
+    ) => {
+      if (!container) return;
+      const el = container.querySelector<HTMLElement>(
+        '[data-selected="true"]'
+      );
+      el?.scrollIntoView({ block: "center" });
+    };
+
+    // wait a tick so the panel has mounted/rendered before measuring
+    const id = requestAnimationFrame(() => {
+      scrollToSelected(hourRef.current);
+      scrollToSelected(minuteRef.current);
+      scrollToSelected(periodRef.current);
+    });
+
+    return () => cancelAnimationFrame(id);
+  }, [open]);
+
+  // NEW: also close on Escape, matching standard select dropdown behavior
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
   const emitValue = (
     h: string,
     m: string,
@@ -134,7 +169,10 @@ export default function AppTimePicker({
   };
 
   return (
-    <div className={`w-full ${className || ""}`} ref={wrapperRef}>
+    <div
+      className={`relative w-full ${className || ""}`}
+      ref={wrapperRef}
+    >
       {label && (
         <label
           className={`mb-1.5 block text-xs font-medium transition-colors duration-300 ${
@@ -246,11 +284,25 @@ export default function AppTimePicker({
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="z-100 mt-2 w-full overflow-hidden rounded-xl border border-slate-50 dark:border-slate-600 bg-white dark:bg-gray-800 shadow-sm"
-            
+            className="
+              absolute
+              left-0
+              top-full
+              z-50
+              mt-1
+              w-full
+              overflow-hidden
+              rounded-xl
+              border
+              border-slate-200
+              dark:border-slate-700
+              bg-white
+              dark:bg-gray-800
+              shadow-xl
+            "
           >
             <div className="flex h-64">
-                              {/* Hour */}
+              {/* Hour */}
               <div
                 ref={hourRef}
                 className="flex-1 overflow-y-auto border-r border-slate-200 dark:border-slate-700 p-2"
@@ -259,6 +311,7 @@ export default function AppTimePicker({
                   <button
                     key={h}
                     type="button"
+                    data-selected={hour === h}
                     onClick={() => {
                       setHour(h);
                       emitValue(h, minute, period);
@@ -300,6 +353,7 @@ export default function AppTimePicker({
                   <button
                     key={m}
                     type="button"
+                    data-selected={minute === m}
                     onClick={() => {
                       setMinute(m);
                       emitValue(hour, m, period);
@@ -343,9 +397,12 @@ export default function AppTimePicker({
                   <button
                     key={item}
                     type="button"
+                    data-selected={period === item}
                     onClick={() => {
                       setPeriod(item);
                       emitValue(hour, minute, item);
+                      // NEW: like a select, finishing the pick closes the dropdown
+                      setOpen(false);
                     }}
                     className={`
                       mb-2 w-full rounded-lg py-2 

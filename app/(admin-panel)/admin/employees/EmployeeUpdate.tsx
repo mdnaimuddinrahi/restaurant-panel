@@ -1,29 +1,30 @@
-"use client"
-import AppModal from '@/components/ui/modal/AppModal';
-import { SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateEmployeeMutation } from "@/features/employee/employeeApi";
-import { employeeSchema } from "@/features/employee/employeeConstant";
+import AppModal from '@/components/ui/modal/AppModal'
+import React from 'react'
+import EmployeeForm from './EmployeeForm'
+import { employeeSchema } from '@/features/employee/employeeConstant';
+import { t } from 'i18next';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { buildFormData } from '@/utils/buildFormData';
 import { formatDate } from '@/store/commonFunction';
 import { appToast } from '@/utils/toastUtils';
-import { buildFormData } from '@/utils/buildFormData';
-import EmployeeForm from './EmployeeForm';
-import { t } from 'i18next';
+import { useUpdateEmployeeMutation } from '@/features/employee/employeeApi';
 
-type EmployeeCreateProps = {
+type EmployeeUpdatedProps = {
   onClose: () => void;
+  employeeId: number;
 };
 
-export default function EmployeeCreate({onClose}: EmployeeCreateProps) {
+export default function EmployeeUpdate({onClose, employeeId}: EmployeeUpdatedProps) {
     const schema = employeeSchema(t);
     type EmployeeFormData = z.infer<typeof schema>;
     const methods = useForm<EmployeeFormData>({
         resolver: zodResolver(schema),
     });
 
-    const [createEmployee, { isLoading }] = useCreateEmployeeMutation();
-
+    const [updateEmployee, { isLoading }] = useUpdateEmployeeMutation();
+    
     const employeeToFormData = (data: EmployeeFormData) => {
         return buildFormData({
             ...data,
@@ -41,7 +42,7 @@ export default function EmployeeCreate({onClose}: EmployeeCreateProps) {
 
     const handleSubmit: SubmitHandler<EmployeeFormData> = async (data) => {
         try {
-            await createEmployee(employeeToFormData(data)).unwrap();
+            // await createEmployee(employeeToFormData(data)).unwrap();
 
             appToast.success(t("employee:message.created"));
             methods.reset(); // Optional
@@ -66,11 +67,11 @@ export default function EmployeeCreate({onClose}: EmployeeCreateProps) {
         <>
             <AppModal
                 onClose={onClose}
-                modalTitle={t("employee:add_new_employee")} 
+                modalTitle={t("employee:update_employee")} 
                 size='full'
             >
                 <EmployeeForm
-                    mode="create"
+                    mode="update"
                     onSubmit={handleSubmit}
                     loading={isLoading}
                     methods={methods}

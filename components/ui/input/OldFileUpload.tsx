@@ -68,16 +68,10 @@ const handleInputChange = (
   const selectedFiles = Array.from(e.target.files ?? []);
 
   if (multiple) {
-    // Append newly picked files to whatever was already selected.
-    handleFile([...files, ...selectedFiles]);
+    handleFile(selectedFiles);
   } else {
-    // Single mode always takes exactly one file and replaces the old one.
     handleFile(selectedFiles.slice(0, 1));
   }
-
-  // Reset the native input value so selecting the same file again
-  // (e.g. after removing it) still fires onChange.
-  e.target.value = "";
 };
 
 //   const handleDrop = (
@@ -98,10 +92,8 @@ const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
   const droppedFiles = Array.from(e.dataTransfer.files);
 
   if (multiple) {
-    // Append dropped files to whatever was already selected.
-    handleFile([...files, ...droppedFiles]);
+    handleFile(droppedFiles);
   } else {
-    // Single mode always takes exactly one file and replaces the old one.
     handleFile(droppedFiles.slice(0, 1));
   }
 };

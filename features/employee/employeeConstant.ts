@@ -57,6 +57,21 @@ const time12Regex =
 
 // const { t } = useTranslation(["employee", "common"]);
 
+const MAX_PROFILE_SIZE = 2 * 1024 * 1024; // 2 MB
+const MAX_RESUME_SIZE = 5 * 1024 * 1024; // 5 MB
+
+const PROFILE_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+];
+
+const RESUME_TYPES = [
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
+
 export const employeeSchema = (t: (key: string) => string) => 
   z.object({
     name: z
@@ -312,13 +327,27 @@ export const employeeSchema = (t: (key: string) => string) =>
       .min(1, {
         error: t("validation.documents_required"),
       }),
-
-    profile_img: z
-      .array(z.instanceof(File))
-      .optional(),
+     profile_img: z
+      .array(
+        z.instanceof(File).refine(
+          (file) => PROFILE_TYPES.includes(file.type),
+          { message: "Profile image must be JPG, PNG, or WebP." }
+        )
+      )
+      .max(1, "Only one profile image is allowed.")
+      .min(1, {
+            error: t("validation.documents_required"),
+          }),
 
     resume: z
-      .array(z.instanceof(File))
+      .array(
+        z.instanceof(File).refine(
+          (file) => RESUME_TYPES.includes(file.type),
+          { message: "Resume must be PDF, DOC, or DOCX." }
+        )
+      )
+      .max(1, "Only one resume is allowed.")
       .optional(),
+
   });
 

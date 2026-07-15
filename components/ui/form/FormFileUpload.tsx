@@ -29,23 +29,28 @@ export default function FormFileUpload<
   multiple=false,
 }: FormFileUploadProps<T>) {
   const { control } = useFormContext<T>();
+  
 
   return (
     <Controller
       name={name}
       control={control}
-      render={({ field, fieldState }) => (
-        <FileUpload
+      render={({ field, fieldState }) => {
+        console.log('fieldState.error', fieldState.error)
+        const errorMessage = Array.isArray(fieldState.error)
+                                    ? fieldState.error[0]?.message
+                                    : fieldState.error?.message;
+        return <FileUpload
             label={label}
             required={required}
             accept={accept}
             disabled={disabled}
             files={field.value ?? []}
             onFilesChange={field.onChange}
-            error={fieldState.error?.message}
+            error={errorMessage}
             multiple={multiple}
         />
-      )}
+      }}
     />
   );
 }

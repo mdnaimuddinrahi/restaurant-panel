@@ -143,5 +143,7 @@
   "employee_designation": "Employee Designation",
   "employee_type": "Employee Type",
   "basic_salary_min": "Basic salary must be greater than 0.",
-  "emergency_contact_name": "Emergency Contact Name"
+  "emergency_contact_name": "Emergency Contact Name",
+  "no_employee_found": "No employees found",
+  "update_employee": "Update Employee"
 }

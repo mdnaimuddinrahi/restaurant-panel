@@ -5,7 +5,8 @@
   "reset": "Reset",
   "cancel": "Cancel",
   "employee": {
-    "employee_name": "employee.employee_name"
+    "employee_name": "employee.employee_name",
+    "update_new_employee": "Update new employee"
   },
   "select_time": "Select time",
   "drag_drop": "Drag & drop {{fileType}} here.",
@@ -29,5 +30,9 @@
   "select_all": "Select All",
   "clear_all": "Clear All",
   "columnRange": "Columns {{from}} - {{to}}",
-  "search_enable_for": "Search enabled for"
+  "search_enable_for": "Search enabled for",
+  "copied": "Copied!",
+  "copy_email": "Copy email",
+  "delete": "Delete",
+  "edit": "Edit"
 }

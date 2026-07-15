@@ -26,5 +26,9 @@
   "select_all": "সব নির্বাচন করুন",
   "clear_all": "সব পরিষ্কার করুন",
   "columnRange": "কলাম {{from}} - {{to}}",
-  "search_enable_for": "অনুসন্ধান করুন"
+  "search_enable_for": "অনুসন্ধান করুন",
+  "copied": "অনুলিপি করা হয়েছে!",
+  "copy_email": "ইমেইল কপি করুন",
+  "delete": "মুছে ফেলুন",
+  "edit": "সম্পাদনা"
 }

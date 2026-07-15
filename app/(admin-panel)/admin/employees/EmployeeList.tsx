@@ -11,7 +11,11 @@ import { useGetEmployeeResourcesQuery, useGetEmployeesQuery } from '@/features/e
 import ColumnSelectorModal from '@/components/ui/modal/ColumnSelectorModal';
 import EmployeeTableBody from './EmployeeTableBody';
 
-export default function EmployeeList() {
+export default function EmployeeList({
+  onEdit
+}: {
+  onEdit: (id:number) => void;
+}) {
   const [sortState, setSortState] = useState<SortState<EmployeeTableHead>>({ col: "id", dir: "asc" });
   const [bloodGroup, setBloodGroup] = useState(DEFAULT_SEARCH.NUMBER);
   const [employeeDesignation, setEmployeeDesignation] = useState(DEFAULT_SEARCH.NUMBER);
@@ -160,7 +164,8 @@ export default function EmployeeList() {
               employeeTypeOption={employeeTypeOption ?? []}
               genderOption={genderOption ?? []}
               maritalStatusOption={maritalStatusOption ?? []}
-              employees={employees} 
+              employees={employees}
+              onEdit={onEdit}
               columns={columns}/>
           </table>
         </div>

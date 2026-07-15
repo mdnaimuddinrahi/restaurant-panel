@@ -6,6 +6,7 @@ import AppCustomButton from "../button/AppCustomButton";
 import { RxCross2 } from "react-icons/rx";
 import { t } from "i18next";
 import useNumberFormatter from "@/hooks/useNumberFormatter";
+import AppCheckbox from "../input/AppCheckbox";
 
 interface Props<T> {
   open: boolean;
@@ -163,15 +164,9 @@ export default function ColumnSelectorModal<T>({
                       <span className="text-sm">
                         {t(col.label)}
                       </span>
-
-                      <input
-                        type="checkbox"
+                      <AppCheckbox
                         checked={col.isVisible}
-                        onChange={() =>
-                          toggleColumn(col.key)
-                        }
-                        style={checkboxStyle}
-                        className="w-4 h-4"
+                        onChange={() => toggleColumn(col.key)}
                       />
                     </label>
                   ))}

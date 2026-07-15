@@ -31,7 +31,7 @@ export default function Heading({
       {buttonText && (
         <button
           onClick={onAddClick}
-          className="flex items-center gap-2 px-4 py-2 accent-bg text-white text-sm rounded-xl hover:opacity-90 transition-opacity font-500 flex-shrink-0"
+          className="flex items-center gap-2 px-4 py-2 accent-bg text-white text-sm rounded-xl hover:opacity-90 transition-opacity font-500 shrink-0"
         >
           <svg
             className="w-4 h-4"

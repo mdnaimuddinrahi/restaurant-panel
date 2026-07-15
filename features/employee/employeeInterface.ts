@@ -143,3 +143,13 @@ export type CreateEmployeeRequest = Omit<
   date_of_birth: string;
   date_of_joining: string;
 };
+
+interface ModalState {
+    modals: Record<
+        string,
+        {
+            open: boolean;
+            data?: any;
+        }
+    >;
+}
