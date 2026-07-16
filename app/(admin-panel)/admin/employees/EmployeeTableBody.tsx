@@ -1,8 +1,11 @@
 import AppTooltip from '@/components/ui/AppTooltip';
 import AppCustomButton from '@/components/ui/button/AppCustomButton';
+import { EMPLOYEE_UPDATE_MODAL } from '@/features/employee/employeeConstant';
 import { Employee } from '@/features/employee/employeeInterface';
+import { openModal } from '@/features/modal/modalSlice';
 import useNumberFormatter from '@/hooks/useNumberFormatter';
 import { ResourceOption, TableColumn } from '@/store/commonInterface';
+import { useAppDispatch } from '@/store/hooks';
 import { hexToRgba, useTheme } from '@/theme';
 import { t } from 'i18next';
 import React, { useState } from 'react'
@@ -10,10 +13,9 @@ import { BiEditAlt } from 'react-icons/bi';
 import { IoMdCopy } from 'react-icons/io';
 import { IoCheckmarkDone } from 'react-icons/io5';
 import { RxTrash } from 'react-icons/rx';
+import { useDispatch } from 'react-redux';
 
 interface Props<T> {
-//   open: boolean;
-//   onClose: () => void;
     columns: TableColumn<T>[];
     employees: Employee[],
     bloodGroupOption: ResourceOption[],
@@ -21,10 +23,6 @@ interface Props<T> {
     employeeTypeOption: ResourceOption[],
     genderOption: ResourceOption[],
     maritalStatusOption: ResourceOption[],
-    onEdit: (id: number) => void;
-//   setColumns: React.Dispatch<
-//     React.SetStateAction<TableColumn<T>[]>
-//   >;
 }
 
 export default function EmployeeTableBody<T>({
@@ -35,9 +33,7 @@ export default function EmployeeTableBody<T>({
     employeeTypeOption,
     genderOption,
     maritalStatusOption,
-    onEdit,
     }: Props<T>) {
-    // const initials = (n: string) => n.split(' ').map(p => p[0]).join('');
     const initials = (name: string) =>
   name
     ?.trim()
@@ -60,6 +56,7 @@ export default function EmployeeTableBody<T>({
 
     const rowHoverStyle = { "--row-hover": hexToRgba(accentColor, 0.08) } as React.CSSProperties;
     const formatNumber = useNumberFormatter();
+    const dispatch = useAppDispatch();
     return (
         <tbody id="employee-table-body">
             {employees.map((employee, index) => (
@@ -290,7 +287,16 @@ export default function EmployeeTableBody<T>({
                             <div className="relative group">
                                 <AppTooltip title={t("common:edit")}>
                                         <AppCustomButton
-                                             onClick={() => onEdit(employee.id)}
+                                            onClick={() =>
+                                                        dispatch(
+                                                            openModal({
+                                                                type: EMPLOYEE_UPDATE_MODAL,
+                                                                payload: {
+                                                                    employeeId: employee.id,
+                                                                },
+                                                            })
+                                                        )
+                                                    }
                                             variant="outline"
                                             className="p-1.5! transition-transform duration-200 hover:scale-110"
                                         >

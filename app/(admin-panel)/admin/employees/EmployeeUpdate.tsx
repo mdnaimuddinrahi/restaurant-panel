@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { buildFormData } from '@/utils/buildFormData';
 import { formatDate } from '@/store/commonFunction';
 import { appToast } from '@/utils/toastUtils';
-import { useUpdateEmployeeMutation } from '@/features/employee/employeeApi';
+// import { useUpdateEmployeeMutation } from '@/features/employee/employeeApi';
 
 type EmployeeUpdatedProps = {
   onClose: () => void;
@@ -23,7 +23,7 @@ export default function EmployeeUpdate({onClose, employeeId}: EmployeeUpdatedPro
         resolver: zodResolver(schema),
     });
 
-    const [updateEmployee, { isLoading }] = useUpdateEmployeeMutation();
+    // const [updateEmployee, { isLoading }] = useUpdateEmployeeMutation();
     
     const employeeToFormData = (data: EmployeeFormData) => {
         return buildFormData({
@@ -73,7 +73,7 @@ export default function EmployeeUpdate({onClose, employeeId}: EmployeeUpdatedPro
                 <EmployeeForm
                     mode="update"
                     onSubmit={handleSubmit}
-                    loading={isLoading}
+                    // loading={isLoading}
                     methods={methods}
                 />
             </AppModal>

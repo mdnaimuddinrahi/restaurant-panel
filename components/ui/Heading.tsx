@@ -1,15 +1,18 @@
+import { openModal } from "@/features/modal/modalSlice";
+import { useAppDispatch } from "@/store/hooks";
 
 export default function Heading({
   title,
   subtitle,
   buttonText,
-  onAddClick,
+  modal,
 }: {
   title?: string;
   subtitle?: string;
   buttonText?: string;
-  onAddClick?: () => void;
+  modal?: string;
 }) {
+  const dispatch = useAppDispatch();
 
   return (
     <div className="flex items-center justify-between mb-6">
@@ -28,9 +31,15 @@ export default function Heading({
       </div>
 
       {/* Right side */}
-      {buttonText && (
+      {buttonText && modal && (
         <button
-          onClick={onAddClick}
+          onClick={() =>
+            dispatch(
+              openModal({
+                type: modal,
+              })
+            )
+          }
           className="flex items-center gap-2 px-4 py-2 accent-bg text-white text-sm rounded-xl hover:opacity-90 transition-opacity font-500 shrink-0"
         >
           <svg

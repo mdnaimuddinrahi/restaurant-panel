@@ -1,6 +1,6 @@
 import { baseApi } from "@/services/baseApi";
 import { CreateEmployeeRequest, Employee, EmployeeFormData, EmployeeResourceResponse, EmployeeTag, GetEmployeesRequests, GetEmployeesResponse } from "./employeeInterface";
-import { CreateEmployeeDTO, UpdateEmployeeDTO } from "./employeeDTOs";
+
 import { DEFAULT_SEGMENT_URL, DEFAULT_TAG, DEFAULT_TAG_SCOPE } from "@/store/commonConstants";
 
 export const employeeApi = baseApi.injectEndpoints({
@@ -46,18 +46,18 @@ export const employeeApi = baseApi.injectEndpoints({
 
       invalidatesTags: [{ type: "Employee", id: "LIST" }],
     }),
-    updateEmployee: builder.mutation<Employee, { id: number; data: UpdateEmployeeDTO }>({
-      query: ({ id, data }) => ({
-        url: `/employees/${id}`,
-        method: "PUT",
-        body: data,
-      }),
+    // updateEmployee: builder.mutation<Employee, FormData>({
+    //   query: ({ id, data }) => ({
+    //     url: `/employees/${id}`,
+    //     method: "PUT",
+    //     body: data,
+    //   }),
 
-      invalidatesTags: (_result, _error, { id }) => [
-        { type: "Employee", id },
-        { type: "Employee", id: "LIST" },
-      ],
-    }),
+    //   invalidatesTags: (_result, _error, { id }) => [
+    //     { type: "Employee", id },
+    //     { type: "Employee", id: "LIST" },
+    //   ],
+    // }),
     deleteEmployee: builder.mutation<{ success: boolean }, number>({
       query: (id) => ({
         url: `/employees/${id}`,
@@ -77,6 +77,6 @@ export const {
   useGetEmployeesQuery,
   useGetEmployeeByIdQuery,
   useCreateEmployeeMutation,
-  useUpdateEmployeeMutation,
+  // useUpdateEmployeeMutation,
   useDeleteEmployeeMutation,
 } = employeeApi;

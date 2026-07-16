@@ -1,6 +1,9 @@
 import { TableColumn } from "@/store/commonInterface";
 import { EmployeeTableHead } from "./employeeInterface";
 
+export const EMPLOYEE_CREATE_MODAL = "employee-create";
+export const EMPLOYEE_UPDATE_MODAL = "employee-update";
+
 
 export const EMPLOYEE_COLUMNS: TableColumn<EmployeeTableHead>[] = [
     { isVisible: true, isSort:true, key: "name", label: "employee:employee_name"},
@@ -37,7 +40,6 @@ export const EMPLOYEE_COLUMNS: TableColumn<EmployeeTableHead>[] = [
 //     { isVisible: false, isSort:false, key: "shift_end", label: t('employee.end_time')},
 // ]
 
-// export const EMPLOYEE_SECTIONS = [ { id: "personal", title: "Personal Information", description: "Basic employee information", }, { id: "employment", title: "Employment Information", description: "Role and employment details", }, { id: "identity", title: "Identity Information", description: "National ID and passport", }, { id: "emergency", title: "Emergency Contact", description: "Emergency contact details", }, { id: "bank", title: "Bank Information", description: "Bank account details", }, { id: "address", title: "Address Information", description: "Present and permanent address", }, { id: "documents", title: "Documents", description: "Attachments and uploaded files", }, { id: "permissions", title: "Permissions", description: "Roles and access control", }, { id: "system", title: "System Information", description: "Internal settings", }, ];
 export const EMPLOYEE_SECTIONS = [
   { id: "personal" },
   { id: "employment" },
@@ -48,6 +50,7 @@ export const EMPLOYEE_SECTIONS = [
 
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
+import { TFunction } from "i18next";
 
 const phoneRegex = /^01[3-9]\d{8}$/;
 const nidRegex = /^(\d{10}|\d{13}|\d{17})$/;
@@ -72,7 +75,7 @@ const RESUME_TYPES = [
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ];
 
-export const employeeSchema = (t: (key: string) => string) => 
+export const employeeSchema = (t: TFunction) => 
   z.object({
     name: z
       .string({
@@ -105,7 +108,7 @@ export const employeeSchema = (t: (key: string) => string) =>
         error: t('validation.phone_required')
       })
       .trim()
-      .regex(phoneRegex, t('validation.valid_phone')),
+      .regex(phoneRegex, t('employee:validation.valid_phone')),
 
     gender: z
       .number({

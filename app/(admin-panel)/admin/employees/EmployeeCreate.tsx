@@ -10,12 +10,14 @@ import { appToast } from '@/utils/toastUtils';
 import { buildFormData } from '@/utils/buildFormData';
 import EmployeeForm from './EmployeeForm';
 import { t } from 'i18next';
+import { useTranslation } from 'react-i18next';
 
 type EmployeeCreateProps = {
   onClose: () => void;
 };
 
 export default function EmployeeCreate({onClose}: EmployeeCreateProps) {
+    const { t } = useTranslation("employee");
     const schema = employeeSchema(t);
     type EmployeeFormData = z.infer<typeof schema>;
     const methods = useForm<EmployeeFormData>({
