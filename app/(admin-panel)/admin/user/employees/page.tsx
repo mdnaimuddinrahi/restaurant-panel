@@ -1,9 +1,9 @@
 "use client"
 import Heading from '@/components/ui/Heading'
-import EmployeeList from './EmployeeList';
 import { useTranslation } from 'react-i18next';
-import EmployeeModal from './EmployeeModal';
 import { EMPLOYEE_CREATE_MODAL } from '@/features/employee/employeeConstant';
+import EmployeeList from '@/components/admin/Employee/EmployeeList';
+import EmployeeModal from '@/components/admin/Employee/EmployeeModal';
 
 export default function page() {
   const { t } = useTranslation("employee");
