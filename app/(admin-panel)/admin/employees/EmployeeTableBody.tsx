@@ -1,6 +1,6 @@
 import AppTooltip from '@/components/ui/AppTooltip';
 import AppCustomButton from '@/components/ui/button/AppCustomButton';
-import { EMPLOYEE_UPDATE_MODAL } from '@/features/employee/employeeConstant';
+import { EMPLOYEE_DELETE_MODAL, EMPLOYEE_UPDATE_MODAL } from '@/features/employee/employeeConstant';
 import { Employee } from '@/features/employee/employeeInterface';
 import { openModal } from '@/features/modal/modalSlice';
 import useNumberFormatter from '@/hooks/useNumberFormatter';
@@ -57,6 +57,7 @@ export default function EmployeeTableBody<T>({
     const rowHoverStyle = { "--row-hover": hexToRgba(accentColor, 0.08) } as React.CSSProperties;
     const formatNumber = useNumberFormatter();
     const dispatch = useAppDispatch();
+
     return (
         <tbody id="employee-table-body">
             {employees.map((employee, index) => (
@@ -288,15 +289,15 @@ export default function EmployeeTableBody<T>({
                                 <AppTooltip title={t("common:edit")}>
                                         <AppCustomButton
                                             onClick={() =>
-                                                        dispatch(
-                                                            openModal({
-                                                                type: EMPLOYEE_UPDATE_MODAL,
-                                                                payload: {
-                                                                    employeeId: employee.id,
-                                                                },
-                                                            })
-                                                        )
-                                                    }
+                                                dispatch(
+                                                    openModal({
+                                                        type: EMPLOYEE_UPDATE_MODAL,
+                                                        payload: {
+                                                            employeeId: employee.id,
+                                                        },
+                                                    })
+                                                )
+                                            }
                                             variant="outline"
                                             className="p-1.5! transition-transform duration-200 hover:scale-110"
                                         >
@@ -311,11 +312,20 @@ export default function EmployeeTableBody<T>({
                                         <AppCustomButton
                                             variant="ghost"
                                             className="p-1.5! transition-transform duration-200 hover:scale-110"
+                                            onClick={() =>
+                                                dispatch(
+                                                    openModal({
+                                                        type: EMPLOYEE_DELETE_MODAL,
+                                                        payload: {
+                                                            employeeId: employee.id,
+                                                        },
+                                                    })
+                                                )
+                                            }
                                         >
                                             <RxTrash className="text-base text-red-700"/>
                                         </AppCustomButton>
                                 </AppTooltip>
-                                
                             </div>
 
                         </div>

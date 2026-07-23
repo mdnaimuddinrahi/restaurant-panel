@@ -1,5 +1,5 @@
 import { baseApi } from "@/services/baseApi";
-import { CreateEmployeeRequest, Employee, EmployeeFormData, EmployeeResourceResponse, EmployeeTag, GetEmployeesRequests, GetEmployeesResponse } from "./employeeInterface";
+import { Employee, EmployeeByIdResponse, EmployeeResourceResponse, EmployeeTag, GetEmployeesRequests, GetEmployeesResponse } from "./employeeInterface";
 
 import { DEFAULT_SEGMENT_URL, DEFAULT_TAG, DEFAULT_TAG_SCOPE } from "@/store/commonConstants";
 
@@ -31,7 +31,7 @@ export const employeeApi = baseApi.injectEndpoints({
         ];
       }
     }),
-    getEmployeeById: builder.query<Employee, number>({
+    getEmployeeById: builder.query<EmployeeByIdResponse, number>({
       query: (id) => `/employees/${id}`,
       providesTags: (_result, _error, id) => [
         { type: "Employee", id },
@@ -46,18 +46,18 @@ export const employeeApi = baseApi.injectEndpoints({
 
       invalidatesTags: [{ type: "Employee", id: "LIST" }],
     }),
-    // updateEmployee: builder.mutation<Employee, FormData>({
-    //   query: ({ id, data }) => ({
-    //     url: `/employees/${id}`,
-    //     method: "PUT",
-    //     body: data,
-    //   }),
+    updateEmployee: builder.mutation<Employee,  { id: number; data: FormData }>({
+      query: ({ id, data }) => ({
+        url: `/employees/${id}`,
+        method: "PUT",
+        body: data,
+      }),
 
-    //   invalidatesTags: (_result, _error, { id }) => [
-    //     { type: "Employee", id },
-    //     { type: "Employee", id: "LIST" },
-    //   ],
-    // }),
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: DEFAULT_TAG.EMPLOYEE, id },
+        { type: DEFAULT_TAG.EMPLOYEE, id: DEFAULT_TAG_SCOPE.LIST },
+      ],
+    }),
     deleteEmployee: builder.mutation<{ success: boolean }, number>({
       query: (id) => ({
         url: `/employees/${id}`,
@@ -77,6 +77,6 @@ export const {
   useGetEmployeesQuery,
   useGetEmployeeByIdQuery,
   useCreateEmployeeMutation,
-  // useUpdateEmployeeMutation,
+  useUpdateEmployeeMutation,
   useDeleteEmployeeMutation,
 } = employeeApi;

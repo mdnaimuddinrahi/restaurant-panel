@@ -1,7 +1,5 @@
 {
-  "save": "Save",
-  "cancel": "Cancel",
-  "admin_dad": "Fudani Board",
+  "save": "সংরক্ষণ করুন",
   "creating": "অপেক্ষা করুন",
   "select_time": "সময় নির্বাচন করুন",
   "drag_drop": "{{fileType}} এখানে টেনে এনে ছেড়ে দিন",
@@ -30,5 +28,6 @@
   "copied": "অনুলিপি করা হয়েছে!",
   "copy_email": "ইমেইল কপি করুন",
   "delete": "মুছে ফেলুন",
-  "edit": "সম্পাদনা"
+  "edit": "সম্পাদনা",
+  "cancel": "বাতিল"
 }

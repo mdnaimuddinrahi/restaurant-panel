@@ -1,15 +1,17 @@
+"use client"
 import AppModal from '@/components/ui/modal/AppModal'
-import React from 'react'
 import EmployeeForm from './EmployeeForm'
-import { employeeSchema } from '@/features/employee/employeeConstant';
-import { t } from 'i18next';
+import { updateEmployeeSchema } from '@/features/employee/employeeConstant';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { buildFormData } from '@/utils/buildFormData';
 import { formatDate } from '@/store/commonFunction';
 import { appToast } from '@/utils/toastUtils';
-// import { useUpdateEmployeeMutation } from '@/features/employee/employeeApi';
+import { useGetEmployeeByIdQuery, useUpdateEmployeeMutation } from '@/features/employee/employeeApi';
+import { useEffect, useState } from 'react';
+import { Employee } from '@/features/employee/employeeInterface';
+import { useTranslation } from 'react-i18next';
 
 type EmployeeUpdatedProps = {
   onClose: () => void;
@@ -17,15 +19,15 @@ type EmployeeUpdatedProps = {
 };
 
 export default function EmployeeUpdate({onClose, employeeId}: EmployeeUpdatedProps) {
-    const schema = employeeSchema(t);
-    type EmployeeFormData = z.infer<typeof schema>;
-    const methods = useForm<EmployeeFormData>({
+    const { t } = useTranslation("employee");
+    const schema = updateEmployeeSchema(t);
+    type UpdateEmployeeFormData = z.infer<typeof schema>;
+    const methods = useForm<UpdateEmployeeFormData>({
         resolver: zodResolver(schema),
     });
-
-    // const [updateEmployee, { isLoading }] = useUpdateEmployeeMutation();
+    const [hasError, setHasError] = useState<boolean>(false);
     
-    const employeeToFormData = (data: EmployeeFormData) => {
+    const employeeToFormData = (data: UpdateEmployeeFormData) => {
         return buildFormData({
             ...data,
             date_of_birth: formatDate(data.date_of_birth),
@@ -40,18 +42,62 @@ export default function EmployeeUpdate({onClose, employeeId}: EmployeeUpdatedPro
         reset,
     } = methods;
 
-    const handleSubmit: SubmitHandler<EmployeeFormData> = async (data) => {
-        try {
-            // await createEmployee(employeeToFormData(data)).unwrap();
+    const { data: employeeResponse, isLoading } = useGetEmployeeByIdQuery(employeeId);
+    const employee = employeeResponse?.data ?? null;
+    console.log('employee', employee)
+    const employeeToDefaultValues = (
+        employee: Employee
+    ): UpdateEmployeeFormData => ({
+        name: employee.name,
+        email: employee.email,
+        phone: employee.phone,
+        gender: employee.gender,
+        blood_group: employee.blood_group,
+        marital_status: employee.marital_status,
+        address: employee.address,
+        date_of_birth: employee.date_of_birth ? new Date(employee.date_of_birth) : new Date,
+        basic_salary:  Number(employee.basic_salary),
+        date_of_joining: employee.date_of_joining ? new Date(employee.date_of_joining) : new Date,
+        employee_designation_id: employee.employee_designation_id,
+        employee_type_id: employee.employee_type_id,
+        shift_start: employee.shift_start,
+        shift_end: employee.shift_end,
+        passport_number: employee.passport_number,
+        emergency_contact_name: employee.emergency_contact_name,
+        emergency_contact_phone: employee.emergency_contact_phone,
+        emergency_contact_email: employee.emergency_contact_email,
+        documents: [],
+        profile_img: [],
+        national_id: employee.national_id,
+        emergency_contact_relation: employee.emergency_contact_relation,
+        resume: [],
+    });
+    useEffect(() => {
+        console.log('employee', employee)
+        if (employee) {
+            reset(employeeToDefaultValues(employee));
+        }
+    }, [employee, reset]);
+    const values = methods.watch();
 
-            appToast.success(t("employee:message.created"));
+console.log("Current values:", values);
+    const [updateEmployee, { isLoading: updating }] =
+    useUpdateEmployeeMutation();
+
+    const handleSubmit: SubmitHandler<UpdateEmployeeFormData> = async (data) => {
+        try {
+            await updateEmployee({
+                id: employeeId,
+                data: employeeToFormData(data),
+            }).unwrap();
+
+            appToast.success(t("employee:message.updated"));
             methods.reset(); // Optional
             onClose();       // Close the modal
         } catch (error: any) {
             const validationErrors = error?.data?.errors;
-            console.log('error', error);
-            console.log('validationErrors', validationErrors)
-
+            setHasError(true)
+            
             if (validationErrors) {
                 Object.entries(validationErrors).forEach(([field, messages]) => {
                     setError(field as any, {
@@ -70,12 +116,16 @@ export default function EmployeeUpdate({onClose, employeeId}: EmployeeUpdatedPro
                 modalTitle={t("employee:update_employee")} 
                 size='full'
             >
-                <EmployeeForm
-                    mode="update"
-                    onSubmit={handleSubmit}
-                    // loading={isLoading}
-                    methods={methods}
-                />
+                {isLoading ? 'Loading...' :  
+                    <EmployeeForm
+                        mode="update"
+                        onSubmit={handleSubmit}
+                        // loading={isLoading}
+                        methods={methods}
+                        oldData={employee}
+                        hasError={hasError}
+                        setHasError={setHasError}
+                    />}
             </AppModal>
         </>
     )

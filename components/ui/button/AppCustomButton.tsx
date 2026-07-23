@@ -2,31 +2,33 @@
 
 import { useState } from "react";
 import { useButtonTheme } from "@/hooks/useButtonTheme";
+import { BiLoaderCircle } from "react-icons/bi";
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "solid" | "outline" | "ghost" | "danger";
+  loading?: boolean;
+  loadingText?: string;
 };
 
 export default function AppCustomButton({
   variant = "solid",
   className = "",
+  loading = false,
+  loadingText,
+  children,
+  disabled,
   ...props
 }: Props) {
   const theme = useButtonTheme();
 
   const [hover, setHover] = useState(false);
   const [active, setActive] = useState(false);
+  const isDisabled = disabled || loading;
 
   return (
     <button
       {...props}
-      // className={`${theme.classNames.base} ${className}`}
-      // style={
-      //   theme.styles[variant]({
-      //     isHovered: hover,
-      //     isActive: active,
-      //   })
-      // }
+      disabled={isDisabled}
       className={`
         ${theme.classNames.base}
         
@@ -45,6 +47,15 @@ export default function AppCustomButton({
       }}
       onMouseDown={() => setActive(true)}
       onMouseUp={() => setActive(false)}
-    />
+    >
+    {loading ? (
+        <span className="flex items-center justify-center gap-2">
+          <BiLoaderCircle className="h-4 w-4 animate-spin" />
+          {loadingText ?? "Loading..."}
+        </span>
+      ) : (
+        children
+      )}
+    </button>
   );
 }

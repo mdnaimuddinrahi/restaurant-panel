@@ -3,14 +3,14 @@ import AppModal from '@/components/ui/modal/AppModal';
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateEmployeeMutation } from "@/features/employee/employeeApi";
-import { employeeSchema } from "@/features/employee/employeeConstant";
-import z from 'zod';
+import { createEmployeeSchema } from "@/features/employee/employeeConstant";
+import z, { boolean } from 'zod';
 import { formatDate } from '@/store/commonFunction';
 import { appToast } from '@/utils/toastUtils';
 import { buildFormData } from '@/utils/buildFormData';
 import EmployeeForm from './EmployeeForm';
-import { t } from 'i18next';
 import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 
 type EmployeeCreateProps = {
   onClose: () => void;
@@ -18,8 +18,9 @@ type EmployeeCreateProps = {
 
 export default function EmployeeCreate({onClose}: EmployeeCreateProps) {
     const { t } = useTranslation("employee");
-    const schema = employeeSchema(t);
+    const schema = createEmployeeSchema(t);
     type EmployeeFormData = z.infer<typeof schema>;
+    const [hasError, setHasError] = useState<boolean>(false);
     const methods = useForm<EmployeeFormData>({
         resolver: zodResolver(schema),
     });
@@ -38,7 +39,6 @@ export default function EmployeeCreate({onClose}: EmployeeCreateProps) {
 
     const {
         setError,
-        reset,
     } = methods;
 
     const handleSubmit: SubmitHandler<EmployeeFormData> = async (data) => {
@@ -50,6 +50,7 @@ export default function EmployeeCreate({onClose}: EmployeeCreateProps) {
             onClose();       // Close the modal
         } catch (error: any) {
             const validationErrors = error?.data?.errors;
+            setHasError(true)
             console.log('error', error);
             console.log('validationErrors', validationErrors)
 
@@ -76,6 +77,8 @@ export default function EmployeeCreate({onClose}: EmployeeCreateProps) {
                     onSubmit={handleSubmit}
                     loading={isLoading}
                     methods={methods}
+                    hasError={hasError}
+                    setHasError={setHasError}
                 />
             </AppModal>
         </>

@@ -1,6 +1,6 @@
 "use client"
-import React, { useEffect, useState } from 'react'
-import { FormProvider, SubmitHandler } from 'react-hook-form'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import {  FieldValues, FormProvider, SubmitHandler } from 'react-hook-form'
 import EmployeeSectionNav from './EmployeeSectionNav'
 import EmployeeSection from './EmployeeSection'
 import FormInput from '@/components/ui/form/FormInput'
@@ -11,24 +11,30 @@ import FormTextArea from '@/components/ui/form/FormTextArea'
 import FormTimePicker from '@/components/ui/form/FormTimePicker'
 import FormFileUpload from '@/components/ui/form/FormFileUpload'
 import AppCustomButton from '@/components/ui/button/AppCustomButton'
-import { EmployeeFormData } from '@/features/employee/employeeInterface'
+import { Employee } from '@/features/employee/employeeInterface'
 import { useGetEmployeeResourcesQuery } from '@/features/employee/employeeApi'
 import { useTranslation } from 'react-i18next'
 import { UseFormReturn } from "react-hook-form";
 import { EMPLOYEE_SECTIONS } from '@/features/employee/employeeConstant'
 
-type EmployeeFormProps = {
-  methods: UseFormReturn<EmployeeFormData>;
+type EmployeeFormProps<T extends FieldValues> = {
+  methods: UseFormReturn<T>;
   mode: "create" | "update";
   loading?: boolean;
-  onSubmit: SubmitHandler<EmployeeFormData>;
+  onSubmit: SubmitHandler<T>;
+  oldData?: Employee | null;
+  hasError: boolean;
+  setHasError: Dispatch<SetStateAction<boolean>>;
 };
-export default function EmployeeForm({
+export default function EmployeeForm<T extends FieldValues>({
     methods,
     mode,
     onSubmit,
     loading,
-}: EmployeeFormProps) {
+    oldData,
+    hasError=false,
+    setHasError
+}: EmployeeFormProps<T>) {
     const {data: resourceResponse, 
                 isLoading: resourceIsLoading} = useGetEmployeeResourcesQuery()
     const bloodGroupOption = resourceResponse?.data?.blood_groups;
@@ -47,19 +53,22 @@ export default function EmployeeForm({
             block: "start",
         });
     };
-    const [hasError, setHasError] = useState(false);
+    
     const {
             setError,
             formState: { errors },
         } = methods;
-    console.log('errors', errors)
+    // console.log('errors', errors)
     const values = methods.watch();
     
-    console.log("Current values:", values);
+    // console.log("Current values:", values);
+    // console.log('errors', errors)
     
     useEffect(() => {
         setHasError(Object.keys(errors).length > 0);
     }, [errors]);
+
+    const [existingDocs, setExistingDocs] = useState<string[]>(oldData?.documents ?? []);
     
     return (   
         <FormProvider {...methods}>
@@ -244,17 +253,23 @@ export default function EmployeeForm({
                                 multiple
                                 required
                                 accept="application/pdf,image/*"
+                                existingFiles={oldData?.documents ?? []}
+                                onRemoveExistingFile={(url) =>
+                                    setExistingDocs((prev) => prev.filter((u) => u !== url))
+                                }
                             />
                             <FormFileUpload
                                 name="profile_img"
                                 required
                                 label={t("profile_img")}
                                 accept='image/*'
+                                existingFile={oldData?.profile_img ?? ''}
                             />
                             <FormFileUpload
                                 name="resume"
                                 label={t("resume")}
                                 accept='.pdf'
+                                existingFile={oldData?.resume ?? ''}
                             />
                         </div>
                     </EmployeeSection> 

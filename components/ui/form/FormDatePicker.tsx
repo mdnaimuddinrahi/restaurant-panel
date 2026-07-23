@@ -31,6 +31,7 @@ export default function FormDatePicker<
     name,
     control,
   });
+  console.log('field.value', field.value)
 
   return (
     <DatePicker

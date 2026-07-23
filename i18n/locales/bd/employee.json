@@ -75,7 +75,10 @@
     "emergency_contact_email_invalid": "জরুরি যোগাযোগের ইমেলটি অবৈধ।",
     "emergency_contact_relation_max": "জরুরী যোগাযোগের সংখ্যা ৫০-এর বেশি হতে পারবে না।",
     "documents_required": "অন্তত একটি কর্মচারী নথি প্রয়োজন।",
-    "invalid_documents": "অবৈধ নথি"
+    "invalid_documents": "অবৈধ নথি",
+    "profile_image_invalid": "প্রোফাইল ছবিটি অবৈধ।",
+    "profile_image_only_one": "প্রোফাইল ছবিতে একাধিক ছবি আপলোড করা যাবে না।",
+    "resume_only_one": "একাধিক জীবনবৃত্তান্ত ফাইল আপলোড করা যাবে না।"
   },
   "message": {
     "created": "কর্মচারী সফলভাবে তৈরি হয়েছে।",
@@ -143,5 +146,15 @@
   "employee_type": "কর্মচারীর ধরন",
   "basic_salary_min": "মূল বেতন অবশ্যই 0-এর বেশি হতে হবে।",
   "emergency_contact_name": "জরুরি যোগাযোগের নাম",
-  "no_employee_found": "কোন কর্মচারী খুঁজে পাওয়া যায়নি"
+  "no_employee_found": "কোন কর্মচারী খুঁজে পাওয়া যায়নি",
+  "employee": {
+    "validation": {
+      "resume_invalid": "আপলোড করা জীবনবৃত্তান্ত ফাইলটি অবৈধ।"
+    }
+  },
+  "delete_employee": "কর্মচারী মুছে ফেলুন",
+  "are_you_sure": "আপনি কি নিশ্চিত?",
+  "delete_employee_confirmation": "আপনি কি নিশ্চিত যে এই কর্মচারীকে স্থায়ীভাবে মুছে ফেলতে চান?",
+  "delete_employee_warning": "এই কাজটি পূর্বাবস্থায় ফিরিয়ে আনা যাবে না।",
+  "employee_deleted_successfully": "কর্মচারী সফলভাবে মুছে ফেলা হয়েছে।"
 }

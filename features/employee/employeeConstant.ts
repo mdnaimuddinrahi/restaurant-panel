@@ -3,6 +3,7 @@ import { EmployeeTableHead } from "./employeeInterface";
 
 export const EMPLOYEE_CREATE_MODAL = "employee-create";
 export const EMPLOYEE_UPDATE_MODAL = "employee-update";
+export const EMPLOYEE_DELETE_MODAL = "employee-delete";
 
 
 export const EMPLOYEE_COLUMNS: TableColumn<EmployeeTableHead>[] = [
@@ -75,20 +76,17 @@ const RESUME_TYPES = [
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ];
 
-export const employeeSchema = (t: TFunction) => 
+const employeeBaseSchema = (t: TFunction) =>
   z.object({
     name: z
       .string({
-        error: t('validation.employee_name_required')
+        error: t('validation.employee_name_required'),
       })
       .trim()
-      .min(2, t("validation.name_contain_must_2_characters"))
+      .min(2, t('validation.name_contain_must_2_characters'))
       .max(100, t('validation.name_maximum_100'))
-      .regex(
-        /^[A-Za-z\s.'-]+$/,
-        t('validation.name_invalid_character')
-      ),
-      
+      .regex(/^[A-Za-z\s.'-]+$/, t('validation.name_invalid_character')),
+
     email: z
       .string({
         error: t("validation.email_required"),
@@ -308,15 +306,10 @@ export const employeeSchema = (t: TFunction) =>
         .optional()
         .or(z.literal("")),
 
-    // =========================
-    // Documents
-    // =========================
-    // documents: z
-    //   .array(z.instanceof(File))
-    //   .min(
-    //     1,
-    //     t("validation.documents_required")
-    //   ),
+  });
+
+export const createEmployeeSchema = (t: TFunction) => 
+  employeeBaseSchema(t).extend({
     documents: z
       .array(z.instanceof(File), {
         error: (issue) => {
@@ -330,7 +323,7 @@ export const employeeSchema = (t: TFunction) =>
       .min(1, {
         error: t("validation.documents_required"),
       }),
-     profile_img: z
+    profile_img: z
       .array(
         z.instanceof(File).refine(
           (file) => PROFILE_TYPES.includes(file.type),
@@ -351,6 +344,37 @@ export const employeeSchema = (t: TFunction) =>
       )
       .max(1, "Only one resume is allowed.")
       .optional(),
-
   });
 
+export const updateEmployeeSchema = (t: TFunction) =>
+  employeeBaseSchema(t).extend({
+    documents: z
+      .array(z.instanceof(File), {
+        error: () => t("validation.invalid_documents"),
+      })
+      .optional(),
+
+    profile_img: z
+      .array(
+        z.instanceof(File).refine(
+          (file) => PROFILE_TYPES.includes(file.type),
+          { message: t("employee:validation.profile_image_invalid") }
+        )
+      )
+      .max(1, {
+        error: t("employee:validation.profile_image_only_one"),
+      })
+      .optional(),
+
+    resume: z
+      .array(
+        z.instanceof(File).refine(
+          (file) => RESUME_TYPES.includes(file.type),
+          { message: t("employee.validation.resume_invalid") }
+        )
+      )
+      .max(1, {
+        error: t("employee:validation.resume_only_one"),
+      })
+      .optional(),
+  });

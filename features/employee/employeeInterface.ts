@@ -1,7 +1,7 @@
 import { DEFAULT_TAG } from "@/store/commonConstants";
 import { CommonResponse, MetaData, RequestParams, ResourceOption } from "@/store/commonInterface";
 import z from "zod";
-import { employeeSchema } from "./employeeConstant";
+import { createEmployeeSchema, updateEmployeeSchema } from "./employeeConstant";
 
 export interface Employee {
   id: number;
@@ -30,12 +30,14 @@ export interface Employee {
   emergency_contact_name: string;
   emergency_contact_phone: string;
   emergency_contact_relation: string;
+  emergency_contact_email: string;
 
   documents: any[]; // you can refine later if structure is known
 
   basic_salary: number; //ok
 
   termination_date: string | null;
+  resume: string;
 
   blood_group: number; //ok
   marital_status: number; //ok
@@ -49,9 +51,6 @@ export interface Employee {
   created_by: number;
   updated_by: number | null;
 
-  // employee_type: EmployeeType;
-  // employee_designation: EmployeeDesignation;
-  // user: User | null;
 }
 
 export interface EmployeeTypeOption extends ResourceOption {
@@ -95,6 +94,10 @@ export interface GetEmployeesRequests extends RequestParams {
   marital_status: number | null
 }
 
+export interface EmployeeByIdResponse {
+  data: Employee;
+}
+
 export interface GetEmployeesResponse {
     data: Employee[]
     paginationHeaders: Headers
@@ -129,27 +132,4 @@ export interface EmployeeFIlterPanelProps {
   setMaritalStatus: (marital_status: number) => void,
   setSearchTerm: (search: string) => void,
   onSearch: () => void;
-}
-
-
-export type EmployeeFormData = z.infer<
-  ReturnType<typeof employeeSchema>
->;
-
-export type CreateEmployeeRequest = Omit<
-  EmployeeFormData,
-  "date_of_birth" | "date_of_joining"
-> & {
-  date_of_birth: string;
-  date_of_joining: string;
-};
-
-interface ModalState {
-    modals: Record<
-        string,
-        {
-            open: boolean;
-            data?: any;
-        }
-    >;
 }

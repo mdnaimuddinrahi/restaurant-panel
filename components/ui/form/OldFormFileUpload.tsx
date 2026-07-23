@@ -8,6 +8,7 @@ import {
 } from "react-hook-form";
 
 import FileUpload from "../input/FileUpload";
+import { strict } from "assert";
 
 interface FormFileUploadProps<T extends FieldValues> {
   name: Path<T>;
@@ -18,7 +19,6 @@ interface FormFileUploadProps<T extends FieldValues> {
   multiple?: boolean;
   existingFiles?: string[];
   existingFile?: string;
-  onRemoveExistingFile?: (url: string) => void;
 }
 
 export default function FormFileUpload<
@@ -26,40 +26,37 @@ export default function FormFileUpload<
 >({
   name,
   label,
-  required = false,
+  required=false,
   accept,
   disabled,
-  multiple = false,
+  multiple=false,
   existingFiles,
-  existingFile,
-  onRemoveExistingFile,
+  existingFile
 }: FormFileUploadProps<T>) {
   const { control } = useFormContext<T>();
+  
 
   return (
     <Controller
       name={name}
       control={control}
       render={({ field, fieldState }) => {
+        console.log('fieldState.error', fieldState.error)
         const errorMessage = Array.isArray(fieldState.error)
-          ? fieldState.error[0]?.message
-          : fieldState.error?.message;
-
-        return (
-          <FileUpload
-            label={label}
-            required={required}
-            accept={accept}
-            disabled={disabled}
-            files={field.value ?? []}
-            onFilesChange={field.onChange}
-            error={errorMessage}
-            multiple={multiple}
-            existingFiles={existingFiles ?? []}
-            existingFile={existingFile}
-            onRemoveExistingFile={onRemoveExistingFile}
-          />
-        );
+                                    ? fieldState.error[0]?.message
+                                    : fieldState.error?.message;
+        return <FileUpload
+                  label={label}
+                  required={required}
+                  accept={accept}
+                  disabled={disabled}
+                  files={field.value ?? []}
+                  onFilesChange={field.onChange}
+                  error={errorMessage}
+                  multiple={multiple}
+                  existingFiles={existingFiles ?? []}
+                  existingFile={existingFile ?? ''}
+              />
       }}
     />
   );

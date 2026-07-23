@@ -76,7 +76,10 @@
     "emergency_contact_email_invalid": "Emergency contact email is invalid.",
     "emergency_contact_relation_max": "Emergency contact relation can not be more than 50.",
     "documents_required": "At least one employee document is required.",
-    "invalid_documents": "Invalid documents"
+    "invalid_documents": "Invalid documents",
+    "profile_image_invalid": "Profile Image is invalid file type.",
+    "profile_image_only_one": "Profile image can not be upload more than one.",
+    "resume_only_one": "Resume file can not be upload more than one."
   },
   "message": {
     "created": "Employee created successfully.",
@@ -145,5 +148,17 @@
   "basic_salary_min": "Basic salary must be greater than 0.",
   "emergency_contact_name": "Emergency Contact Name",
   "no_employee_found": "No employees found",
-  "update_employee": "Update Employee"
+  "update_employee": "Update Employee",
+  "employee": {
+    "validation": {
+      "resume_invalid": "Uploaded Resume file is invalid."
+    }
+  },
+  "delete_employee": "Delete Employee",
+  "are_you_sure": "Are you sure?",
+  "delete_employee_confirmation": "Are you sure you want to permanently delete this employee?",
+  "delete_employee_warning": "This action cannot be undone.",
+  "employee_deleted_successfully": "Employee deleted successfully.",
+  "cancel": "Cancel",
+  "delete": "Delete"
 }

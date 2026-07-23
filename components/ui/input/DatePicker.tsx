@@ -67,6 +67,10 @@ export default function DatePicker({
   const [currentMonth, setCurrentMonth] = useState(
     value ?? new Date()
   );
+  // Add this
+  const [inputValue, setInputValue] = useState(
+    value ? format(value, "yyyy-MM-dd") : ""
+  );
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -76,6 +80,7 @@ export default function DatePicker({
   useEffect(() => {
     if (value) {
       setCurrentMonth(value);
+      setInputValue(format(value, "yyyy-MM-dd"));
     }
   }, [value]);
 
@@ -226,10 +231,7 @@ export default function DatePicker({
     label: String(year),
   }));
 
-   // Add this
-  const [inputValue, setInputValue] = useState(
-    value ? format(value, "yyyy-MM-dd") : ""
-  );
+   
 
 
   // Add this
@@ -276,6 +278,7 @@ export default function DatePicker({
         }
       }
     };
+  console.log('date inputValue', inputValue)
   
   const {t} = useTranslation(['common'])
 
@@ -326,6 +329,7 @@ export default function DatePicker({
             setOpen(true);
             setFocused(true);
           }}
+          
           onBlur={() => setFocused(false)}
           onChange={handleInputChange}
           className={`

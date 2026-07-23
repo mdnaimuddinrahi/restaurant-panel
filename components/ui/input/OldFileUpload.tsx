@@ -28,28 +28,9 @@ interface FileUploadProps
     multiple?: boolean;
   files?: File[];
   onFilesChange?: (files: File[]) => void;
-
-  // Already-uploaded files coming from the server (e.g. when editing/updating
-  // a record). These are plain URL strings, not File objects.
-  existingFiles?: string[]; // used when multiple = true
-  existingFile?: string; // used when multiple = false
-
-  // Called when the user removes an existing (already-uploaded) file/url.
-  // The parent is responsible for updating its own existingFile/existingFiles state.
-  onRemoveExistingFile?: (url: string) => void;
+  existingFiles?: string[];
+  existingFile?: string;
 }
-
-const isImageUrl = (url: string) => /\.(jpe?g|png|gif|webp|svg|bmp|avif)(\?.*)?$/i.test(url);
-
-const getFileNameFromUrl = (url: string) => {
-  try {
-    const path = url.split("?")[0];
-    const last = path.substring(path.lastIndexOf("/") + 1);
-    return decodeURIComponent(last) || url;
-  } catch {
-    return url;
-  }
-};
 
 export default function FileUpload({
   label,
@@ -61,9 +42,6 @@ export default function FileUpload({
   accept,
   disabled,
   multiple = false,
-  existingFiles = [],
-  existingFile,
-  onRemoveExistingFile,
   ...props
 }: FileUploadProps) {
   const id = useId();
@@ -171,17 +149,6 @@ const removeFile = (index: number) => {
     }, [files]);
   const { t } = useTranslation(["common"]);
 
-  // Existing (already-uploaded) files to preview alongside newly picked ones.
-  // In single mode, a freshly picked file takes priority over the old existingFile.
-  const existingUrls: string[] =
-    multiple
-      ? existingFiles
-      : files.length === 0 && existingFile
-      ? [existingFile]
-      : [];
-
-  const hasNothingToShow = files.length === 0 && existingUrls.length === 0;
-
   return (
     <div className="w-full">
       {label && (
@@ -275,7 +242,7 @@ const removeFile = (index: number) => {
             <FiUploadCloud size={30} />
           </div>
 
-          {hasNothingToShow ? (
+          {files.length === 0 ? (
             <>
                 <p className="text-sm font-medium text-slate-700 dark:text-slate-200">
                 {/* Drag & drop {multiple ? "files" : "a file"} here */}
@@ -292,68 +259,6 @@ const removeFile = (index: number) => {
             </>
             ) : (
             <div className="w-full max-w-md space-y-2">
-                {/* Already-uploaded files coming from the server */}
-                {existingUrls.map((url) => (
-                    <div
-                        key={url}
-                        className="flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800"
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.borderColor = accentColor;
-                            e.currentTarget.style.backgroundColor = `${accentColor}10`;
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.borderColor = "";
-                            e.currentTarget.style.backgroundColor = "";
-                        }}
-                    >
-                        <a
-                            href={url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="flex min-w-0 items-center gap-3"
-                        >
-                            {isImageUrl(url) ? (
-                                <img
-                                    src={url}
-                                    alt={getFileNameFromUrl(url)}
-                                    className="h-14 w-14 rounded-lg object-cover border"
-                                />
-                                ) : (
-                                <div className="flex h-14 w-14 items-center justify-center rounded-lg border">
-                                    <FiFile
-                                    size={22}
-                                    color={accentColor}
-                                    />
-                                </div>
-                            )}
-
-                            <div className="min-w-0">
-                                <p className="truncate text-sm font-medium text-slate-700 dark:text-slate-100">
-                                {getFileNameFromUrl(url)}
-                                </p>
-
-                                <p className="text-xs text-slate-500">
-                                {t("uploaded")}
-                                </p>
-                            </div>
-                        </a>
-{/* 
-                        <button
-                            type="button"
-                            onClick={(e) => {
-                                
-                                e.preventDefault();
-                                onRemoveExistingFile?.(url);
-                            }}
-                            className="rounded-md p-2 text-red-500 transition hover:bg-red-50 dark:hover:bg-red-500/10"
-                        >
-                            <FiTrash2 size={16} />
-                        </button> */}
-                    </div>
-                ))}
-
-                {/* Newly picked files (not yet uploaded) */}
                 {files.map((file, index) => (
                     <div
                         key={`${file.name}-${file.lastModified}`}
