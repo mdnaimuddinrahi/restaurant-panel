@@ -13,6 +13,9 @@ export default function Heading({
   modal?: string;
 }) {
   const dispatch = useAppDispatch();
+  // alert(subtitle)
+  console.log('subtitle', subtitle)
+  console.log('title', title)
 
   return (
     <div className="flex items-center justify-between mb-6">
@@ -23,6 +26,7 @@ export default function Heading({
             {title}
           </h1>
         )}
+        
         {subtitle && (
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">
             {subtitle}

@@ -33,7 +33,7 @@ export default function page() {
 
   return (
     <>
-      <Heading title={t("admin_dad")} subtitle="Manage your restaurant settings" />
+      <Heading title={t("admin_dad")} subtitles={"Manage your restaurant settings"} />
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
         {stats.map((s, i) => (
           <div
