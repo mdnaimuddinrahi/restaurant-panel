@@ -1,6 +1,6 @@
 "use client"
 import Navbar from "@/components/admin/Navbar";
-import Sidebar from "@/components/admin/Sidebar";
+import Sidebar from "@/components/admin/Sidebar/Sidebar";
 import "./admin.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
