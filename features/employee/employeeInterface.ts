@@ -110,7 +110,6 @@ export type EmployeeTag = {
   id: number | "LIST"
 }
 
-
 export interface EmployeeFIlterPanelProps {
   resourceIsLoading: boolean,
   bloodGroupOption: ResourceOption[],

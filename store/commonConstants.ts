@@ -28,23 +28,15 @@ export const DEFAULT_TAG_SCOPE = {
 
 export const DEFAULT_TAG = {
   EMPLOYEE: 'Employee',
-  CUSTOMER: 'Customer',
+  ROLE: 'Role',
 } as const;
 
 export const TAG_VALUES = Object.values(DEFAULT_TAG);
-
-export const DEFAULT_SEGMENT_URL = {
-    EMPLOYEE: {
-        RESOURCE: "/employee-resources",
-        EMPLOYEES: '/employees'
-    }
+export const DEFAULT_METHOD  = {
+    GET:"GET",
+    PUT: "PUT",
+    POST: "POST",
+    DELETE: "DELETE",
 }
 
-export const MODAL_SIZE_CLASS = { 
-    sm: "max-w-md", 
-    md: "max-w-2xl", 
-    lg: "max-w-4xl", 
-    xl: "max-w-6xl", 
-    full: "max-w-7xl"
-}
 export const INVALID_NUMBER = -1

@@ -79,6 +79,7 @@ export default function EmployeeCreate({onClose}: EmployeeCreateProps) {
                     methods={methods}
                     hasError={hasError}
                     setHasError={setHasError}
+                    buttonText={isLoading ? t("common:creating") : t("create_employee")}
                 />
             </AppModal>
         </>

@@ -156,5 +156,6 @@
   "are_you_sure": "আপনি কি নিশ্চিত?",
   "delete_employee_confirmation": "আপনি কি নিশ্চিত যে এই কর্মচারীকে স্থায়ীভাবে মুছে ফেলতে চান?",
   "delete_employee_warning": "এই কাজটি পূর্বাবস্থায় ফিরিয়ে আনা যাবে না।",
-  "employee_deleted_successfully": "কর্মচারী সফলভাবে মুছে ফেলা হয়েছে।"
+  "employee_deleted_successfully": "কর্মচারী সফলভাবে মুছে ফেলা হয়েছে।",
+  "update_employee": "কর্মচারীর তথ্য আপডেট করুন"
 }

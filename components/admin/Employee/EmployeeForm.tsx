@@ -25,6 +25,7 @@ type EmployeeFormProps<T extends FieldValues> = {
   oldData?: Employee | null;
   hasError: boolean;
   setHasError: Dispatch<SetStateAction<boolean>>;
+  buttonText: string;
 };
 export default function EmployeeForm<T extends FieldValues>({
     methods,
@@ -33,7 +34,8 @@ export default function EmployeeForm<T extends FieldValues>({
     loading,
     oldData,
     hasError=false,
-    setHasError
+    setHasError,
+    buttonText,
 }: EmployeeFormProps<T>) {
     const {data: resourceResponse, 
                 isLoading: resourceIsLoading} = useGetEmployeeResourcesQuery()
@@ -291,7 +293,7 @@ export default function EmployeeForm<T extends FieldValues>({
                             disabled={loading}
                             className=" rounded-xl px-5 py-2.5 text-white disabled:opacity-50"
                         >
-                            {loading ? t("common:creating") : t("create_employee")}
+                            {buttonText}
                         </AppCustomButton>
                     </div>
                 </div>

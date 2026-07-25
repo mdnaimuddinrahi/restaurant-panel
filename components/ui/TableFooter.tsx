@@ -5,8 +5,6 @@ import AppSelect from './input/AppSelect';
 import { t } from 'i18next';
 import useNumberFormatter from '@/hooks/useNumberFormatter';
 
-
-
 export default function TableFooter({
     totalDataCount,
     tablePage,

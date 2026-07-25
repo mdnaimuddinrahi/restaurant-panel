@@ -125,6 +125,7 @@ console.log("Current values:", values);
                         oldData={employee}
                         hasError={hasError}
                         setHasError={setHasError}
+                        buttonText={isLoading ? t("common:updading") : t("update_employee")}
                     />}
             </AppModal>
         </>

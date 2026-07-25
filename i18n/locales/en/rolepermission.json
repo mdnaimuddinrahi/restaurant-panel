@@ -1,3 +1,9 @@
 {
-  "title": "Role & Page Permission"
+  "title": "Role & Page Permission",
+  "totalSelected": "{{size}} of {{total}} selected",
+  "assigned": "Assigned ✓",
+  "assign_to_role": "Assign to Role",
+  "search_permission": "Search permissions",
+  "search_roles": "Search roles",
+  "selected_permissions": "{{count}}/{{total}} permissions"
 }

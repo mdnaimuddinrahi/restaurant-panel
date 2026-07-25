@@ -1,6 +1,5 @@
 "use client"
 import React, { useMemo, useState } from "react";
-import { Search, ChevronDown, Check, RotateCcw, Sun, Moon } from "lucide-react";
 import { useTheme } from "@/theme";
 import { hexToRgba } from "@/utils/colorUtils";
 import { Role } from "@/features/rolepermission/roleInterface";
@@ -10,7 +9,10 @@ import Heading from "@/components/ui/Heading";
 import { useTranslation } from "react-i18next";
 import AppCustomButton from "@/components/ui/button/AppCustomButton";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiChevronDown, FiChevronUp } from "react-icons/fi";
+import { FiChevronDown } from "react-icons/fi";
+import { FaArrowRotateLeft, FaCheck } from "react-icons/fa6";
+import { CiSearch } from "react-icons/ci";
+import useNumberFormatter from '@/hooks/useNumberFormatter';
 
 export default function page() {
   const { accentColor } = useTheme();
@@ -28,7 +30,7 @@ export default function page() {
     const [roleFocused, setRoleFocused] = useState<boolean>(false);
     const [permFocused, setPermFocused] = useState<boolean>(false);
     const [showGroupTags, setShowGroupTags] = useState(false);
-
+    const formatNumber = useNumberFormatter();
     const grouped: GroupedPermissions = useMemo(() => groupBy(permissions, "group_name"), [permissions]);
 
     const filteredRoles: Role[] = useMemo(() => {
@@ -71,19 +73,6 @@ export default function page() {
 
     return out;
   }, [grouped, permQuery, selectedGroup]);
-
-    // const filteredGroups: GroupedPermissions = useMemo(() => {
-    //   const q = permQuery.trim().toLowerCase();
-    //   if (!q) return grouped;
-    //   const out: GroupedPermissions = {};
-    //   Object.keys(grouped).forEach((g) => {
-    //     const rows = grouped[g].filter(
-    //       (p) => p.name.toLowerCase().includes(q) || p.slug.toLowerCase().includes(q)
-    //     );
-    //     if (rows.length) out[g] = rows;
-    //   });
-    //   return out;
-    // }, [grouped, permQuery]);
 
     const selectedRole: Role | undefined = roles.find((r) => r.id === selectedRoleId);
     const draftIds = new Set<number>(draft[selectedRoleId] || []);
@@ -132,41 +121,35 @@ export default function page() {
       <>
         <Heading 
           title={t("title")}
-
         />
         {/* <div className="grid grid-cols-[240px_1fr] gap-4 items-start"> */}
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-[280px_1fr] items-start">
             {/* ============================ ROLE LIST ============================ */}
-            {/* <div 
-              className="rounded-2xl border border-slate-200 
-                dark:border-slate-800 bg-white 
-                dark:bg-slate-900 overflow-hidden 
-                transition-colors duration-300"> */}
             <div className="w-full rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 overflow-hidden transition-all duration-300">
               <div className="p-3 border-b border-slate-200 dark:border-slate-800">
                 <div className="relative">
-                  <Search 
-                    className="absolute left-2.5 top-1/2 
-                    -translate-y-1/2 w-3.5 h-3.5 
-                    text-slate-400 dark:text-slate-500" />
-                  <input
-                    value={roleQuery}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRoleQuery(e.target.value)}
-                    onFocus={() => setRoleFocused(true)}
-                    onBlur={() => setRoleFocused(false)}
-                    placeholder="Search roles"
-                    className="w-full pl-8 pr-3 py-2 text-sm 
-                    rounded-lg border border-slate-200
-                    dark:border-slate-700 bg-slate-50 
-                    dark:bg-slate-800 text-slate-900 
-                    dark:text-slate-100 placeholder-slate-400
-                    dark:placeholder-slate-500 outline-none
-                    transition-shadow duration-150"
-                    style={
-                      roleFocused ? 
-                        { borderColor: accentColor, boxShadow: `0 0 0 3px ${hexToRgba(accentColor, 0.18)}` } 
-                        : undefined}
-                  />
+                    <CiSearch className="absolute left-2.5 top-1/2 
+                      -translate-y-1/2 w-3.5 h-3.5 
+                      text-slate-400 dark:text-slate-500" />
+
+                    <input
+                      value={roleQuery}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRoleQuery(e.target.value)}
+                      onFocus={() => setRoleFocused(true)}
+                      onBlur={() => setRoleFocused(false)}
+                      placeholder={t('search_roles')}
+                      className="w-full pl-8 pr-3 py-2 text-sm 
+                      rounded-lg border border-slate-200
+                      dark:border-slate-700 bg-slate-50 
+                      dark:bg-slate-800 text-slate-900 
+                      dark:text-slate-100 placeholder-slate-400
+                      dark:placeholder-slate-500 outline-none
+                      transition-shadow duration-150"
+                      style={
+                        roleFocused ? 
+                          { borderColor: accentColor, boxShadow: `0 0 0 3px ${hexToRgba(accentColor, 0.18)}` } 
+                          : undefined}
+                    />
                 </div>
               </div>
 
@@ -195,7 +178,11 @@ export default function page() {
                     >
                       <div className="text-sm font-medium">{role.name}</div>
                       <div className="text-xs text-slate-400 dark:text-slate-500">
-                        {count}/{total} permissions
+                        
+                        {t('selected_permissions', {
+                          count: formatNumber(count),
+                          total: formatNumber(total)
+                        })}
                       </div>
                     </button>
                   );
@@ -204,7 +191,9 @@ export default function page() {
             </div>
             {/* ============================ PERMISSIONS ============================ */}
             
-            <div className="min-w-0 rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 overflow-hidden transition-all duration-300">
+            <div className="min-w-0 rounded-2xl border border-slate-200
+                 bg-white dark:border-slate-800 dark:bg-slate-900 
+                 overflow-hidden transition-all duration-300">
               <div 
                 className="p-4 border-b border-slate-200 
                 dark:border-slate-800 flex items-center 
@@ -212,26 +201,24 @@ export default function page() {
                 <div>
                   <div className="text-sm font-semibold">{selectedRole?.name}</div>
                   <div className="text-xs text-slate-400 dark:text-slate-500">
-                    {draftIds.size} of {total} selected
+                    {/* {draftIds.size} of {total} selected */}
+                    {t('totalSelected', {
+                      size: formatNumber(draftIds.size),
+                      total: formatNumber(total)
+                    })}
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
                   {isDirty && (
-                    <button
+                    <AppCustomButton
+                      variant="outline"
                       onClick={handleCancel}
-                      className="flex items-center gap-1.5 
-                        px-3 py-1.5 text-sm font-medium 
-                        rounded-lg border border-slate-200 
-                        dark:border-slate-700 text-slate-700 
-                        dark:text-slate-200 bg-white 
-                        dark:bg-slate-800 transition-colors 
-                        duration-150 hover:bg-slate-50 
-                        dark:hover:bg-slate-700"
+                      className="text-sm flex items-center gap-1.5 px-3 py-1.5"
                     >
-                      <RotateCcw className="w-3.5 h-3.5" />
-                      Cancel
-                    </button>
+                      <FaArrowRotateLeft />
+                      {t('common:cancel')}
+                    </AppCustomButton>
                   )}
                   <button
                     onClick={handleAssign}
@@ -241,30 +228,17 @@ export default function page() {
                     }`}
                     style={isDirty ? { backgroundColor: savedFlash ? "#16A34A" : accentColor } : undefined}
                   >
-                    {savedFlash ? "Assigned ✓" : "Assign to Role"}
+                    {savedFlash ? t('assigned') : t('assign_to_role')}
                   </button>
                 </div>
               </div>
 
-              {/* <div className="p-3 border-b border-slate-200 dark:border-slate-800">
-                <div className="relative">
-                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
-                  <input
-                    value={permQuery}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPermQuery(e.target.value)}
-                    onFocus={() => setPermFocused(true)}
-                    onBlur={() => setPermFocused(false)}
-                    placeholder="Search permissions"
-                    className="w-full pl-8 pr-3 py-2 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none transition-shadow duration-150"
-                    style={permFocused ? { borderColor: accentColor, boxShadow: `0 0 0 3px ${hexToRgba(accentColor, 0.18)}` } : undefined}
-                  />
-                </div>
-              </div> */}
               <div className="p-3 border-b border-slate-200 dark:border-slate-800">
                 <div className="flex items-center gap-2">
                   {/* Search */}
                   <div className="relative flex-1">
-                    <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+                    
+                    <CiSearch className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
 
                     <input
                       value={permQuery}
@@ -273,8 +247,12 @@ export default function page() {
                       }
                       onFocus={() => setPermFocused(true)}
                       onBlur={() => setPermFocused(false)}
-                      placeholder="Search permissions"
-                      className="w-full pl-8 pr-3 py-2 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none transition-shadow duration-150"
+                      placeholder={t('search_permission')}
+                      className="w-full pl-8 pr-3 py-2 text-sm 
+                      rounded-lg border border-slate-200 
+                      dark:border-slate-700 bg-slate-50 dark:bg-slate-800
+                       text-slate-900 dark:text-slate-100 placeholder-slate-400
+                        dark:placeholder-slate-500 outline-none transition-shadow duration-150"
                       style={
                         permFocused
                           ? {
@@ -290,7 +268,10 @@ export default function page() {
                   <AppCustomButton
                     variant="ghost"
                     onClick={() => setShowGroupTags((prev) => !prev)}
-                    className="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 flex items-center justify-center transition-colors hover:bg-slate-100 dark:hover:bg-slate-700"
+                    className="w-10 h-10 rounded-full border 
+                    border-slate-200 dark:border-slate-700 bg-slate-50 
+                    dark:bg-slate-800 flex items-center justify-center 
+                    transition-colors hover:bg-slate-100 dark:hover:bg-slate-700"
                   >
                     <motion.div
                       animate={{ rotate: showGroupTags ? 180 : 0 }}
@@ -302,32 +283,6 @@ export default function page() {
                 </div>
               </div>
                 {/* add_groups_tags */}
-                {/* <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-800">
-                  <div className="flex flex-wrap gap-2">
-                    {permissionGroups.map((group) => {
-                      const active = selectedGroup === group;
-
-                      return (
-                        <button
-                          key={group}
-                          onClick={() => setSelectedGroup(group)}
-                          className="px-3 py-1.5 rounded-sm text-xs font-medium border border-slate-300 dark:border-slate-400 transition-all duration-200"
-                          style={
-                            active
-                              ? {
-                                  backgroundColor: accentColor,
-                                  borderColor: accentColor,
-                                  color: "#fff",
-                                }
-                              : undefined
-                          }
-                        >
-                          {group}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div> */}
                 <AnimatePresence initial={false}>
                   {showGroupTags && (
                     <motion.div
@@ -348,7 +303,9 @@ export default function page() {
                               whileTap={{ scale: 0.96 }}
                               layout
                               onClick={() => setSelectedGroup(group)}
-                              className="px-3 py-1.5 rounded-md text-xs font-medium border border-slate-300 dark:border-slate-600 transition-colors"
+                              className="px-3 py-1.5 rounded-md text-xs 
+                              font-medium border border-slate-300 
+                              dark:border-slate-600 transition-colors"
                               style={
                                 active
                                   ? {
@@ -393,11 +350,12 @@ export default function page() {
                             }}
                             className="flex items-center justify-center w-5 h-5 rounded-full border border-slate-300 dark:border-slate-600"
                           >
-                            <ChevronDown className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+                            {/* <ChevronDown className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" /> */}
+                            <FiChevronDown className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                           </motion.div>
                           <span className="text-sm font-semibold">{groupName}</span>
                           <span className="text-xs text-slate-400 dark:text-slate-500">
-                            ({grantedInGroup}/{ids.length})
+                            ({formatNumber(grantedInGroup)}/{formatNumber(ids.length)})
                           </span>
                         </div>
                         <span
@@ -408,7 +366,7 @@ export default function page() {
                           className="text-xs font-medium cursor-pointer"
                           style={{ color: accentColor }}
                         >
-                          {allOn ? "Clear all" : "Select all"}
+                          {allOn ? t('common:clear_all') : t('common:select_all')}
                         </span>
                       </div>
                       <AnimatePresence initial={false}>
@@ -429,6 +387,7 @@ export default function page() {
 
                                 return (
                                   <motion.label
+                                    onClick={() => toggle(perm.id)}
                                     key={perm.id}
                                     initial={{ opacity: 0, y: -6 }}
                                     animate={{ opacity: 1, y: 0 }}
@@ -436,11 +395,15 @@ export default function page() {
                                       delay: i * 0.03,
                                       duration: 0.2,
                                     }}
-                                    className="flex items-center gap-2.5 px-1.5 py-2 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                                    className="flex items-center gap-2.5 
+                                    px-1.5 py-2 rounded-lg cursor-pointer 
+                                    hover:bg-slate-50 dark:hover:bg-slate-800/50"
                                   >
                                     <span
-                                      onClick={() => toggle(perm.id)}
-                                      className="w-4.5 h-4.5 rounded-[5px] border border-slate-300 dark:border-slate-600 flex items-center justify-center shrink-0"
+                                      // onClick={() => toggle(perm.id)}
+                                      className="w-4.5 h-4.5 rounded-[5px] 
+                                      border border-slate-300 dark:border-slate-600 
+                                      flex items-center justify-center shrink-0"
                                       style={
                                         on
                                           ? {
@@ -451,15 +414,12 @@ export default function page() {
                                       }
                                     >
                                       {on && (
-                                        <Check
-                                          className="w-3 h-3 text-white"
-                                          strokeWidth={3}
-                                        />
+                                        <FaCheck className="w-3 h-3 text-white" strokeWidth={3}/>
                                       )}
                                     </span>
 
                                     <span
-                                      onClick={() => toggle(perm.id)}
+                                      // onClick={() => toggle(perm.id)}
                                       className="min-w-0"
                                     >
                                       <span className="block text-sm text-slate-800 dark:text-slate-200">

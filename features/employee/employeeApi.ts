@@ -1,17 +1,21 @@
 import { baseApi } from "@/services/baseApi";
 import { Employee, EmployeeByIdResponse, EmployeeResourceResponse, EmployeeTag, GetEmployeesRequests, GetEmployeesResponse } from "./employeeInterface";
 
-import { DEFAULT_SEGMENT_URL, DEFAULT_TAG, DEFAULT_TAG_SCOPE } from "@/store/commonConstants";
+import { DEFAULT_METHOD, DEFAULT_TAG, DEFAULT_TAG_SCOPE } from "@/store/commonConstants";
+import { routes } from "@/utils/apiRoutes";
 
 export const employeeApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getEmployeeResources: builder.query<EmployeeResourceResponse, void>({
-      query: () => DEFAULT_SEGMENT_URL.EMPLOYEE.RESOURCE,
+      query: () => ({
+        url: routes.employee.resource,
+        method: DEFAULT_METHOD.GET,
+      }),
       providesTags: [{ type: DEFAULT_TAG.EMPLOYEE, id: DEFAULT_TAG_SCOPE.RESOURCE }]
     }),
     getEmployees: builder.query<GetEmployeesResponse, GetEmployeesRequests>({
       query: (params) => ({
-        url: DEFAULT_SEGMENT_URL.EMPLOYEE.EMPLOYEES,
+        url: routes.employee.list,
         params,
       }),
       providesTags: (result): EmployeeTag[] => {
@@ -32,24 +36,26 @@ export const employeeApi = baseApi.injectEndpoints({
       }
     }),
     getEmployeeById: builder.query<EmployeeByIdResponse, number>({
-      query: (id) => `/employees/${id}`,
+      query: (id: number) => ({
+        url: routes.employee.getById(id),
+        method: DEFAULT_METHOD.GET
+      }),
       providesTags: (_result, _error, id) => [
-        { type: "Employee", id },
+        { type: DEFAULT_TAG.EMPLOYEE, id },
       ],
     }),
     createEmployee: builder.mutation<Employee, FormData>({
       query: (body) => ({
-        url: "/employees",
-        method: "POST",
+        url: routes.employee.create,
+        method: DEFAULT_METHOD.POST,
         body,
       }),
-
-      invalidatesTags: [{ type: "Employee", id: "LIST" }],
+      invalidatesTags: [{ type: DEFAULT_TAG.EMPLOYEE, id: DEFAULT_TAG_SCOPE.LIST }],
     }),
     updateEmployee: builder.mutation<Employee,  { id: number; data: FormData }>({
       query: ({ id, data }) => ({
-        url: `/employees/${id}`,
-        method: "PUT",
+        url: routes.employee.update(id),
+        method: DEFAULT_METHOD.PUT,
         body: data,
       }),
 
@@ -60,13 +66,13 @@ export const employeeApi = baseApi.injectEndpoints({
     }),
     deleteEmployee: builder.mutation<{ success: boolean }, number>({
       query: (id) => ({
-        url: `/employees/${id}`,
-        method: "DELETE",
+        url: routes.employee.delete(id),
+        method: DEFAULT_METHOD.DELETE,
       }),
 
       invalidatesTags: (_result, _error, id) => [
-        { type: "Employee", id },
-        { type: "Employee", id: "LIST" },
+        { type: DEFAULT_TAG.EMPLOYEE, id },
+        { type: DEFAULT_TAG.EMPLOYEE, id: DEFAULT_TAG_SCOPE.LIST  },
       ],
     }),
   }),
