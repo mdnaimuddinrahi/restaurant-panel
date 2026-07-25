@@ -1,32 +1,20 @@
 "use client"
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import {  FieldValues, FormProvider, SubmitHandler } from 'react-hook-form'
+import {useEffect, useState } from 'react'
+import {  FieldValues, FormProvider } from 'react-hook-form'
 import EmployeeSectionNav from './EmployeeSectionNav'
 import EmployeeSection from './EmployeeSection'
 import FormInput from '@/components/ui/form/FormInput'
-import { t } from 'i18next'
 import FormDatePicker from '@/components/ui/form/FormDatePicker'
 import FormSelect from '@/components/ui/form/FormSelect'
 import FormTextArea from '@/components/ui/form/FormTextArea'
 import FormTimePicker from '@/components/ui/form/FormTimePicker'
 import FormFileUpload from '@/components/ui/form/FormFileUpload'
 import AppCustomButton from '@/components/ui/button/AppCustomButton'
-import { Employee } from '@/features/employee/employeeInterface'
+import { EmployeeFormProps } from '@/features/employee/employee.types'
 import { useGetEmployeeResourcesQuery } from '@/features/employee/employeeApi'
-import { useTranslation } from 'react-i18next'
-import { UseFormReturn } from "react-hook-form";
+import { useTranslation } from 'react-i18next';
 import { EMPLOYEE_SECTIONS } from '@/features/employee/employeeConstant'
 
-type EmployeeFormProps<T extends FieldValues> = {
-  methods: UseFormReturn<T>;
-  mode: "create" | "update";
-  loading?: boolean;
-  onSubmit: SubmitHandler<T>;
-  oldData?: Employee | null;
-  hasError: boolean;
-  setHasError: Dispatch<SetStateAction<boolean>>;
-  buttonText: string;
-};
 export default function EmployeeForm<T extends FieldValues>({
     methods,
     mode,

@@ -47,7 +47,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 h-14 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex items-center px-4 gap-3 shadow-sm">
+    <nav className="fixed top-0 left-0 right-0 z-50 h-14 bg-white dark:bg-slate-800 border-b border-slate-50 dark:border-slate-700 flex items-center px-4 gap-3 ">
       <NavbarSideToggle/>
       <div className="flex items-center gap-2 mr-3 shrink-0">
         <div className="w-7 h-7 accent-bg rounded-lg flex items-center justify-center">

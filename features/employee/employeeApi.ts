@@ -1,5 +1,5 @@
 import { baseApi } from "@/services/baseApi";
-import { Employee, EmployeeByIdResponse, EmployeeResourceResponse, EmployeeTag, GetEmployeesRequests, GetEmployeesResponse } from "./employeeInterface";
+import { Employee, EmployeeByIdResponse, EmployeeResourceResponse, EmployeeTag, GetEmployeesRequests, GetEmployeesResponse } from "./employee.types";
 
 import { DEFAULT_METHOD, DEFAULT_TAG, DEFAULT_TAG_SCOPE } from "@/store/commonConstants";
 import { routes } from "@/utils/apiRoutes";

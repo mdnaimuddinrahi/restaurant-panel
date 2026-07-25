@@ -1,5 +1,9 @@
 import { openModal } from "@/features/modal/modalSlice";
 import { useAppDispatch } from "@/store/hooks";
+import AppCustomButton from "./button/AppCustomButton";
+import { PiCirclesThreePlus } from "react-icons/pi";
+
+
 
 export default function Heading({
   title,
@@ -13,12 +17,13 @@ export default function Heading({
   modal?: string;
 }) {
   const dispatch = useAppDispatch();
-  // alert(subtitle)
-  console.log('subtitle', subtitle)
-  console.log('title', title)
 
   return (
-    <div className="flex items-center justify-between mb-6">
+    <div className="flex items-center 
+      justify-between mb-1 p-3 bg-white 
+      border rounded-lg border-slate-100
+      dark:bg-slate-800
+      dark:border-slate-700">
       {/* Left side */}
       <div>
         {title && (
@@ -36,7 +41,8 @@ export default function Heading({
 
       {/* Right side */}
       {buttonText && modal && (
-        <button
+        <AppCustomButton
+          variant="solid"
           onClick={() =>
             dispatch(
               openModal({
@@ -44,23 +50,13 @@ export default function Heading({
               })
             )
           }
-          className="flex items-center gap-2 px-4 py-2 accent-bg text-white text-sm rounded-xl hover:opacity-90 transition-opacity font-500 shrink-0"
+          // className="flex items-center gap-2 px-4 py-2 accent-bg text-white text-sm rounded-xl hover:opacity-90 transition-opacity font-500 shrink-0"
+          className="text-sm px-4 py-2 gap-2 "
         >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-            />
-          </svg>
+          <PiCirclesThreePlus className="w-4 h-4"/>
+
           {buttonText}
-        </button>
+        </AppCustomButton>
       )}
     </div>
   );

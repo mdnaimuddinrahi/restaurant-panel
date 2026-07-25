@@ -1,5 +1,5 @@
 import { TableColumn } from "@/store/commonInterface";
-import { EmployeeTableHead } from "./employeeInterface";
+import { EmployeeTableHead } from "./employee.types";
 
 export const EMPLOYEE_CREATE_MODAL = "employee-create";
 export const EMPLOYEE_UPDATE_MODAL = "employee-update";

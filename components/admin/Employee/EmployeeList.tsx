@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useMemo, useState } from 'react';
-import { Employee, EmployeeTableHead, GetEmployeesRequests } from '@/features/employee/employeeInterface';
+import { Employee, EmployeeTableHead, GetEmployeesRequests } from '@/features/employee/employee.types';
 import TableHead from '@/components/ui/TableHead';
 import { SortState, TableColumn } from '@/store/commonInterface';
 import { EMPLOYEE_COLUMNS } from '@/features/employee/employeeConstant';
@@ -10,6 +10,7 @@ import { DEFAULT_PAGINATION, DEFAULT_SEARCH } from '@/store/commonConstants';
 import { useGetEmployeeResourcesQuery, useGetEmployeesQuery } from '@/features/employee/employeeApi';
 import ColumnSelectorModal from '@/components/ui/modal/ColumnSelectorModal';
 import EmployeeTableBody from './EmployeeTableBody';
+import ContentCard from '@/components/ui/ContentCard';
 
 export default function EmployeeList() {
   const [sortState, setSortState] = useState<SortState<EmployeeTableHead>>({ col: "id", dir: "asc" });
@@ -115,7 +116,7 @@ export default function EmployeeList() {
   ) => fields.map(field => `${prefix}${field}`);
 
   return (
-      <div className=" bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+      <ContentCard>
         <EmployeeFilterPanel
           resourceIsLoading={resourceIsLoading}
           bloodGroupOption={bloodGroupOption ?? []}
@@ -177,6 +178,6 @@ export default function EmployeeList() {
           columns={columns}
           setColumns={setColumns}
         />
-      </div>
+      </ContentCard>
   )
 }

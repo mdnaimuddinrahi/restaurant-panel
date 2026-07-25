@@ -10,13 +10,9 @@ import { formatDate } from '@/store/commonFunction';
 import { appToast } from '@/utils/toastUtils';
 import { useGetEmployeeByIdQuery, useUpdateEmployeeMutation } from '@/features/employee/employeeApi';
 import { useEffect, useState } from 'react';
-import { Employee } from '@/features/employee/employeeInterface';
+import { Employee, EmployeeUpdatedProps } from '@/features/employee/employee.types';
 import { useTranslation } from 'react-i18next';
 
-type EmployeeUpdatedProps = {
-  onClose: () => void;
-  employeeId: number;
-};
 
 export default function EmployeeUpdate({onClose, employeeId}: EmployeeUpdatedProps) {
     const { t } = useTranslation("employee");

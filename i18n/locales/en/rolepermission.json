@@ -5,5 +5,7 @@
   "assign_to_role": "Assign to Role",
   "search_permission": "Search permissions",
   "search_roles": "Search roles",
-  "selected_permissions": "{{count}}/{{total}} permissions"
+  "selected_permissions": "{{count}}/{{total}} permissions",
+  "roles": "Roles",
+  "add_role": "Add Role"
 }

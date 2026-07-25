@@ -1,6 +1,10 @@
 import { Assignments, Permission } from "./permissionInterface";
 import { Role } from "./roleInterface";
 
+export const ROLE_CREATE_MODAL = 'role-create';
+export const ROLE_UPDATE_MODAL = 'role-update';
+export const ROLE_DELETE_MODAL = 'role-delete';
+
 export const ROLES_SOURCE: Role[] = [
   { id: 2, name: "Manager", status: "assigned" },
   { id: 3, name: "Employee", status: "assigned" },
@@ -32,7 +36,6 @@ export const SEED_ASSIGNMENTS: Assignments = {
   3: PERMISSIONS_SOURCE.filter((p) => p.slug.endsWith(".index") || p.slug.endsWith(".show")).map((p) => p.id),
   4: [],
 };
-
 
 export const groupBy = <T, K extends keyof T>(list: T[], key: K): Record<string, T[]>  => {
   return list.reduce<Record<string, T[]>>((acc, item) => {

@@ -2,7 +2,7 @@ import SkeletonSelect from '@/components/ui/SkeletonSelect';
 import { useGetEmployeeResourcesQuery } from '@/features/employee/employeeApi';
 import AppInput from '@/components/ui/input/AppInput';
 import AppButton from '@/components/ui/button/AppButton';
-import { EmployeeFIlterPanelProps } from '@/features/employee/employeeInterface';
+import { EmployeeFIlterPanelProps } from '@/features/employee/employee.types';
 import { ResourceOption } from '@/store/commonInterface';
 import { useState } from 'react';
 import { hexToRgba, useTheme } from "@/theme";  

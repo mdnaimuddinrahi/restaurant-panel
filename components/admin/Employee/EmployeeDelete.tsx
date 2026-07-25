@@ -9,11 +9,8 @@ import { hexToRgba } from "@/utils/colorUtils";
 import AppModal from "@/components/ui/modal/AppModal";
 import AppCustomButton from "@/components/ui/button/AppCustomButton";
 import { FiAlertTriangle } from "react-icons/fi";
+import { EmployeeDeletedProps } from "@/features/employee/employee.types";
 
-interface EmployeeDeletedProps {
-    employeeId: number;
-    onClose: () => void;
-}
 
 export default function EmployeeDelete({
     employeeId,

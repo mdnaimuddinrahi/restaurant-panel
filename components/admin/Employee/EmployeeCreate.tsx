@@ -12,11 +12,9 @@ import EmployeeForm from './EmployeeForm';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 
-type EmployeeCreateProps = {
+export default function EmployeeCreate({onClose}: {
   onClose: () => void;
-};
-
-export default function EmployeeCreate({onClose}: EmployeeCreateProps) {
+}) {
     const { t } = useTranslation("employee");
     const schema = createEmployeeSchema(t);
     type EmployeeFormData = z.infer<typeof schema>;

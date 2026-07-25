@@ -4,7 +4,7 @@
 /* ------------------------------------------------------------------ */
 
 import { hexToRgba } from "@/theme";
-import { SubmenuLinkProps } from "./SidebarInterface";
+import { SubmenuLinkProps } from "../../../features/sidebar/sidebar.types";
 
 export const SubmenuLink = ({
   label,

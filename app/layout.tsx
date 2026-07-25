@@ -33,7 +33,7 @@ export default function RootLayout({
            <ThemeProvider>{children}</ThemeProvider>
         </ReduxProvider>
       </body> */}
-      <body className="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen">
+      <body className="bg-slate-200 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen">
         <Providers>
           {children}
         </Providers>

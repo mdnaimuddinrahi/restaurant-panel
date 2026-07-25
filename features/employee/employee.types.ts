@@ -1,7 +1,9 @@
 import { DEFAULT_TAG } from "@/store/commonConstants";
-import { CommonResponse, MetaData, RequestParams, ResourceOption } from "@/store/commonInterface";
+import { CommonResponse, MetaData, RequestParams, ResourceOption, TableColumn } from "@/store/commonInterface";
 import z from "zod";
 import { createEmployeeSchema, updateEmployeeSchema } from "./employeeConstant";
+import { FieldValues, SubmitHandler, UseFormReturn } from "react-hook-form";
+import { Dispatch, SetStateAction } from "react";
 
 export interface Employee {
   id: number;
@@ -131,4 +133,38 @@ export interface EmployeeFIlterPanelProps {
   setMaritalStatus: (marital_status: number) => void,
   setSearchTerm: (search: string) => void,
   onSearch: () => void;
+}
+
+
+export type EmployeeUpdatedProps = {
+  onClose: () => void;
+  employeeId: number;
+};
+
+
+export interface EmployeeDeletedProps {
+    employeeId: number;
+    onClose: () => void;
+}
+
+export type EmployeeFormProps<T extends FieldValues> = {
+  methods: UseFormReturn<T>;
+  mode: "create" | "update";
+  loading?: boolean;
+  onSubmit: SubmitHandler<T>;
+  oldData?: Employee | null;
+  hasError: boolean;
+  setHasError: Dispatch<SetStateAction<boolean>>;
+  buttonText: string;
+};
+
+
+export interface EmployeeTableBodyProps<T> {
+    columns: TableColumn<T>[];
+    employees: Employee[],
+    bloodGroupOption: ResourceOption[],
+    employeeDesignationOption: ResourceOption[],
+    employeeTypeOption: ResourceOption[],
+    genderOption: ResourceOption[],
+    maritalStatusOption: ResourceOption[],
 }

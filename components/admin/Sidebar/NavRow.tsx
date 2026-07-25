@@ -4,7 +4,7 @@
 /* ------------------------------------------------------------------ */
 
 import { useEffect, useRef, useState } from "react";
-import { SidebarProps } from "./SidebarInterface";
+import { SidebarProps } from "../../../features/sidebar/sidebar.types";
 import { AnimatePresence, motion } from "framer-motion";
 import { SubmenuLink } from "./SubmenuLink";
 import { createPortal } from "react-dom";

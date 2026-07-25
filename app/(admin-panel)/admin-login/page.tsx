@@ -63,8 +63,8 @@ export default function page() {
           user: response.user,
         })
       );
-      router.push('/admin')
-window.location.reload();
+      router.push('/admin/dashboard')
+      window.location.reload();
     } catch (error) {
       setToast({ visible: true, message: 'Invalid email or password.', error: true })
     }
@@ -83,7 +83,7 @@ window.location.reload();
     <div className="page-root min-h-screen bg-nx-bg text-nx-text">
       <div className="mx-auto flex min-h-screen max-w-7xl items-center justify-center px-6">
         
-          <main className={`relative overflow-hidden rounded-[32px] ${shake ? 'shake' : ''}`}>
+          <main className={`relative overflow-hidden rounded-4xl ${shake ? 'shake' : ''}`}>
             <div className="absolute inset-0 hero-overlay" />
             <div className="relative card-inner border border-nx-border bg-white p-8 sm:p-10">
               <div className="mb-8 text-center">
@@ -189,7 +189,7 @@ window.location.reload();
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="nx-btn w-full bg-gradient-to-r from-nx-cyan via-nx-violet to-nx-pink text-gray-900 font-display font-bold text-sm rounded-2xl py-3 mt-2 flex items-center justify-center gap-2 disabled:cursor-not-allowed"
+                  className="nx-btn w-full bg-linear-to-r from-nx-cyan via-nx-violet to-nx-pink text-gray-900 font-display font-bold text-sm rounded-2xl py-3 mt-2 flex items-center justify-center gap-2 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? <span className="spinner" ><AiOutlineLoading3Quarters /></span> : 'Sign In'}
                 </button>

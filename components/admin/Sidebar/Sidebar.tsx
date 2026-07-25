@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { useTheme } from "@/theme";
 import { hexToRgba } from "@/utils/colorUtils";
 import { useSidebarCollapsed } from "@/hooks/useSidebarCollapsed";
-import { NavItem } from "./SidebarInterface";
+import { NavItem } from "../../../features/sidebar/sidebar.types";
 import { COLLAPSED_WIDTH, EXPANDED_WIDTH, NAV_SECTIONS } from "./SidebarConstants";
 import Footer from "./Footer";
 import NavSection from "./NavSection";

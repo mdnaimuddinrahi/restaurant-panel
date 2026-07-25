@@ -24,21 +24,6 @@ export default function NavbarLocalization() {
         label: "বাংলা",
         flag: "🇧🇩",
       },
-      {
-        code: "es",
-        label: "Español",
-        flag: "🇪🇸",
-      },
-      {
-        code: "fr",
-        label: "Français",
-        flag: "🇫🇷",
-      },
-      {
-        code: "de",
-        label: "Deutsch",
-        flag: "🇩🇪",
-      },
     ] as const;
 
   useEffect(() => {
@@ -64,7 +49,6 @@ export default function NavbarLocalization() {
         ? localStorage.getItem("language") || "en"
         : "en";
     i18n.changeLanguage(savedLanguage);
-    console.log('first')
   }, [i18n]);
 
   const changeLanguage = (lng: (typeof languages)[number]["code"]) => {

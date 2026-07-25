@@ -1,10 +1,9 @@
 import AppTooltip from '@/components/ui/AppTooltip';
 import AppCustomButton from '@/components/ui/button/AppCustomButton';
 import { EMPLOYEE_DELETE_MODAL, EMPLOYEE_UPDATE_MODAL } from '@/features/employee/employeeConstant';
-import { Employee } from '@/features/employee/employeeInterface';
+import { EmployeeTableBodyProps } from '@/features/employee/employee.types';
 import { openModal } from '@/features/modal/modalSlice';
 import useNumberFormatter from '@/hooks/useNumberFormatter';
-import { ResourceOption, TableColumn } from '@/store/commonInterface';
 import { useAppDispatch } from '@/store/hooks';
 import { hexToRgba, useTheme } from '@/theme';
 import { t } from 'i18next';
@@ -13,17 +12,7 @@ import { BiEditAlt } from 'react-icons/bi';
 import { IoMdCopy } from 'react-icons/io';
 import { IoCheckmarkDone } from 'react-icons/io5';
 import { RxTrash } from 'react-icons/rx';
-import { useDispatch } from 'react-redux';
 
-interface Props<T> {
-    columns: TableColumn<T>[];
-    employees: Employee[],
-    bloodGroupOption: ResourceOption[],
-    employeeDesignationOption: ResourceOption[],
-    employeeTypeOption: ResourceOption[],
-    genderOption: ResourceOption[],
-    maritalStatusOption: ResourceOption[],
-}
 
 export default function EmployeeTableBody<T>({
     employees, 
@@ -33,7 +22,7 @@ export default function EmployeeTableBody<T>({
     employeeTypeOption,
     genderOption,
     maritalStatusOption,
-    }: Props<T>) {
+    }: EmployeeTableBodyProps<T>) {
     const initials = (name: string) =>
   name
     ?.trim()

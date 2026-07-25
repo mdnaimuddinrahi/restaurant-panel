@@ -53,8 +53,8 @@
   h1,h2,h3,h4,h5,.font-display { font-family: 'Syne', sans-serif; }
 
  
-  #main-content { transition: margin-left 0.3s cubic-bezier(.4,0,.2,1); margin-left: 260px; }
-  #main-content.expanded { margin-left: 68px; }
+  #main-content { transition: margin-left 0.3s cubic-bezier(.4,0,.2,1); margin-left: 250px; }
+  #main-content.expanded { margin-left: 38px; }
 
   /* Accent dynamic color usage */
   .accent-bg { background-color: var(--accent) !important; }

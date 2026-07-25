@@ -1,7 +1,7 @@
 
 import { SectionLabel } from './SectionLabel';
 import { NavRow } from './NavRow';
-import { SidebarNavProps } from './SidebarInterface';
+import { SidebarNavProps } from '../../../features/sidebar/sidebar.types';
 
 export default function NavSection({
     sections,

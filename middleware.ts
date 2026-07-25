@@ -11,7 +11,7 @@ export function middleware(request: NextRequest) {
   if (pathname === "/admin-login") {
     if (token) {
       return NextResponse.redirect(
-        new URL("/admin", request.url)
+        new URL("/admin/dashboard", request.url)
       );
     }
 
