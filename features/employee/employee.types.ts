@@ -1,70 +1,53 @@
 import { DEFAULT_TAG } from "@/store/commonConstants";
 import { CommonResponse, MetaData, RequestParams, ResourceOption, TableColumn } from "@/store/commonInterface";
-import z from "zod";
-import { createEmployeeSchema, updateEmployeeSchema } from "./employeeConstant";
 import { FieldValues, SubmitHandler, UseFormReturn } from "react-hook-form";
 import { Dispatch, SetStateAction } from "react";
 
 export interface Employee {
   id: number;
-
   employee_type_id: number;
   employee_designation_id: number;
   user_id: number | null;
-
   name: string;
   email: string;
   phone: string;
   address: string;
-
   date_of_birth: string;
-  date_of_joining: string; //ok
-
+  date_of_joining: string; 
   is_active: boolean;
-
   gender: number;
-
   profile_img: string | null;
-
   national_id: string;
   passport_number: string;
-
   emergency_contact_name: string;
   emergency_contact_phone: string;
   emergency_contact_relation: string;
   emergency_contact_email: string;
-
   documents: any[]; // you can refine later if structure is known
-
-  basic_salary: number; //ok
-
+  basic_salary: number; 
   termination_date: string | null;
   resume: string;
-
-  blood_group: number; //ok
-  marital_status: number; //ok
-
+  blood_group: number; 
+  marital_status: number; 
   shift_start: string;
   shift_end: string;
-
   created_at: string;
   updated_at: string | null;
-
   created_by: number;
   updated_by: number | null;
 
 }
 
 export interface EmployeeTypeOption extends ResourceOption {
-  code: string
+  code: string;
 }
 
 export interface EmployeeResourceData {
-  blood_groups: ResourceOption[]
-  employee_designations: ResourceOption[]
-  employee_types: EmployeeTypeOption[]
-  genders: ResourceOption[]
-  marital_status: ResourceOption[]
+  blood_groups: ResourceOption[];
+  employee_designations: ResourceOption[];
+  employee_types: EmployeeTypeOption[];
+  genders: ResourceOption[];
+  marital_status: ResourceOption[];
 }
 
 export type EmployeeResourceResponse = CommonResponse<EmployeeResourceData>
@@ -89,11 +72,11 @@ export interface EmployeeTableHead {
 }
 
 export interface GetEmployeesRequests extends RequestParams {
-  blood_group: number | null
-  employee_designation: number | null
-  employee_type: number | null
-  gender: number | null
-  marital_status: number | null
+  blood_group: number | null;
+  employee_designation: number | null;
+  employee_type: number | null;
+  gender: number | null;
+  marital_status: number | null;
 }
 
 export interface EmployeeByIdResponse {
@@ -101,37 +84,37 @@ export interface EmployeeByIdResponse {
 }
 
 export interface GetEmployeesResponse {
-    data: Employee[]
-    paginationHeaders: Headers
-    totalCount: number
-    meta: MetaData
+  data: Employee[];
+  paginationHeaders: Headers;
+  totalCount: number;
+  meta: MetaData;
 }
 
 export type EmployeeTag = {
-  type: typeof DEFAULT_TAG.EMPLOYEE
-  id: number | "LIST"
+  type: typeof DEFAULT_TAG.EMPLOYEE;
+  id: number | "LIST";
 }
 
 export interface EmployeeFIlterPanelProps {
-  resourceIsLoading: boolean,
-  bloodGroupOption: ResourceOption[],
-  employeeDesignationOption: ResourceOption[],
-  employeeTypeOption: ResourceOption[],
-  genderOption: ResourceOption[],
-  maritalStatusOption: ResourceOption[],
-  bloodGroup: number,
-  employeeDesignation: number,
-  employeeType: number,
-  gender: number,
-  maritalStatus: number,
-  searchTerm: string,
-  searchFields: string[],
-  setBloodGroup: (blood_group: number) => void,
-  setEmployeeDesignation: (employee_designation: number) => void,
-  setEmployeeType: (employee_type: number) => void,
-  setGender: (gender: number) => void,
-  setMaritalStatus: (marital_status: number) => void,
-  setSearchTerm: (search: string) => void,
+  resourceIsLoading: boolean;
+  bloodGroupOption: ResourceOption[];
+  employeeDesignationOption: ResourceOption[];
+  employeeTypeOption: ResourceOption[];
+  genderOption: ResourceOption[];
+  maritalStatusOption: ResourceOption[];
+  bloodGroup: number;
+  employeeDesignation: number;
+  employeeType: number;
+  gender: number;
+  maritalStatus: number;
+  searchTerm: string;
+  searchFields: string[];
+  setBloodGroup: (blood_group: number) => void;
+  setEmployeeDesignation: (employee_designation: number) => void;
+  setEmployeeType: (employee_type: number) => void;
+  setGender: (gender: number) => void;
+  setMaritalStatus: (marital_status: number) => void;
+  setSearchTerm: (search: string) => void;
   onSearch: () => void;
 }
 
@@ -143,8 +126,8 @@ export type EmployeeUpdatedProps = {
 
 
 export interface EmployeeDeletedProps {
-    employeeId: number;
-    onClose: () => void;
+  employeeId: number;
+  onClose: () => void;
 }
 
 export type EmployeeFormProps<T extends FieldValues> = {
@@ -160,11 +143,11 @@ export type EmployeeFormProps<T extends FieldValues> = {
 
 
 export interface EmployeeTableBodyProps<T> {
-    columns: TableColumn<T>[];
-    employees: Employee[],
-    bloodGroupOption: ResourceOption[],
-    employeeDesignationOption: ResourceOption[],
-    employeeTypeOption: ResourceOption[],
-    genderOption: ResourceOption[],
-    maritalStatusOption: ResourceOption[],
+  columns: TableColumn<T>[];
+  employees: Employee[];
+  bloodGroupOption: ResourceOption[];
+  employeeDesignationOption: ResourceOption[];
+  employeeTypeOption: ResourceOption[];
+  genderOption: ResourceOption[];
+  maritalStatusOption: ResourceOption[];
 }

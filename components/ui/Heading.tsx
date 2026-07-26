@@ -21,7 +21,7 @@ export default function Heading({
   return (
     <div className="flex items-center 
       justify-between mb-1 p-3 bg-white 
-      border rounded-lg border-slate-100
+      border rounded-lg border-slate-300
       dark:bg-slate-800
       dark:border-slate-700">
       {/* Left side */}

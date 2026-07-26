@@ -115,20 +115,20 @@ export const NavRow = ({
             <AnimatePresence initial={false}>
             {open && (
                 <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-                className="overflow-hidden"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2, ease: "easeInOut" }}
+                    className="overflow-hidden"
                 >
                 <div className="pl-10 pr-2 py-1 space-y-0.5">
                     {item.children.map((child) => (
-                    <SubmenuLink
-                        key={child.key}
-                        label={child.label}
-                        active={isRouteActive(child.route)}
-                        onClick={() => onChildClick(child.route)}
-                    />
+                        <SubmenuLink
+                            key={child.key}
+                            label={child.label}
+                            active={isRouteActive(child.route)}
+                            onClick={() => onChildClick(child.route)}
+                        />
                     ))}
                 </div>
                 </motion.div>

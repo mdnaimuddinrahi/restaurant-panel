@@ -20,9 +20,6 @@ export default function AdminLayout({
     <>
       <Navbar />
       <Sidebar />
-      {/* <main className="flex-1">
-        {children}
-      </main> */}
       <main id="main-content" className="mt-14 min-h-screen pt-2 pl-6 pr-3">
         <div id="page-outlet">
           {children}

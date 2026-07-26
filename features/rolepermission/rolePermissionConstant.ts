@@ -1,5 +1,7 @@
+import { TableColumn } from "@/store/commonInterface";
 import { Assignments, Permission } from "./permissionInterface";
 import { Role } from "./roleInterface";
+import { RoleTableHead } from "./rolepermission.types";
 
 export const ROLE_CREATE_MODAL = 'role-create';
 export const ROLE_UPDATE_MODAL = 'role-update';
@@ -44,3 +46,11 @@ export const groupBy = <T, K extends keyof T>(list: T[], key: K): Record<string,
     return acc;
   }, {});
 }
+
+
+export const ROLE_COLUMNS: TableColumn<RoleTableHead>[] = [
+  { isVisible: true, isSort:true, key: "name", label: "rolepermission:role_name"},
+  { isVisible: true, isSort:true, key: "status", label: "rolepermission:status"},
+  { isVisible: true, isSort:true, key: "created_at", label: "common:created_at"},
+  { isVisible: true, isSort:true, key: "updated_at", label: "common:updated_at"},
+]

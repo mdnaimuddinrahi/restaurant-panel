@@ -10,6 +10,7 @@ import AppSelect from '@/components/ui/input/AppSelect';
 import { SingleValue } from 'react-select';
 import AppTimePicker from '@/components/ui/input/AppTimePicker';
 import { t } from 'i18next';
+import FilterSkeleton from '@/components/ui/FilterSkeleton';
 
 export default function EmployeeFilterPanel({
     resourceIsLoading,
@@ -33,19 +34,18 @@ export default function EmployeeFilterPanel({
     setSearchTerm,
     searchFields
 }: EmployeeFIlterPanelProps) {
-    
     const [showSearchHint, setShowSearchHint] = useState(false)
     const { accentColor } = useTheme();
       
     return (
-        <div id="filterPanel">
-            {resourceIsLoading ? <div className="grid grid-cols-3 md:grid-cols-4 xl:grid-cols-4 gap-3 mt-4 p-3">
-                    <SkeletonSelect />
-                    <SkeletonSelect />
-                    <SkeletonSelect />
-                    <SkeletonSelect />
-                    <SkeletonSelect />
-                </div>: 
+        <>
+            {resourceIsLoading ? <FilterSkeleton
+                  fields={[
+                    { type: "select", count: 5 },
+                    { type: "input", count: 1 },
+                    {type: "button", count: 1},
+                  ]}
+                />: 
                 <div className="grid grid-cols-3 md:grid-cols-4 xl:grid-cols-4 gap-3 mt-1 p-3">
                     <AppSelect
                         options={bloodGroupOption}
@@ -136,6 +136,6 @@ export default function EmployeeFilterPanel({
                     </AppButton>
                 </div>
             }
-        </div>
+        </>
     )
 }

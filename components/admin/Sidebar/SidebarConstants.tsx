@@ -3,6 +3,7 @@ import { BsHouse } from "react-icons/bs";
 import { NavSection } from "../../../features/sidebar/sidebar.types";
 import { RiShieldKeyholeLine } from "react-icons/ri";
 import { PiUsersDuotone } from "react-icons/pi";
+import { BsHouseDoor } from "react-icons/bs";
 
 export const EXPANDED_WIDTH = 264;
 export const COLLAPSED_WIDTH = 50;
@@ -16,7 +17,7 @@ export const NAV_SECTIONS: NavSection[] = [
         key: "dashboard",
         label: "Dashboard",
         route: "/admin/dashboard",
-        icon: (<BsHouse />),
+        icon: (<BsHouseDoor />),
       },
       {
         key: "roles",

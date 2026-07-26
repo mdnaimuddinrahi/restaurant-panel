@@ -1,7 +1,21 @@
-export default function SkeletonSelect() {
+interface SkeletonSelectProps {
+  showLabel?: boolean;
+}
+
+export default function SkeletonSelect({
+  showLabel = false,
+}: SkeletonSelectProps) {
   return (
-    <div className="h-10.5 rounded border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 overflow-hidden relative">
-      <div className="absolute inset-0 animate-pulse bg-linear-to-r from-slate-100 via-slate-200 to-slate-100 dark:from-slate-800 dark:via-slate-700 dark:to-slate-800" />
+    <div className="space-y-2">
+      {showLabel && (
+        <div className="h-3 w-20 rounded-full bg-slate-200 dark:bg-slate-700 animate-pulse" />
+      )}
+
+      <div className="flex items-center justify-between h-10 rounded-lg border border-slate-200 dark:border-slate-700 px-3">
+        <div className="h-3 w-24 rounded-full bg-slate-200 dark:bg-slate-700 animate-pulse" />
+
+        <div className="h-4 w-4 rounded bg-slate-200 dark:bg-slate-700 animate-pulse" />
+      </div>
     </div>
   );
 }
