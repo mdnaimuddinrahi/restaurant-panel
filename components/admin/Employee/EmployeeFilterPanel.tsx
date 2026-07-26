@@ -1,4 +1,4 @@
-import SkeletonSelect from '@/components/ui/SkeletonSelect';
+import SkeletonSelect from '@/components/ui/skeleton/SkeletonSelect';
 import { useGetEmployeeResourcesQuery } from '@/features/employee/employeeApi';
 import AppInput from '@/components/ui/input/AppInput';
 import AppButton from '@/components/ui/button/AppButton';
@@ -10,7 +10,7 @@ import AppSelect from '@/components/ui/input/AppSelect';
 import { SingleValue } from 'react-select';
 import AppTimePicker from '@/components/ui/input/AppTimePicker';
 import { t } from 'i18next';
-import FilterSkeleton from '@/components/ui/FilterSkeleton';
+import FilterSkeleton from '@/components/ui/skeleton/SkeletonFilter';
 
 export default function EmployeeFilterPanel({
     resourceIsLoading,
@@ -39,7 +39,7 @@ export default function EmployeeFilterPanel({
       
     return (
         <>
-            {resourceIsLoading ? <FilterSkeleton
+            {!resourceIsLoading ? <FilterSkeleton
                   fields={[
                     { type: "select", count: 5 },
                     { type: "input", count: 1 },

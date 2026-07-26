@@ -11,6 +11,7 @@ import { useGetEmployeeResourcesQuery, useGetEmployeesQuery } from '@/features/e
 import ColumnSelectorModal from '@/components/ui/modal/ColumnSelectorModal';
 import EmployeeTableBody from './EmployeeTableBody';
 import ContentCard from '@/components/ui/ContentCard';
+import SkeletonTable from '@/components/ui/skeleton/SkeletonTable';
 
 export default function EmployeeList() {
   const [sortState, setSortState] = useState<SortState<EmployeeTableHead>>({ col: "id", dir: "asc" });
@@ -147,31 +148,33 @@ export default function EmployeeList() {
           }}
           searchFields = {withPrefix(searchFields, "employee:")}
         />
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <TableHead<EmployeeTableHead>
-              columns={columns}
-              sortState={sortState}
-              setSortState={setSortState}
-              setOpenColumnModal={setOpenColumnModal}
-            />
-            <EmployeeTableBody
-              bloodGroupOption={bloodGroupOption ?? []}
-              employeeDesignationOption={employeeDesignationOption ?? []}
-              employeeTypeOption={employeeTypeOption ?? []}
-              genderOption={genderOption ?? []}
-              maritalStatusOption={maritalStatusOption ?? []}
-              employees={employees}
-              columns={columns}/>
-          </table>
-        </div>
-        <TableFooter
-          totalDataCount={total}
-          tablePage={currentPage}
-          tablePageSize={perPage}
-          setTablePage={setCurrentPage}
-          setTablePageSize={setPerPage}
-        />
+        {!isLoading ? <SkeletonTable/> :<div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <TableHead<EmployeeTableHead>
+                columns={columns}
+                sortState={sortState}
+                setSortState={setSortState}
+                setOpenColumnModal={setOpenColumnModal}
+              />
+              <EmployeeTableBody
+                bloodGroupOption={bloodGroupOption ?? []}
+                employeeDesignationOption={employeeDesignationOption ?? []}
+                employeeTypeOption={employeeTypeOption ?? []}
+                genderOption={genderOption ?? []}
+                maritalStatusOption={maritalStatusOption ?? []}
+                employees={employees}
+                columns={columns}/>
+            </table>
+          </div>
+          <TableFooter
+            totalDataCount={total}
+            tablePage={currentPage}
+            tablePageSize={perPage}
+            setTablePage={setCurrentPage}
+            setTablePageSize={setPerPage}
+          />
+        </div>}
         <ColumnSelectorModal<EmployeeTableHead>
           open={openColumnModal}
           onClose={() => setOpenColumnModal(false)}

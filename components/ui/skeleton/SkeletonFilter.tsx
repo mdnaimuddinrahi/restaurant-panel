@@ -15,7 +15,7 @@ interface FilterSkeletonProps {
   className?: string;
 }
 
-export default function FilterSkeleton({
+export default function SkeletonFilter({
   fields,
   showLabel = false,
   className = "",
@@ -29,6 +29,7 @@ export default function FilterSkeleton({
         xl:grid-cols-4
         gap-5
         p-6
+        dark:bg-slate-900
         ${className}
       `}
     >

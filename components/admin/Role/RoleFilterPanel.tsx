@@ -1,5 +1,5 @@
 import AppButton from '@/components/ui/button/AppButton';
-import FilterSkeleton from '@/components/ui/FilterSkeleton';
+import FilterSkeleton from '@/components/ui/skeleton/SkeletonFilter';
 import AppInput from '@/components/ui/input/AppInput';
 import { RoleFilterPanelProps } from '@/features/rolepermission/rolepermission.types';
 import { hexToRgba, useTheme } from '@/theme';

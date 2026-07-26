@@ -5,6 +5,7 @@ import "./admin.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState } from "react";
+import SkeletonSidebar from "@/components/ui/skeleton/SkeletonSidebar";
 
 export default function AdminLayout({
   children,
@@ -19,7 +20,8 @@ export default function AdminLayout({
   return (
     <>
       <Navbar />
-      <Sidebar />
+      {/* <Sidebar /> */}
+      <SkeletonSidebar/>
       <main id="main-content" className="mt-14 min-h-screen pt-2 pl-6 pr-3">
         <div id="page-outlet">
           {children}
