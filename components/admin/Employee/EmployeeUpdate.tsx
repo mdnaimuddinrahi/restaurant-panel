@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 
 
 export default function EmployeeUpdate({onClose, employeeId}: EmployeeUpdatedProps) {
-    const { t } = useTranslation("employee");
+    const { t } = useTranslation("main");
     const schema = updateEmployeeSchema(t);
     type UpdateEmployeeFormData = z.infer<typeof schema>;
     const methods = useForm<UpdateEmployeeFormData>({
@@ -87,7 +87,7 @@ console.log("Current values:", values);
                 data: employeeToFormData(data),
             }).unwrap();
 
-            appToast.success(t("employee:message.updated"));
+            appToast.success(t("main:message.updated", {name: t("content.employee")}));
             methods.reset(); // Optional
             onClose();       // Close the modal
         } catch (error: any) {
@@ -109,7 +109,7 @@ console.log("Current values:", values);
         <>
             <AppModal
                 onClose={onClose}
-                modalTitle={t("employee:update_employee")} 
+                modalTitle={t("main:modal_title.update_employee")} 
                 size='full'
             >
                 {isLoading ? 'Loading...' :  
@@ -121,7 +121,7 @@ console.log("Current values:", values);
                         oldData={employee}
                         hasError={hasError}
                         setHasError={setHasError}
-                        buttonText={isLoading ? t("common:updading") : t("update_employee")}
+                        buttonText={isLoading ? t("main:button.updating") : t("main:button.update_employee")}
                     />}
             </AppModal>
         </>

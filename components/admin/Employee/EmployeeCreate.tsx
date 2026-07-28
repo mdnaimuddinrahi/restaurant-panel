@@ -15,7 +15,7 @@ import { useState } from 'react';
 export default function EmployeeCreate({onClose}: {
   onClose: () => void;
 }) {
-    const { t } = useTranslation("employee");
+    const { t } = useTranslation("main");
     const schema = createEmployeeSchema(t);
     type EmployeeFormData = z.infer<typeof schema>;
     const [hasError, setHasError] = useState<boolean>(false);
@@ -43,7 +43,7 @@ export default function EmployeeCreate({onClose}: {
         try {
             await createEmployee(employeeToFormData(data)).unwrap();
 
-            appToast.success(t("employee:message.created"));
+            appToast.success(t("message.created", {name: t('content.employee')}));
             methods.reset(); // Optional
             onClose();       // Close the modal
         } catch (error: any) {
@@ -67,7 +67,7 @@ export default function EmployeeCreate({onClose}: {
         <>
             <AppModal
                 onClose={onClose}
-                modalTitle={t("employee:add_new_employee")} 
+                modalTitle={t("modal_title.add_new_employee")} 
                 size='full'
             >
                 <EmployeeForm
@@ -77,7 +77,7 @@ export default function EmployeeCreate({onClose}: {
                     methods={methods}
                     hasError={hasError}
                     setHasError={setHasError}
-                    buttonText={isLoading ? t("common:creating") : t("create_employee")}
+                    buttonText={isLoading ? t("button.creating") : t("button.create_employee")}
                 />
             </AppModal>
         </>

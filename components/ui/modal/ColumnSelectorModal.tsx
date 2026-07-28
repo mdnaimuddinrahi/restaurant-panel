@@ -88,11 +88,11 @@ export default function ColumnSelectorModal<T>({
         <div className="px-6 py-4 border-b border-gray-300 dark:border-slate-700 flex items-center justify-between">
           <div>
             <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
-              {t('common:manage_columns')}
+              {t('main:content.manage_columns')}
             </h3>
 
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              {t("common:columnsVisible", {
+              {t("main:content.columnsVisible", {
                 visible: formatNumber(visibleColumns),
                 total: formatNumber(columns.length),
               })}
@@ -113,14 +113,14 @@ export default function ColumnSelectorModal<T>({
 
           {/* Search */}
           <div>
-            <AppInput value={search} onChange={(e: any) => setSearch(e.target.value)} placeholder={t('common:placeholder.search')} />
+            <AppInput value={search} onChange={(e: any) => setSearch(e.target.value)} placeholder={t('main:placeholder.search')} />
           </div>
 
           {/* Actions */}
           <div className="flex flex-wrap gap-2">
 
             <AppCustomButton variant="outline" onClick={selectAll} className="text-xs">
-              {t('common:select_all')}
+              {t('main:button.select_all')}
             </AppCustomButton>
 
             <AppCustomButton
@@ -128,7 +128,7 @@ export default function ColumnSelectorModal<T>({
               onClick={clearAll}
               className="text-xs"
               >
-              {t('common:clear_all')}
+              {t('main:button.clear_all')}
             </AppCustomButton>
 
           </div>
@@ -145,7 +145,7 @@ export default function ColumnSelectorModal<T>({
                 <div className="text-xs text-slate-500 mb-3">
                   {/* Columns {gi * 5 + 1} -{" "}
                   {gi * 5 + group.length} */}
-                  {t("common:columnRange", {
+                  {t("main:content.columnRange", {
                       from: formatNumber(gi * 5 + 1),
                       to: formatNumber(gi * 5 + group.length),
                     })}

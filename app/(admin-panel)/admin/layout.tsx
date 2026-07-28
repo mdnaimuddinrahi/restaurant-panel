@@ -20,8 +20,8 @@ export default function AdminLayout({
   return (
     <>
       <Navbar />
-      {/* <Sidebar /> */}
-      <SkeletonSidebar/>
+      <Sidebar />
+      {/* <SkeletonSidebar/> */}
       <main id="main-content" className="mt-14 min-h-screen pt-2 pl-6 pr-3">
         <div id="page-outlet">
           {children}

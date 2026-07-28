@@ -8,7 +8,6 @@ import { useState } from 'react';
 import { hexToRgba, useTheme } from "@/theme";  
 import AppSelect from '@/components/ui/input/AppSelect';
 import { SingleValue } from 'react-select';
-import AppTimePicker from '@/components/ui/input/AppTimePicker';
 import { t } from 'i18next';
 import FilterSkeleton from '@/components/ui/skeleton/SkeletonFilter';
 
@@ -39,7 +38,7 @@ export default function EmployeeFilterPanel({
       
     return (
         <>
-            {!resourceIsLoading ? <FilterSkeleton
+            {resourceIsLoading ? <FilterSkeleton
                   fields={[
                     { type: "select", count: 5 },
                     { type: "input", count: 1 },
@@ -49,7 +48,7 @@ export default function EmployeeFilterPanel({
                 <div className="grid grid-cols-3 md:grid-cols-4 xl:grid-cols-4 gap-3 mt-1 p-3">
                     <AppSelect
                         options={bloodGroupOption}
-                        placeholder={t('employee:blood_group')}
+                        placeholder={t('main:placeholder.employee.blood_group')}
                         isClearable={true}
                         value={bloodGroupOption?.find(o => o.value === bloodGroup)}
                         onChange={(option: SingleValue<ResourceOption>) => {
@@ -59,7 +58,7 @@ export default function EmployeeFilterPanel({
 
                     <AppSelect
                         options={employeeDesignationOption}
-                        placeholder={t('employee:employee_designation')}
+                        placeholder={t('main:placeholder.employee.employee_designation')}
                         isClearable={true}
                         value={employeeDesignationOption?.find(o => o.value ===employeeDesignation)}
                         onChange={(option: SingleValue<ResourceOption>) => setEmployeeDesignation(option?.value ?? -1)}
@@ -67,7 +66,7 @@ export default function EmployeeFilterPanel({
 
                     <AppSelect
                         options={employeeTypeOption}
-                        placeholder={t('employee:employee_type')}
+                        placeholder={t('main:placeholder.employee.employee_type')}
                         isClearable={true}
                         value={employeeTypeOption?.find(o => o.value ===employeeType)}
                         onChange={(option: SingleValue<ResourceOption>) => setEmployeeType(option?.value ?? -1)}
@@ -75,7 +74,7 @@ export default function EmployeeFilterPanel({
 
                     <AppSelect
                         options={genderOption}
-                        placeholder={t('employee:gender')}
+                        placeholder={t('main:placeholder.employee.gender')}
                         isClearable={true}
                         value={genderOption?.find(o => o.value ===gender)}
                         onChange={(option: SingleValue<ResourceOption>) => setGender(option?.value ?? -1)}
@@ -83,7 +82,7 @@ export default function EmployeeFilterPanel({
 
                     <AppSelect
                         options={maritalStatusOption}
-                        placeholder={t('employee:marital_status')}
+                        placeholder={t('main:placeholder.employee.marital_status')}
                         isClearable={true}
                         value={maritalStatusOption?.find(o => o.value ===maritalStatus)}
                         onChange={(option: SingleValue<ResourceOption>) => setMaritalStatus(option?.value ?? -1)}
@@ -94,7 +93,7 @@ export default function EmployeeFilterPanel({
                         onMouseLeave={() => setShowSearchHint(false)}
                     >
                         <AppInput
-                            placeholder={t('common:placeholder.search')}
+                            placeholder={t('main:placeholder.search')}
                             onFocus={() => setShowSearchHint(true)}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
                         />
@@ -116,23 +115,23 @@ export default function EmployeeFilterPanel({
                                 pointer-events-none
                             `}
                         >
-                            <div className="font-medium mb-1">{t('common:search_enable_for')}:</div>
+                            <div className="font-medium mb-1">{t('main:content.search_enable_for')}:</div>
 
                             <div className="flex flex-wrap gap-1 text-slate-300">
-                                {searchFields.map((field) => (
+                                {searchFields.map((field: string) => (
                                     <span
                                         key={field}
                                         className="text-white px-2 py-0.5 rounded-md border border-gray-300"
                                         style={{ backgroundColor: accentColor }}
                                     >
-                                        {t(field)}
+                                        {t(`main:content.employees.${field}`)}
                                     </span>
                                 ))}
                             </div>
                         </div>
                     </div>
                     <AppButton onClick={onSearch}>
-                        {t('common:search')}
+                        {t('main:button.search')}
                     </AppButton>
                 </div>
             }

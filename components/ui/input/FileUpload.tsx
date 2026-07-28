@@ -279,15 +279,15 @@ const removeFile = (index: number) => {
             <>
                 <p className="text-sm font-medium text-slate-700 dark:text-slate-200">
                 {/* Drag & drop {multiple ? "files" : "a file"} here */}
-                {t("drag_drop", {
+                {t("main:placeholder.drag_drop", {
                     fileType: multiple
-                      ? t("files")
-                      : t("file"),
+                      ? t("main:placeholder.files")
+                      : t("main:placeholder.file"),
                   })}
                 </p>
 
                 <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                  {t('click_to_browse')}
+                  {t('main:placeholder.click_to_browse')}
                 </p>
             </>
             ) : (
@@ -334,22 +334,10 @@ const removeFile = (index: number) => {
                                 </p>
 
                                 <p className="text-xs text-slate-500">
-                                {t("uploaded")}
+                                {t("main:placeholder.uploaded")}
                                 </p>
                             </div>
                         </a>
-{/* 
-                        <button
-                            type="button"
-                            onClick={(e) => {
-                                
-                                e.preventDefault();
-                                onRemoveExistingFile?.(url);
-                            }}
-                            className="rounded-md p-2 text-red-500 transition hover:bg-red-50 dark:hover:bg-red-500/10"
-                        >
-                            <FiTrash2 size={16} />
-                        </button> */}
                     </div>
                 ))}
 

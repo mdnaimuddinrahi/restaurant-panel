@@ -15,12 +15,12 @@ export default function EmployeeSectionNav({
     onNavigate,
     sectionIds,
 }: Props) {
-    const { t } = useTranslation("employee");
+    const { t } = useTranslation("main");
 
     const sections = sectionIds.map((section) => ({
         ...section,
-        title: t(`section.${section.id}.title`),
-        description: t(`section.${section.id}.description`),
+        title: t(`section.employee.${section.id}.title`),
+        description: t(`section.employee.${section.id}.description`),
     }));
     
     return (

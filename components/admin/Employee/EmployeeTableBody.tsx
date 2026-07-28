@@ -128,7 +128,7 @@ export default function EmployeeTableBody<T>({
                                                                     rounded bg-green-600 px-2 py-1 text-xs 
                                                                     text-white opacity-0 transition-all 
                                                                     duration-200 group-hover:opacity-100">
-                                                    {t('common:copied')}
+                                                    {t('main:tooltip.copied')}
                                                 </div>
                                             </>
                                             ) : (
@@ -146,7 +146,7 @@ export default function EmployeeTableBody<T>({
                                                                 group-hover:opacity-100"
                                                     style={{ background: hexToRgba(accentColor, 0.9) }}
                                                     >
-                                                    {t("common:copy_email")}
+                                                    {t("main:tooltip.copy_email")}
                                                 </div>
                                             </>
                                             )}
@@ -275,7 +275,7 @@ export default function EmployeeTableBody<T>({
 
                             {/* Edit */}
                             <div className="relative group">
-                                <AppTooltip title={t("common:edit")}>
+                                <AppTooltip title={t("main:tooltip.edit")}>
                                         <AppCustomButton
                                             onClick={() =>
                                                 dispatch(
@@ -297,7 +297,7 @@ export default function EmployeeTableBody<T>({
 
                             {/* Delete */}
                             <div className="relative group">
-                                <AppTooltip title={t('common:delete')}>
+                                <AppTooltip title={t('main:tooltip.delete')}>
                                         <AppCustomButton
                                             variant="ghost"
                                             className="p-1.5! transition-transform duration-200 hover:scale-110"
@@ -323,7 +323,7 @@ export default function EmployeeTableBody<T>({
             ))}
             {employees.length === 0 && (
                 <tr>
-                    <td colSpan={6} className="px-4 py-8 text-center text-slate-400 text-sm">{t('employee:no_employee_found')}</td>
+                    <td colSpan={6} className="px-4 py-8 text-center text-slate-400 text-sm">{t('main:content.employees.no_employee_found')}</td>
                 </tr>
             )}
         </tbody>

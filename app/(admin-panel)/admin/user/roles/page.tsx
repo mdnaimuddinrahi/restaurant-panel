@@ -120,7 +120,7 @@ export default function page() {
     return (
       <>
         <Heading 
-          title={t("title")}
+          title={t("main:title.role_and_page_permission")}
         />
         {/* <div className="grid grid-cols-[240px_1fr] gap-4 items-start"> */}
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-[280px_1fr] items-start">
@@ -137,7 +137,7 @@ export default function page() {
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRoleQuery(e.target.value)}
                       onFocus={() => setRoleFocused(true)}
                       onBlur={() => setRoleFocused(false)}
-                      placeholder={t('search_roles')}
+                      placeholder={t('main:placeholder.search_roles')}
                       className="w-full pl-8 pr-3 py-2 text-sm 
                       rounded-lg border border-slate-200
                       dark:border-slate-700 bg-slate-50 
@@ -179,7 +179,7 @@ export default function page() {
                       <div className="text-sm font-medium">{role.name}</div>
                       <div className="text-xs text-slate-400 dark:text-slate-500">
                         
-                        {t('selected_permissions', {
+                        {t('main:content.selected_permissions', {
                           count: formatNumber(count),
                           total: formatNumber(total)
                         })}
@@ -202,7 +202,7 @@ export default function page() {
                   <div className="text-sm font-semibold">{selectedRole?.name}</div>
                   <div className="text-xs text-slate-400 dark:text-slate-500">
                     {/* {draftIds.size} of {total} selected */}
-                    {t('totalSelected', {
+                    {t('main:content.totalSelected', {
                       size: formatNumber(draftIds.size),
                       total: formatNumber(total)
                     })}
@@ -217,7 +217,7 @@ export default function page() {
                       className="text-sm flex items-center gap-1.5 px-3 py-1.5"
                     >
                       <FaArrowRotateLeft />
-                      {t('common:cancel')}
+                      {t('main:button.cancel')}
                     </AppCustomButton>
                   )}
                   <button
@@ -228,7 +228,7 @@ export default function page() {
                     }`}
                     style={isDirty ? { backgroundColor: savedFlash ? "#16A34A" : accentColor } : undefined}
                   >
-                    {savedFlash ? t('assigned') : t('assign_to_role')}
+                    {savedFlash ? t('main:button.assigned') : t('main:button.assign_to_role')}
                   </button>
                 </div>
               </div>
@@ -247,7 +247,7 @@ export default function page() {
                       }
                       onFocus={() => setPermFocused(true)}
                       onBlur={() => setPermFocused(false)}
-                      placeholder={t('search_permission')}
+                      placeholder={t('main:placeholder.search_permission')}
                       className="w-full pl-8 pr-3 py-2 text-sm 
                       rounded-lg border border-slate-200 
                       dark:border-slate-700 bg-slate-50 dark:bg-slate-800
@@ -366,7 +366,7 @@ export default function page() {
                           className="text-xs font-medium cursor-pointer"
                           style={{ color: accentColor }}
                         >
-                          {allOn ? t('common:clear_all') : t('common:select_all')}
+                          {allOn ? t('main:content.clear_all') : t('main:content.select_all')}
                         </span>
                       </div>
                       <AnimatePresence initial={false}>

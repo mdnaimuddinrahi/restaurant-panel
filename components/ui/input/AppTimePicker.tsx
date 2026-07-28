@@ -35,7 +35,7 @@ export default function AppTimePicker({
   value,
   onChange,
   label,
-  placeholder = t("select_time"),
+  placeholder = t("main:placeholder.select_time"),
   required,
   error,
   disabled,

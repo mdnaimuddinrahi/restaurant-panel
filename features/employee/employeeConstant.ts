@@ -7,37 +7,37 @@ export const EMPLOYEE_DELETE_MODAL = "employee-delete";
 
 
 export const EMPLOYEE_COLUMNS: TableColumn<EmployeeTableHead>[] = [
-    { isVisible: true, isSort:true, key: "name", label: "employee:employee_name"},
-    { isVisible: true, isSort:true, key: "email", label: "employee:email_address"},
-    { isVisible: true, isSort:true, key: "phone", label: "employee:phone_number"},
-    { isVisible: true, isSort:false, key: "blood_group", label: "employee:blood_group"},
-    { isVisible: true, isSort:true, key: "date_of_joining", label: "employee:date_of_joining"},
-    { isVisible: false, isSort:false, key: "employee_designation_id", label: "employee:employee_designation"},
-    { isVisible: false, isSort:false, key: "employee_type_id", label: "employee:employee_type"},
-    { isVisible: false, isSort:false, key: "gender", label: "employee:gender"},
-    { isVisible: false, isSort:false, key: "marital_status", label: "employee:marital_status"},
-    { isVisible: false, isSort:false, key: "emergency_contact_name", label: "employee:contact_person_name"},
-    { isVisible: false, isSort:false, key: "emergency_contact_phone", label: "employee:contact_person_phone"},
-    { isVisible: false, isSort:false, key: "emergency_contact_relation", label: "employee:contact_person_relation"},
-    { isVisible: false, isSort:false, key: "shift_start", label: "employee:start_time"},
-    { isVisible: false, isSort:false, key: "shift_end", label: "employee:end_time"},
+    { isVisible: true, isSort:true, key: "name", label: "main:label.employee.employee_name"},
+    { isVisible: true, isSort:true, key: "email", label: "main:label.employee.email_address"},
+    { isVisible: true, isSort:true, key: "phone", label: "main:label.employee.phone_number"},
+    { isVisible: true, isSort:false, key: "blood_group", label: "main:label.employee.blood_group"},
+    { isVisible: true, isSort:true, key: "date_of_joining", label: "main:label.employee.date_of_joining"},
+    { isVisible: false, isSort:false, key: "employee_designation_id", label: "main:label.employee.employee_designation"},
+    { isVisible: false, isSort:false, key: "employee_type_id", label: "main:label.employee.employee_type"},
+    { isVisible: false, isSort:false, key: "gender", label: "main:label.employee.gender"},
+    { isVisible: false, isSort:false, key: "marital_status", label: "main:label.employee.marital_status"},
+    { isVisible: false, isSort:false, key: "emergency_contact_name", label: "main:label.employee.contact_person_name"},
+    { isVisible: false, isSort:false, key: "emergency_contact_phone", label: "main:label.employee.contact_person_phone"},
+    { isVisible: false, isSort:false, key: "emergency_contact_relation", label: "main:label.employee.contact_person_relation"},
+    { isVisible: false, isSort:false, key: "shift_start", label: "main:label.employee.start_time"},
+    { isVisible: false, isSort:false, key: "shift_end", label: "main:label.employee.end_time"},
 ]
 // export const getEmployeeColumns = (
 //   t: (key: string) => string
 // ): TableColumn<EmployeeTableHead>[] => [
-//     { isVisible: true, isSort:true, key: "name", label: t("employee:employee_name")},
-//     { isVisible: true, isSort:true, key: "email", label: t("employee:email_address")},
-//     { isVisible: true, isSort:true, key: "phone", label: t('employee:phone_number')},
-//     { isVisible: true, isSort:false, key: "blood_group", label: t("employee.blood_group")},
-//     { isVisible: true, isSort:true, key: "date_of_joining", label: t('employee:date_of_joining')},
-//     { isVisible: false, isSort:false, key: "employee_designation_id", label: t("employee.employee_designation")},
-//     { isVisible: false, isSort:false, key: "employee_type_id", label: t('employee.employee_type')},
-//     { isVisible: false, isSort:false, key: "gender", label: t('employee.gender')},
-//     { isVisible: false, isSort:false, key: "marital_status", label: t('employee.marital_status')},
-//     { isVisible: false, isSort:false, key: "emergency_contact_name", label: t('employee.contact_person_name')},
-//     { isVisible: false, isSort:false, key: "emergency_contact_phone", label: t('employee.contact_person_phone')},
-//     { isVisible: false, isSort:false, key: "emergency_contact_relation", label: t('employee.contact_person_relation')},
-//     { isVisible: false, isSort:false, key: "shift_start", label: t('employee.start_time')},
+//     { isVisible: true, isSort:true, key: "name", label: t("main:label.employee:employee_name")},
+//     { isVisible: true, isSort:true, key: "email", label: t("main:label.employee:email_address")},
+//     { isVisible: true, isSort:true, key: "phone", label: t('main:label.employee:phone_number')},
+//     { isVisible: true, isSort:false, key: "blood_group", label: t("main:label.employee.blood_group")},
+//     { isVisible: true, isSort:true, key: "date_of_joining", label: t('main:label.employee:date_of_joining')},
+//     { isVisible: false, isSort:false, key: "employee_designation_id", label: t("main:label.employee.employee_designation")},
+//     { isVisible: false, isSort:false, key: "employee_type_id", label: t('main:label.employee.employee_type')},
+//     { isVisible: false, isSort:false, key: "gender", label: t('main:label.employee.gender')},
+//     { isVisible: false, isSort:false, key: "marital_status", label: t('main:label.employee.marital_status')},
+//     { isVisible: false, isSort:false, key: "emergency_contact_name", label: t('main:label.employee.contact_person_name')},
+//     { isVisible: false, isSort:false, key: "emergency_contact_phone", label: t('main:label.employee.contact_person_phone')},
+//     { isVisible: false, isSort:false, key: "emergency_contact_relation", label: t('main:label.employee.contact_person_relation')},
+//     { isVisible: false, isSort:false, key: "shift_start", label: t('main:label.employee.start_time')},
 //     { isVisible: false, isSort:false, key: "shift_end", label: t('employee.end_time')},
 // ]
 
@@ -80,71 +80,71 @@ const employeeBaseSchema = (t: TFunction) =>
   z.object({
     name: z
       .string({
-        error: t('validation.employee_name_required'),
+        error: t('main:validation.employee.employee_name_required'),
       })
       .trim()
-      .min(2, t('validation.name_contain_must_2_characters'))
-      .max(100, t('validation.name_maximum_100'))
-      .regex(/^[A-Za-z\s.'-]+$/, t('validation.name_invalid_character')),
+      .min(2, t('main:validation.employee.name_contain_must_2_characters'))
+      .max(100, t('main:validation.employee.name_maximum_100'))
+      .regex(/^[A-Za-z\s.'-]+$/, t('main:validation.employee.name_invalid_character')),
 
     email: z
       .string({
-        error: t("validation.email_required"),
+        error: t("main:validation.employee.email_required"),
       })
       .trim()
       .min(1, {
-        error: t("validation.email_required"),
+        error: t("main:validation.employee.email_required"),
       })
       .pipe(
         z.email({
-          error: t("validation.invalid_email"),
+          error: t("main:validation.employee.invalid_email"),
         })
       ),
 
     phone: z
       .string({
-        error: t('validation.phone_required')
+        error: t('main:validation.employee.phone_required')
       })
       .trim()
-      .regex(phoneRegex, t('employee:validation.valid_phone')),
+      .regex(phoneRegex, t('main:validation.employee.valid_phone')),
 
     gender: z
       .number({
-        error: t("validation.gender_required"),
+        error: t("main:validation.employee.gender_required"),
       })
       .int()
       .positive(),
 
     blood_group: z
       .number({
-        error: t('validation.blood_group_required'),
+        error: t('main:validation.employee.blood_group_required'),
       })
       .int()
       .positive(),
 
     marital_status: z
       .number({
-        error: t('validation.marital_status_required'),
+        error: t('main:validation.employee.marital_status_required'),
       })
       .int()
       .positive(),
 
     address: z
       .string({
-        error: t('validation.address_required')
+        error: t('main:validation.employee.address_required')
       })
       .trim()
-      .min(5, t('validation.address_required'))
-      .max(500, t("validation.address_max_500")),
+      .min(5, t('main:validation.employee.address_required'))
+      .max(500, t("main:validation.employee.address_max_500")),
 
     date_of_birth: z
       .date({
-        error: t("validation.date_of_birth_required"),
+        error: t("main:validation.employee.date_of_birth_required"),
       })
       .refine(
         (date) => date < new Date(),
         {
-          error: t("validation.date_of_birth_cannot_be_future"),
+          error: t("main:validation.employee.date_of_birth_cannot_be_future"),
         }
       )
       .refine(
@@ -159,7 +159,7 @@ const employeeBaseSchema = (t: TFunction) =>
           return date <= minDate;
         },
         {
-          error: t("validation.minimum_age_18"),
+          error: t("main:validation.employee.minimum_age_18"),
         }
       )
       .refine(
@@ -174,7 +174,7 @@ const employeeBaseSchema = (t: TFunction) =>
           return date >= oldestAllowed;
         },
         {
-          error: t("validation.invalid_date_of_birth"),
+          error: t("main:validation.employee.invalid_date_of_birth"),
         }
       ),
 
@@ -183,62 +183,62 @@ const employeeBaseSchema = (t: TFunction) =>
     // =========================
     basic_salary: z
       .number({
-        error: t('validation.basic_salary_required'),
+        error: t('main:validation.employee.basic_salary_required'),
       })
-      .positive(t('basic_salary_min'))
-      .max(10000000, t('validation.basic_salary_max'))
+      .positive(t('main:validation.employee.basic_salary_min'))
+      .max(10000000, t('main:validation.employee.basic_salary_max'))
       .refine(
         (value) => Number.isInteger(value * 100),
         {
-          message: t('validation.basic_salary_2_decimal'),
+          message: t('main:validation.employee.basic_salary_2_decimal'),
         }
     ),
     date_of_joining: z
       .date({
-        error: t("validation.date_of_join_requrired"),
+        error: t("main:validation.employee.date_of_join_requrired"),
       })
       .refine(
         (date) => date.getFullYear() >= 1900,
         {
-          error: t("validation.invalid_date_of_join"),
+          error: t("main:validation.employee.invalid_date_of_join"),
         }
       ),
 
     employee_designation_id: z
       .number({
-        error: t('validation.designation_required'),
+        error: t('main:validation.employee.designation_required'),
       })
       .int({
-        error: t("validation.employee_designation_invalid")
+        error: t("main:validation.employee.employee_designation_invalid")
       })
       .positive({
-        error: t('validation.employee_designation_invalid')
+        error: t('main:validation.employee.employee_designation_invalid')
       }),
 
     employee_type_id: z
       .number({
-        error: t("validation.employee_type_required"),
+        error: t("main:validation.employee.employee_type_required"),
       })
       .int({
-        error: t('validation.employee_type_invalid')
+        error: t('main:validation.employee.employee_type_invalid')
       })
       .positive({
-        error: t("validation.employee_type_invalid")
+        error: t("main:validation.employee.employee_type_invalid")
       }),
 
     shift_start: z
       .string({
-        error: t("validation.shift_start_required"),
+        error: t("main:validation.employee.shift_start_required"),
       })
       .trim()
-      .regex(time12Regex, t('validation.shift_start_invalid')),
+      .regex(time12Regex, t('main:validation.employee.shift_start_invalid')),
 
     shift_end: z
       .string({
-        error: t("validation.shift_end_required"),
+        error: t("main:validation.employee.shift_end_required"),
       })
       .trim()
-      .regex(time12Regex, t("validation.shift_end_invalid")),
+      .regex(time12Regex, t("main:validation.employee.shift_end_invalid")),
 
     // =========================
     // Identity Information
@@ -248,61 +248,61 @@ const employeeBaseSchema = (t: TFunction) =>
       .trim()
       .refine(
         (value) => value === "" || nidRegex.test(value),
-        t('validation.nid_invalid')
+        t('main:validation.employee.nid_invalid')
       )
       .optional(),
 
     passport_number: z
       .string({
-        error: t("validation.passport_required"),
+        error: t("main:validation.employee.passport_required"),
       })
       .trim()
-      .min(1, t('validation.passport_required'))
-      .min(5, t('validation.passport_minimum'))
-      .max(20, t('validation.passport_max'))
+      .min(1, t('main:validation.employee.passport_required'))
+      .min(5, t('main:validation.employee.passport_minimum'))
+      .max(20, t('main:validation.employee.passport_max'))
       .regex(
         passportRegex,
-        t('validation.passport_invalid')
+        t('main:validation.employee.passport_invalid')
       ),
     // =========================
     // Emergency Contact
     // =========================
     emergency_contact_name: z
       .string({
-        error: t('validation.emergency_contact_name_required')
+        error: t('main:validation.employee.emergency_contact_name_required')
       })
       .trim()
-      .min(2, t('validation.emergency_contact_name_required'))
-      .max(100, t('validation.emergency_contact_name_max')),
+      .min(2, t('main:validation.employee.emergency_contact_name_required'))
+      .max(100, t('main:validation.employee.emergency_contact_name_max')),
 
     emergency_contact_phone: z
       .string({
-        error: t('validation.emergency_contact_phone_required')
+        error: t('main:validation.employee.emergency_contact_phone_required')
       })
       .trim()
       .regex(
         phoneRegex,
-        t('validation.emergency_contact_phone_invalid')
+        t('main:validation.employee.emergency_contact_phone_invalid')
       ),
 
       emergency_contact_email: z
         .string({
-          error: t("validation.emergency_contact_email_required"),
+          error: t("main:validation.employee.emergency_contact_email_required"),
         })
         .trim()
         .min(1, {
-          error: t("validation.emergency_contact_email_required"),
+          error: t("main:validation.employee.emergency_contact_email_required"),
         })
         .pipe(
           z.email({
-            error: t("validation.emergency_contact_email_invalid"),
+            error: t("main:validation.employee.emergency_contact_email_invalid"),
           })
         ),
 
       emergency_contact_relation: z
         .string()
         .trim()
-        .max(50, t("validation.emergency_contact_relation_max"))
+        .max(50, t("main:validation.employee.emergency_contact_relation_max"))
         .optional()
         .or(z.literal("")),
 
@@ -314,14 +314,14 @@ export const createEmployeeSchema = (t: TFunction) =>
       .array(z.instanceof(File), {
         error: (issue) => {
           if (issue.input === undefined) {
-            return t("validation.documents_required");
+            return t("main:validation.employee.documents_required");
           }
 
-          return t("validation.invalid_documents");
+          return t("main:validation.employee.invalid_documents");
         },
       })
       .min(1, {
-        error: t("validation.documents_required"),
+        error: t("main:validation.employee.documents_required"),
       }),
     profile_img: z
       .array(
@@ -332,7 +332,7 @@ export const createEmployeeSchema = (t: TFunction) =>
       )
       .max(1, "Only one profile image is allowed.")
       .min(1, {
-            error: t("validation.documents_required"),
+            error: t("main:validation.employee.documents_required"),
           }),
 
     resume: z
@@ -350,7 +350,7 @@ export const updateEmployeeSchema = (t: TFunction) =>
   employeeBaseSchema(t).extend({
     documents: z
       .array(z.instanceof(File), {
-        error: () => t("validation.invalid_documents"),
+        error: () => t("main:validation.employee.invalid_documents"),
       })
       .optional(),
 
@@ -358,11 +358,11 @@ export const updateEmployeeSchema = (t: TFunction) =>
       .array(
         z.instanceof(File).refine(
           (file) => PROFILE_TYPES.includes(file.type),
-          { message: t("employee:validation.profile_image_invalid") }
+          { message: t("main:validation.employee.profile_image_invalid") }
         )
       )
       .max(1, {
-        error: t("employee:validation.profile_image_only_one"),
+        error: t("main:validation.employee.profile_image_only_one"),
       })
       .optional(),
 
@@ -370,11 +370,11 @@ export const updateEmployeeSchema = (t: TFunction) =>
       .array(
         z.instanceof(File).refine(
           (file) => RESUME_TYPES.includes(file.type),
-          { message: t("employee.validation.resume_invalid") }
+          { message: t("main:validation.employee.resume_invalid") }
         )
       )
       .max(1, {
-        error: t("employee:validation.resume_only_one"),
+        error: t("main:validation.employee.resume_only_one"),
       })
       .optional(),
   });

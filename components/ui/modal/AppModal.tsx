@@ -1,7 +1,7 @@
 import { useTheme } from '@/theme';
 import { ReactNode, useRef } from 'react'
 import AppCustomButton from '../button/AppCustomButton';
-import { RxCross2 } from 'react-icons/rx';
+import { RxCross1, RxCross2 } from 'react-icons/rx';
 
 type ModalSize = "sm" | "md" | "lg" | "xl" | "full";
 
@@ -44,10 +44,9 @@ export default function AppModal({
                         relative
                         w-full
                         ${sizeClasses[size]}
-                        rounded-xl
+                        rounded-md
                         bg-white
                         dark:bg-slate-800
-                        shadow-2xl
                         animate-in
                         fade-in
                         zoom-in-95
@@ -57,13 +56,14 @@ export default function AppModal({
                     <AppCustomButton
                         variant='ghost'
                         onClick={() => onClose()}
-                        className="absolute right-4 top-4 rounded-md p-2 "
+                        className="absolute right-4 top-4 rounded-md px-2 py-2 "
                     >
-                        <RxCross2  style={{ color: accentColor }}/>
+                        <RxCross1 style={{ color: accentColor }}/>
+
                     </AppCustomButton>
                     {modalTitle && (
-                        <div className="border-b border-slate-200 dark:border-slate-700 px-6 py-4">
-                            <h2 className="text-lg font-semibold">
+                        <div className="border-b border-slate-300 dark:border-slate-700 px-6 py-4">
+                            <h2 className="text-lg">
                                 {modalTitle}
                             </h2>
                         </div>

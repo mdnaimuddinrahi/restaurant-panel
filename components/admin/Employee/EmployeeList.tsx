@@ -146,9 +146,9 @@ export default function EmployeeList() {
               setCurrentPage(1);
               setSearchTerm(draftSearchTerm)
           }}
-          searchFields = {withPrefix(searchFields, "employee:")}
+          searchFields = {searchFields}
         />
-        {!isLoading ? <SkeletonTable/> :<div>
+        {isLoading ? <SkeletonTable/> :<div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <TableHead<EmployeeTableHead>

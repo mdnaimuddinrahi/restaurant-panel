@@ -324,7 +324,7 @@ export default function DatePicker({
           id={name}
           type="text"
           value={inputValue}
-          placeholder={placeholder ?? t("common:placeholder.date")}
+          placeholder={placeholder ?? t("main:placeholder.date")}
           onFocus={() => {
             setOpen(true);
             setFocused(true);

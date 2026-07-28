@@ -2,6 +2,8 @@ import { TableColumn } from "@/store/commonInterface";
 import { Assignments, Permission } from "./permissionInterface";
 import { Role } from "./roleInterface";
 import { RoleTableHead } from "./rolepermission.types";
+import { TFunction } from "i18next";
+import z from "zod";
 
 export const ROLE_CREATE_MODAL = 'role-create';
 export const ROLE_UPDATE_MODAL = 'role-update';
@@ -54,3 +56,31 @@ export const ROLE_COLUMNS: TableColumn<RoleTableHead>[] = [
   { isVisible: true, isSort:true, key: "created_at", label: "common:created_at"},
   { isVisible: true, isSort:true, key: "updated_at", label: "common:updated_at"},
 ]
+
+const roleBaseSchema = (t: TFunction) =>
+  z.object({
+    name: z
+      .string({
+        error: t("rolepermission:validation.role_name"),
+      })
+      .trim()
+      .min(1, t("rolepermission:validation.role_name"))
+      .max(100, t("rolepermission:validation.role_name_maximum_100"))
+      .regex(
+        /^[A-Za-z\s.'-]+$/,
+        t("rolepermission:validation.name_invalid_character")
+      ),
+  });
+
+// const roleBaseSchema = (t: TFunction) => 
+//   z.object({
+//     name: z.string({
+//         error: t("rolepermission:validaiton.role_name")
+//       })
+//       .trim()
+//       .max(100, t('rolepermission:validation.role_name_maxium_100')
+//       .regex(/^[A-Za-z\s.'-]+$/, t('rolepermission:validation.name_invalid_character')),
+//   })
+
+export const createRoleSchema = (t: TFunction) => 
+  roleBaseSchema

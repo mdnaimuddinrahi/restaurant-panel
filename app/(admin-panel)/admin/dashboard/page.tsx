@@ -29,11 +29,11 @@ export default function page() {
     console.log("Navigate to", url);
     // router.push(url);
   }
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("main");
 
   return (
     <>
-      <Heading title={t("admin_dad")} subtitles={"Manage your restaurant settings"} />
+      <Heading title={t("title.admin_dashboard")}/>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
         {stats.map((s, i) => (
           <div
@@ -114,12 +114,12 @@ export default function page() {
           <div className="space-y-3">
             {recentActivity.map((a, i) => 
               <div key={i} className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-700 flex-shrink-0" style={{ background: a.color }}>{a.avatar}</div>
+                <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-700 shrink-0" style={{ background: a.color }}>{a.avatar}</div>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-500 truncate">{a.user}</p>
                   <p className="text-xs text-slate-400 truncate">{a.action}</p>
                 </div>
-                <span className="text-xs text-slate-400 flex-shrink-0">{a.time}</span>
+                <span className="text-xs text-slate-400 shrink-0">{a.time}</span>
               </div>
             )}
           </div>
@@ -150,11 +150,11 @@ export default function page() {
       {/* <!-- Alerts --> */}
       <div className="space-y-3">
         <div className="flex items-start gap-3 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 rounded-xl">
-          <svg className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <svg className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <div><p className="text-sm font-600 text-emerald-800 dark:text-emerald-300">All systems operational</p><p className="text-xs text-emerald-600 dark:text-emerald-400 mt-0.5">Last checked 2 minutes ago</p></div>
         </div>
         <div className="flex items-start gap-3 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl">
-          <svg className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+          <svg className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
           <div><p className="text-sm font-600 text-amber-800 dark:text-amber-300">Storage usage at 85%</p><p className="text-xs text-amber-600 dark:text-amber-400 mt-0.5">Consider upgrading your plan</p></div>
         </div>
       </div>

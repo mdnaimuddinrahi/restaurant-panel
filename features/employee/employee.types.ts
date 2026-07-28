@@ -132,7 +132,7 @@ export interface EmployeeDeletedProps {
 
 export type EmployeeFormProps<T extends FieldValues> = {
   methods: UseFormReturn<T>;
-  mode: "create" | "update";
+  mode: "create" | "update" | "delete";
   loading?: boolean;
   onSubmit: SubmitHandler<T>;
   oldData?: Employee | null;

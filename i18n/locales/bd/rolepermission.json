@@ -1,9 +1,0 @@
-{
-  "title": "ভূমিকা ও পৃষ্ঠার অনুমতি",
-  "totalSelected": "{{total}}টির মধ্যে {{size}}টি নির্বাচিত",
-  "assigned": "বরাদ্দ সম্পন্ন ✓",
-  "assign_to_role": "রোলে বরাদ্দ করুন",
-  "search_permission": "অনুসন্ধানের অনুমতি",
-  "search_roles": "ভূমিকা অনুসন্ধান করুন",
-  "selected_permissions": "{{total}}টির মধ্যে {{count}}টি অনুমতি"
-}

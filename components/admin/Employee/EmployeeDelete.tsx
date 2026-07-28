@@ -16,26 +16,26 @@ export default function EmployeeDelete({
     employeeId,
     onClose,
 }: EmployeeDeletedProps) {
-    const { t } = useTranslation("employee");
+    const { t } = useTranslation("main");
     const { accentColor } = useButtonTheme();
     const [deleteEmployee, { isLoading }] =
         useDeleteEmployeeMutation();
     const handleDelete = async () => {
         try {
             await deleteEmployee(employeeId).unwrap();
-            toast.success(t("employee_deleted_successfully"));
+            toast.success(t("message.deleted", {name: t('content.employee')}));
             onClose();
         } catch (error: any) {
             toast.error(
                 error?.data?.message ??
-                t("common:something_went_wrong")
+                t("message.something_went_wrong")
             );
         }
     };
 
     return (
         <AppModal
-            modalTitle={t("delete_employee")}
+            modalTitle={t("main:modal_title.delete_employee")}
             onClose={onClose}
             size="sm"
         >
@@ -70,12 +70,12 @@ export default function EmployeeDelete({
                 </motion.div>
 
                 <h3 className="text-center text-xl font-semibold">
-                    {t("employee:are_you_sure")}
+                    {t("main:content.are_you_sure")}
                 </h3>
 
                 <p className="mt-3 text-center text-sm text-gray-500 leading-6">
                     {t(
-                        "employee:delete_employee_confirmation"
+                        "main:content.delete_employee_confirmation"
                     )}
                 </p>
 
@@ -85,7 +85,7 @@ export default function EmployeeDelete({
                         onClick={onClose}
                         disabled={isLoading}
                     >
-                        {t("common:cancel")}
+                        {t("main:button.cancel")}
                     </AppCustomButton>
 
                     <AppCustomButton
@@ -93,7 +93,7 @@ export default function EmployeeDelete({
                         loading={isLoading}
                         disabled={isLoading}
                     >
-                        {t("common:delete")}
+                        {t("main:button.delete")}
                     </AppCustomButton>
                 </div>
             </div>

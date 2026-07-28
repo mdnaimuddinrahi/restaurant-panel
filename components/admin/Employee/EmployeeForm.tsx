@@ -14,6 +14,7 @@ import { EmployeeFormProps } from '@/features/employee/employee.types'
 import { useGetEmployeeResourcesQuery } from '@/features/employee/employeeApi'
 import { useTranslation } from 'react-i18next';
 import { EMPLOYEE_SECTIONS } from '@/features/employee/employeeConstant'
+import AppForm from '@/components/ui/AppForm'
 
 export default function EmployeeForm<T extends FieldValues>({
     methods,
@@ -32,7 +33,7 @@ export default function EmployeeForm<T extends FieldValues>({
     const employeeTypeOption = resourceResponse?.data?.employee_types;
     const genderOption = resourceResponse?.data?.genders;
     const maritalStatusOption = resourceResponse?.data?.marital_status;
-    const { t } = useTranslation(["employee", "common"]);
+    const { t } = useTranslation("main");
 
     const [activeSection, setActiveSection] = useState("personal");
     const scrollToSection = (id: string) => {
@@ -62,10 +63,11 @@ export default function EmployeeForm<T extends FieldValues>({
     
     return (   
         <FormProvider {...methods}>
-            <form
+            {/* <form
                 onSubmit={methods.handleSubmit(onSubmit)}
                 className="grid h-[calc(100vh-120px)] grid-cols-1 gap-1 lg:grid-cols-[320px_1fr]"
-            >
+            > */}
+            <AppForm onSubmit={methods.handleSubmit(onSubmit)}>
                 {/* LEFT */}
                 <div className="sticky top-0 hidden overflow-hidden 
                 rounded-lg border border-slate-200 bg-white 
@@ -80,58 +82,58 @@ export default function EmployeeForm<T extends FieldValues>({
                 <div className="mb-3 overflow-y-auto space-y-3 pr-2">
                     <EmployeeSection
                         id="personal"
-                        title={t("personal_information")}
+                        title={t("title.personal_information")}
                     >
                         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
 
                             <FormInput
                                 name="name"
-                                label={t("employee_name")}
-                                placeholder={t("placeholder.employee_name")}
+                                label={t("label.employee.employee_name")}
+                                placeholder={t("placeholder.employee.employee_name")}
                                 required
                             />
 
                             <FormInput
                                 name="email"
-                                label={t("email_address")}
+                                label={t("label.employee.email_address")}
                                 type="email"
-                                placeholder={t("placeholder.email_address")}
+                                placeholder={t("placeholder.employee.email_address")}
                                 required
                             />
 
                             <FormInput
                                 name="phone"
-                                label={t("phone_number")}
+                                label={t("label.employee.phone_number")}
                                 type="tel"
-                                placeholder={t("placeholder.phone_number")}
+                                placeholder={t("placeholder.employee.phone_number")}
                             />
 
                             <FormDatePicker
                                 name="date_of_birth"
-                                label={t("date_of_birth")}
+                                label={t("label.employee.date_of_birth")}
                                 required
                             />
 
                             <FormSelect
                                 name="gender"
-                                label={t("gender")}
-                                placeholder={t("placeholder.gender")}
+                                label={t("label.employee.gender")}
+                                placeholder={t("placeholder.employee.gender")}
                                 required
                                 options={genderOption ?? []}
                             />
                     
                             <FormSelect
                                 name="blood_group"
-                                label={t("blood_group")}
-                                placeholder={t("placeholder.blood_group")}
+                                label={t("label.employee.blood_group")}
+                                placeholder={t("placeholder.employee.blood_group")}
                                 required
                                 options={bloodGroupOption ?? []}
                             />
 
                             <FormSelect
                                 name="marital_status"
-                                label={t("marital_status")}
-                                placeholder={t("placeholder.marital_status")}
+                                label={t("label.employee.marital_status")}
+                                placeholder={t("placeholder.employee.marital_status")}
                                 required
                                 options={maritalStatusOption ?? []}
                             />
@@ -139,107 +141,107 @@ export default function EmployeeForm<T extends FieldValues>({
                             <div className="md:col-span-2">
                                 <FormTextArea
                                     name="address"
-                                    label={t("address")}
-                                    placeholder={t("placeholder.address")}
+                                    label={t("label.employee.address")}
+                                    placeholder={t("placeholder.employee.address")}
                                 />
                             </div>
                         </div>
                     </EmployeeSection>
                     
-                    <EmployeeSection id="employment" title={t('employement_information')} > 
+                    <EmployeeSection id="employment" title={t('title.employement_information')} > 
                         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                             <FormInput
                                 name="basic_salary"
-                                label={t("basic_salary")}
+                                label={t("label.employee.basic_salary")}
                                 type="number"
                                 placeholder="0.00"
                                 
                             /> 
                             <FormDatePicker
                                 name="date_of_joining"
-                                label={t("date_of_joining")}
+                                label={t("label.employee.date_of_joining")}
                                 required
                             />
                             <FormSelect
                                 name="employee_designation_id"
-                                label={t("employee_designation")}
-                                placeholder={t("placeholder.employee_designation")}
+                                label={t("label.employee.employee_designation")}
+                                placeholder={t("placeholder.employee.employee_designation")}
                                 required
                                 options={employeeDesignationOption ?? []}
                             />
                             <FormSelect
                                 name="employee_type_id"
-                                label={t("employee_type")}
-                                placeholder={t("placeholder.employee_type")}
+                                label={t("label.employee.employee_type")}
+                                placeholder={t("placeholder.employee.employee_type")}
                                 required
                                 options={employeeTypeOption ?? []}
                             />
 
                             <FormTimePicker
                                 name="shift_start"
-                                label={t("start_time")}
+                                label={t("label.employee.start_time")}
                                 required
                             />
                             
                             <FormTimePicker
                                 name="shift_end"
-                                label={t("end_time")}
+                                label={t("label.employee.end_time")}
                                 required
                             />
                         </div>
                     </EmployeeSection> 
 
-                    <EmployeeSection id="identity" title={t('identity_information')} >    
+                    <EmployeeSection id="identity" title={t('title.identity_information')} >    
                         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                             <FormInput
                                 name="national_id"
-                                label={t("national_id")}
-                                placeholder={t("placeholder.national_id")}
+                                label={t("label.employee.national_id")}
+                                placeholder={t("placeholder.employee.national_id")}
                             />
 
                             <FormInput
                                 name="passport_number"
                                 required
-                                label={t("passport_number")}
-                                placeholder={t("placeholder.passport_number")}
+                                label={t("label.employee.passport_number")}
+                                placeholder={t("placeholder.employee.passport_number")}
                             /> 
                         </div>
                     </EmployeeSection> 
                     
-                    <EmployeeSection id="emergency" title={t("emergency_contact")} > 
+                    <EmployeeSection id="emergency" title={t("title.emergency_contact")} > 
                         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                             <FormInput
                                 name="emergency_contact_name"
-                                label={t("contact_person_name")}
-                                placeholder={t("placeholder.contact_person_name")}
+                                label={t("label.employee.contact_person_name")}
+                                placeholder={t("placeholder.employee.contact_person_name")}
                                 required
                             /> 
                             <FormInput
                                 type="tel"
                                 name="emergency_contact_phone"
-                                label={t("contact_person_phone")}
+                                label={t("label.employee.contact_person_phone")}
                                 required
-                                placeholder={t("placeholder.enter_contact_person_phone")}
+                                placeholder={t("placeholder.employee.enter_contact_person_phone")}
                             /> 
                             <FormInput
                                 type="email"
                                 name="emergency_contact_email"
-                                label={t("contact_person_email")}
-                                placeholder={t("placeholder.contact_person_email")}
+                                label={t("label.employee.contact_person_email")}
+                                placeholder={t("placeholder.employee.contact_person_email")}
                             />
                             <FormInput
                                 name="emergency_contact_relation"
-                                label={t("contact_person_relation")}
-                                placeholder={t("placeholder.contact_person_relation")}
+                                label={t("label.employee.contact_person_relation")}
+                                placeholder={t("placeholder.employee.contact_person_relation")}
                             />  
                         </div>
                     </EmployeeSection> 
                     
-                    <EmployeeSection id="documents" title={t("documents")} > 
+                    <EmployeeSection id="documents" title={t("title.documents")} > 
                         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                             <FormFileUpload
                                 name="documents"
-                                label={t("employee_documents")}
+                                label={t("label.employee.employee_documents")}
                                 multiple
                                 required
                                 accept="application/pdf,image/*"
@@ -251,13 +253,13 @@ export default function EmployeeForm<T extends FieldValues>({
                             <FormFileUpload
                                 name="profile_img"
                                 required
-                                label={t("profile_img")}
+                                label={t("label.employee.profile_img")}
                                 accept='image/*'
                                 existingFile={oldData?.profile_img ?? ''}
                             />
                             <FormFileUpload
                                 name="resume"
-                                label={t("resume")}
+                                label={t("label.employee.resume")}
                                 accept='.pdf'
                                 existingFile={oldData?.resume ?? ''}
                             />
@@ -273,7 +275,7 @@ export default function EmployeeForm<T extends FieldValues>({
                             }
                             className="rounded-xl border border-slate-300 px-5 py-2.5"
                         >
-                            {t("common:reset")}
+                            {t("main:button.reset")}
                         </AppCustomButton>
                         <AppCustomButton
                             variant={hasError ? "danger" : "solid"}
@@ -285,7 +287,7 @@ export default function EmployeeForm<T extends FieldValues>({
                         </AppCustomButton>
                     </div>
                 </div>
-            </form>
+            </AppForm>
         </FormProvider>
     )
 }

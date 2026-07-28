@@ -55,7 +55,7 @@ export default function TableFooter({
           {/* LEFT: info + page size */}
           <div className="flex items-center gap-4">
             <span id="table-info">
-              {t("common:tableInfo", {
+              {t("main:content.tableInfo", {
                 from: formatNumber(from),
                 to: formatNumber(to),
                 total: formatNumber(totalDataCount),
@@ -92,7 +92,7 @@ export default function TableFooter({
               onClick={() => setTablePage(tablePage - 1)}
               disabled={tablePage === 1}
             >
-              {t('common:previous')}
+              {t('main:button.previous')}
             </AppCustomButton>
 
             {/* First page */}
@@ -137,7 +137,7 @@ export default function TableFooter({
               onClick={() => setTablePage(tablePage + 1)}
               disabled={tablePage === pagesCount}
             >
-              {t('common:next')}
+              {t('main:button.next')}
             </AppCustomButton>
 
             {/* Last */}

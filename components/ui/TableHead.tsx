@@ -103,11 +103,11 @@ export default function TableHead<T>({
               "
             >
               <div className="font-medium">
-                {t('common:filter_columns')}
+                {t('main:content.filter_columns')}
               </div>
 
               <div className="text-xs text-white/80 mt-1">
-              {t("common:visibleColumns", {
+              {t("main:content.visibleColumns", {
                 visible: formatNumber(columns.filter(c => c.isVisible).length),
                 total: formatNumber(columns.length),
               })}
@@ -145,7 +145,7 @@ export default function TableHead<T>({
           ))}
 
         <th className="px-4 py-3 text-left font-semibold">
-          {t('common:action')}
+          {t('main:content.action')}
         </th>
       </tr>
     </thead>

@@ -6,6 +6,7 @@ import { EmployeeTableHead } from '@/features/employee/employee.types';
 import { TableColumn } from '@/store/commonInterface';
 import { ROLE_COLUMNS } from '@/features/rolepermission/rolePermissionConstant';
 import { RoleTableHead } from '@/features/rolepermission/rolepermission.types';
+import SkeletonTable from '@/components/ui/skeleton/SkeletonTable';
 
 export default function RoleList() {
   const withPrefix = (
@@ -34,6 +35,7 @@ export default function RoleList() {
               setSearchTerm(draftSearchTerm)
           }}
         />
+        <SkeletonTable/>
     </ContentCard>
   )
 }
