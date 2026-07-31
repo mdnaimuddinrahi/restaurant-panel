@@ -152,7 +152,8 @@
       "no_employee_found": "No employees found",
       "name": "Employee Name",
       "email": "Employee Email",
-      "phone": "Employee Phone"
+      "phone": "Employee Phone",
+      "try_adjusting_filter_a_new_message": "Try adjusting your filters or add a new employee."
     },
     "totalSelected": "{{size}} of {{total}} selected",
     "selected_permissions": "{{count}}/{{total}} permissions",
@@ -160,7 +161,10 @@
     "employee": "Employee",
     "delete_employee_confirmation": "Are you sure you want to permanently delete this employee?",
     "are_you_sure": "Are you sure?",
-    "role": "Role"
+    "role": "Role",
+    "roles": {
+      "no_role_found": "No Role Found."
+    }
   },
   "modal_title": {
     "create_role": "Add New Role",

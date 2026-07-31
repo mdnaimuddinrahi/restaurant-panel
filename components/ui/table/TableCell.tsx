@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
-import type { HTMLAttributes, ReactNode } from "react";
+import type { ReactNode, TdHTMLAttributes } from "react";
 
 interface AppTableCellProps
-  extends HTMLAttributes<HTMLTableCellElement> {
+  extends TdHTMLAttributes<HTMLTableCellElement> {
   children: ReactNode;
 }
 

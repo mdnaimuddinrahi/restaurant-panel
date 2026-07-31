@@ -2,13 +2,16 @@ import { EMPLOYEE_DELETE_MODAL, EMPLOYEE_UPDATE_MODAL } from '@/features/employe
 import { EmployeeTableBodyProps } from '@/features/employee/employee.types';
 import { hexToRgba, useTheme } from '@/theme';
 import { t } from 'i18next';
-import { useState } from 'react'
+import { CSSProperties, useState } from 'react'
 import { IoMdCopy } from 'react-icons/io';
 import { IoCheckmarkDone } from 'react-icons/io5';
 import TableRow from '@/components/ui/table/TableRow';
 import TableActions from '@/components/ui/table/TableActions';
 import TableEmpty from '@/components/ui/table/TableEmpty';
 import TableCell from '@/components/ui/table/TableCell';
+import { HiOutlineBriefcase, HiOutlineUsers } from 'react-icons/hi';
+import { motion } from "framer-motion";
+import TableBody from '@/components/ui/table/TableBody';
 
 export default function EmployeeTableBody<T>({
     employees, 
@@ -19,6 +22,7 @@ export default function EmployeeTableBody<T>({
     genderOption,
     maritalStatusOption,
     }: EmployeeTableBodyProps<T>) {
+        employees = [];
     const initials = 
         (name: string) => 
             name?.trim()
@@ -44,7 +48,14 @@ export default function EmployeeTableBody<T>({
     const { accentColor } = useTheme();
 
     return (
-        <tbody id="employee-table-body">
+        <TableBody resource="employee">
+            <TableEmpty
+                totalItems={employees.length}
+                colSpan={6}
+                message={t("main:content.employees.no_employee_found")}
+                adjustMessage={t('main:content.employees.try_adjusting_filter_a_new_message')}
+                // icon={HiOutlineBriefcase}
+            />
             {employees.map((employee, index) => (
                 <TableRow
                     key={index}
@@ -257,11 +268,6 @@ export default function EmployeeTableBody<T>({
                     />
                 </TableRow>
             ))}
-            <TableEmpty
-                totalItems={employees.length}
-                colSpan={6}
-                message={t("main:content.employees.no_employee_found")}
-            />
-        </tbody>
+        </TableBody>
     )
 }
