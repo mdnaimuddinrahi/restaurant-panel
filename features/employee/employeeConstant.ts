@@ -1,4 +1,4 @@
-import { TableColumn } from "@/store/commonInterface";
+import { TableColumn } from "@/store/common.types";
 import { EmployeeTableHead } from "./employee.types";
 
 export const EMPLOYEE_CREATE_MODAL = "employee-create";

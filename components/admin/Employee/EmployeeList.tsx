@@ -1,17 +1,18 @@
 "use client"
 import { useEffect, useMemo, useState } from 'react';
 import { Employee, EmployeeTableHead, GetEmployeesRequests } from '@/features/employee/employee.types';
-import TableHead from '@/components/ui/TableHead';
-import { SortState, TableColumn } from '@/store/commonInterface';
+import TableHead from '@/components/ui/table/TableHead';
+import { SortState, TableColumn } from '@/store/common.types';
 import { EMPLOYEE_COLUMNS } from '@/features/employee/employeeConstant';
 import EmployeeFilterPanel from './EmployeeFilterPanel';
-import TableFooter from '@/components/ui/TableFooter';
+import TableFooter from '@/components/ui/table/TableFooter';
 import { DEFAULT_PAGINATION, DEFAULT_SEARCH } from '@/store/commonConstants';
 import { useGetEmployeeResourcesQuery, useGetEmployeesQuery } from '@/features/employee/employeeApi';
 import ColumnSelectorModal from '@/components/ui/modal/ColumnSelectorModal';
 import EmployeeTableBody from './EmployeeTableBody';
 import ContentCard from '@/components/ui/ContentCard';
 import SkeletonTable from '@/components/ui/skeleton/SkeletonTable';
+import { useSortableData } from '@/hooks/useSortableData';
 
 export default function EmployeeList() {
   const [sortState, setSortState] = useState<SortState<EmployeeTableHead>>({ col: "id", dir: "asc" });
@@ -84,31 +85,7 @@ export default function EmployeeList() {
     setLastPage(employeesResponse.meta.last_page ?? DEFAULT_PAGINATION.LAST_PAGE);
     setBloodGroup(DEFAULT_SEARCH.NUMBER)
   }, [employeesResponse?.meta]);
-
-  const employees = useMemo(() => {
-    const data = [...(employeesResponse?.data ?? [])]
-
-    if (!sortState.col) return data;
-
-      data.sort((a, b) => {
-        const aValue = a[sortState.col];
-        const bValue = b[sortState.col];
-
-        if (aValue == null || bValue == null) return 0;
-
-        if (typeof aValue === "string" && typeof bValue === "string") {
-          return sortState.dir === "asc"
-            ? aValue.localeCompare(bValue)
-            : bValue.localeCompare(aValue);
-        }
-
-        return sortState.dir === "asc"
-          ? Number(aValue) - Number(bValue)
-          : Number(bValue) - Number(aValue);
-      });
-
-      return data;
-  }, [employeesResponse?.data, sortState]);
+  const employees = useSortableData(employeesResponse?.data, sortState)
 
   const [openColumnModal, setOpenColumnModal] = useState(false);
   const withPrefix = (

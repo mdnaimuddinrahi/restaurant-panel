@@ -67,7 +67,12 @@ export default function EmployeeForm<T extends FieldValues>({
                 onSubmit={methods.handleSubmit(onSubmit)}
                 className="grid h-[calc(100vh-120px)] grid-cols-1 gap-1 lg:grid-cols-[320px_1fr]"
             > */}
-            <AppForm onSubmit={methods.handleSubmit(onSubmit)}>
+            <AppForm className='
+                    grid
+                    h-[calc(100vh-120px)]
+                    grid-cols-1
+                    lg:grid-cols-[320px_1fr]
+                    gap-4' onSubmit={methods.handleSubmit(onSubmit)}>
                 {/* LEFT */}
                 <div className="sticky top-0 hidden overflow-hidden 
                 rounded-lg border border-slate-200 bg-white 

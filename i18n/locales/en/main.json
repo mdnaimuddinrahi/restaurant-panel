@@ -1,6 +1,6 @@
 {
   "title": {
-    "roles": "Roles", 
+    "roles": "Roles",
     "role_and_page_permission": "Role & Page Permission",
     "admin_dashboard": "Admin Dasheboard",
     "employees": "Employees",
@@ -13,7 +13,6 @@
   "placeholder": {
     "select_time": "Select time",
     "search_permission": "Search permissions",
- 
     "search_roles": "Search roles",
     "date": "yyyy-mm-dd",
     "role_name": "Enter Role Name",
@@ -21,7 +20,6 @@
     "drag_drop": "Drag & drop {{fileType}} here.",
     "file": "a file",
     "files": "files",
-  
     "click_to_browse": "or click to browse",
     "search": "Search...",
     "employee": {
@@ -41,7 +39,7 @@
       "contact_person_relation": "Enter Contact Person Relation",
       "employee_designation": "Select Employee Designation",
       "employee_type": "Select Employee Type"
-    }, 
+    },
     "role": {
       "name": "Role Name"
     }
@@ -100,7 +98,9 @@
       "resume_only_one": "Resume file can not be upload more than one."
     },
     "role": {
-      "role_name": "Role name is required."
+      "role_name": "Role name is required.",
+      "role_name_maximum_100": "Role name can't be exceed than 100.",
+      "name_invalid_character": "Role name contains can't be invalid characters."
     }
   },
   "message": {
@@ -121,7 +121,6 @@
     "previous": "Previous",
     "next": "Next",
     "showing": "Showing",
-    
     "select_all": "Select All",
     "clear_all": "Clear All",
     "assigned": "Assigned ✓",
@@ -143,7 +142,6 @@
     "tableInfo": "Showing {{from}}–{{to}} of {{total}}",
     "filter_columns": "Filter Columns",
     "visibleColumns": "{{visible}} of {{total}} visible",
-
     "action": "Action",
     "manage_columns": "Manage Columns",
     "columnsVisible": "{{visible}} of {{total}} columns visible",
@@ -161,7 +159,8 @@
     "search_enable_for": "Search enabled for",
     "employee": "Employee",
     "delete_employee_confirmation": "Are you sure you want to permanently delete this employee?",
-    "are_you_sure": "Are you sure?"
+    "are_you_sure": "Are you sure?",
+    "role": "Role"
   },
   "modal_title": {
     "create_role": "Add New Role",
@@ -183,13 +182,11 @@
       "profile_img": "Profile Image",
       "image": "Image",
       "resume": "Resume",
-      
       "date_of_joining": "Joining Date",
       "employee_designation": "Employee Designation",
       "employee_type": "Employee Type",
       "start_time": "Shift Starting time",
       "end_time": "Shift Ending Time",
-  
       "basic_salary": "Basic Salary",
       "employee_name": "Employee Name",
       "email_address": "Email Address",
@@ -199,12 +196,11 @@
       "national_id": "National ID",
       "passport_number": "Passport Number",
       "blood_group": "Blood Group",
-
       "marital_status": "Marital Status",
       "address": "Address"
     }
   },
-   "section": {
+  "section": {
     "employee": {
       "personal": {
         "title": "Personal Information",

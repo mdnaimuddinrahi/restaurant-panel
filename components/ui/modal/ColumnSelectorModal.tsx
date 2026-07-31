@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useTheme } from "@/theme";
-import { TableColumn } from "@/store/commonInterface";
+import { TableColumn } from "@/store/common.types";
 import AppInput from "../input/AppInput";
 import AppCustomButton from "../button/AppCustomButton";
 import { RxCross2 } from "react-icons/rx";

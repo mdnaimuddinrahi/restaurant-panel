@@ -1,14 +1,19 @@
+import AppTooltip from '@/components/ui/AppTooltip';
+import AppCustomButton from '@/components/ui/button/AppCustomButton';
 import { EMPLOYEE_DELETE_MODAL, EMPLOYEE_UPDATE_MODAL } from '@/features/employee/employeeConstant';
 import { EmployeeTableBodyProps } from '@/features/employee/employee.types';
+import { openModal } from '@/features/modal/modalSlice';
+import useNumberFormatter from '@/hooks/useNumberFormatter';
+import { useAppDispatch } from '@/store/hooks';
 import { hexToRgba, useTheme } from '@/theme';
 import { t } from 'i18next';
-import { useState } from 'react'
+import React, { useState } from 'react'
+import { BiEditAlt } from 'react-icons/bi';
 import { IoMdCopy } from 'react-icons/io';
 import { IoCheckmarkDone } from 'react-icons/io5';
+import { RxTrash } from 'react-icons/rx';
 import TableRow from '@/components/ui/table/TableRow';
-import TableActions from '@/components/ui/table/TableActions';
-import TableEmpty from '@/components/ui/table/TableEmpty';
-import TableCell from '@/components/ui/table/TableCell';
+
 
 export default function EmployeeTableBody<T>({
     employees, 
@@ -43,19 +48,23 @@ export default function EmployeeTableBody<T>({
     };
     const { accentColor } = useTheme();
 
+    const rowHoverStyle = { "--row-hover": hexToRgba(accentColor, 0.08) } as React.CSSProperties;
+    const formatNumber = useNumberFormatter();
+    const dispatch = useAppDispatch();
+
     return (
         <tbody id="employee-table-body">
             {employees.map((employee, index) => (
                 <TableRow
                     key={index}
                 >
-                    <TableCell className='border-left-1 border-r border-gray-200 dark:border-gray-900'>{employee.id}</TableCell>
+                    <td className='px-4 py-3 text-slate-500 border-left-1 border-r border-gray-200 dark:border-gray-900'>{employee.id}</td>
                     {columns.map(column => {
                         if (!column.isVisible) return null;
                         
                         if (column.key === 'name') {
                             return (
-                                <TableCell key={column.key}>
+                                <td key={column.key} className="px-4 py-3">
                                     <div className="flex items-center gap-2.5">
                                         <div className="relative inline-block group">
                                             {employee.profile_img ? (
@@ -82,13 +91,13 @@ export default function EmployeeTableBody<T>({
                                         </div>
                                         <span className="font-medium">{employee.name}</span>
                                     </div>
-                                </TableCell>
+                                </td>
                             )
                         }
 
                         if (column.key === 'email') {
                             return (
-                                <TableCell key={column.key}>
+                                <td key={column.key} className="px-4 py-3 text-slate-500">
                                     <div className="flex items-center gap-2">
                                         <a
                                             href={`mailto:${employee.email}`}
@@ -141,127 +150,180 @@ export default function EmployeeTableBody<T>({
                                             )}
                                         </div>
                                     </div>
-                                </TableCell>
+                                </td>
                             )
                         }
 
                         if (column.key === 'phone') {
-                            return (<TableCell key={column.key}>{employee.phone}</TableCell>)
+                            return (
+                                <td key={column.key} className="px-4 py-3 text-slate-500">{employee.phone}</td>
+                            )
                         }
 
                         if (column.key === 'blood_group') {
                             return (
-                                <TableCell key={column.key}>
+                                <td key={column.key} className="px-4 py-3 text-slate-500">
                                     {
-                                        bloodGroupOption?.find(
-                                            option => Number(option.value) === Number(employee.blood_group)
-                                        )?.label ?? employee.blood_group
+                                    bloodGroupOption?.find(
+                                        option => Number(option.value) === Number(employee.blood_group)
+                                    )?.label ?? employee.blood_group
                                     }
-                                </TableCell>
+                                </td>
                             )
                         }
 
                         if (column.key === 'date_of_joining') {
                             return (
-                                <TableCell key={column.key}>
-                                    {employee.date_of_joining}
-                                </TableCell>
+                                <td key={column.key} className="px-4 py-3 text-slate-500">{employee.date_of_joining}</td>
                             )
                         }
 
                         if (column.key === 'employee_designation_id') {
                             return (
-                                <TableCell key={column.key} >
+                                <td key={column.key} className="px-4 py-3 text-slate-500">
                                     {
                                         employeeDesignationOption?.find(
                                             option => Number(option.value) === Number(employee.employee_designation_id)
                                         )?.label ?? employee.employee_designation_id
                                     }
-                                </TableCell>
+                                </td>
                             )
                         }
 
                         if (column.key === 'employee_type_id') {
                             return (
-                                <TableCell key={column.key}>
+                                <td key={column.key} className="px-4 py-3 text-slate-500">
                                     {
                                         employeeTypeOption?.find(
                                             option => Number(option.value) === Number(employee.employee_type_id)
                                         )?.label ?? employee.employee_type_id
                                     }
-                                </TableCell>
+                                </td>
                             )
                         }
 
                         if (column.key === 'gender') {
                             return (
-                                <TableCell key={column.key} >
+                                <td key={column.key} className="px-4 py-3 text-slate-500">
                                     {
                                         genderOption?.find(
                                             option => Number(option.value) === Number(employee.gender)
                                         )?.label ?? employee.gender
                                     }
-                                </TableCell>
+                                </td>
                             )
                         }
 
                         if (column.key === 'marital_status') {
                             return (
-                                <TableCell key={column.key} >
+                                <td key={column.key} className="px-4 py-3 text-slate-500">
                                     {
                                         maritalStatusOption?.find(
                                             option => Number(option.value) === Number(employee.marital_status)
                                         )?.label ?? employee.marital_status
                                     }
-                                </TableCell>
+                                </td>
                             )
                         }
 
                         if (column.key === 'emergency_contact_name') {
-                            return <TableCell key={column.key}>{employee.emergency_contact_name}</TableCell>
+                            return (
+                                <td 
+                                    key={column.key} 
+                                    className="px-4 py-3 text-slate-500">
+                                        {employee.emergency_contact_name}
+                                </td>
+                            )
                         }
                         
                         if (column.key === 'emergency_contact_phone') {
                             return (
-                                <TableCell key={column.key}>{employee.emergency_contact_phone}</TableCell>
+                                <td 
+                                    key={column.key} 
+                                    className="px-4 py-3 text-slate-500">
+                                        {employee.emergency_contact_phone}
+                                </td>
                             )
                         }
                         
                         if (column.key === 'emergency_contact_relation') {
                             return (
-                                <TableCell key={column.key}>
+                                <td 
+                                    key={column.key} 
+                                    className="px-4 py-3 text-slate-500">
                                         {employee.emergency_contact_relation}
-                                </TableCell>
+                                </td>
                             )
                         }
                         
                         if (column.key === 'shift_start') {
                             return (
-                                <TableCell key={column.key}>{employee.shift_start}</TableCell>
+                                <td key={column.key} className="px-4 py-3 text-slate-500">{employee.shift_start}</td>
                             )
                         }
                         
                         if (column.key === 'shift_end') {
                             return (
-                                <TableCell key={column.key}>{employee.shift_end}</TableCell>
+                                <td key={column.key} className="px-4 py-3 text-slate-500">{employee.shift_end}</td>
                             )
                         }
                     })}
-                    <TableActions
-                        editModalType={EMPLOYEE_UPDATE_MODAL}
-                        editPayload={{ employeeId: employee.id }}
-                        deleteModalType={EMPLOYEE_DELETE_MODAL}
-                        deletePayload={{ employeeId: employee.id }}
-                        allowEdit
-                        allowDelete
-                    />
+                    <td className="px-4 py-3 text-slate-500">
+                        <div className="flex items-center gap-1.5">
+
+                            {/* Edit */}
+                            <div className="relative group">
+                                <AppTooltip title={t("main:tooltip.edit")}>
+                                        <AppCustomButton
+                                            onClick={() =>
+                                                dispatch(
+                                                    openModal({
+                                                        type: EMPLOYEE_UPDATE_MODAL,
+                                                        payload: {
+                                                            employeeId: employee.id,
+                                                        },
+                                                    })
+                                                )
+                                            }
+                                            variant="outline"
+                                            className="p-1.5! transition-transform duration-200 hover:scale-110"
+                                        >
+                                            <BiEditAlt className="text-base text-blue-900 dark:text-blue-400" />
+                                        </AppCustomButton>
+                                </AppTooltip>
+                            </div>
+
+                            {/* Delete */}
+                            <div className="relative group">
+                                <AppTooltip title={t('main:tooltip.delete')}>
+                                        <AppCustomButton
+                                            variant="ghost"
+                                            className="p-1.5! transition-transform duration-200 hover:scale-110"
+                                            onClick={() =>
+                                                dispatch(
+                                                    openModal({
+                                                        type: EMPLOYEE_DELETE_MODAL,
+                                                        payload: {
+                                                            employeeId: employee.id,
+                                                        },
+                                                    })
+                                                )
+                                            }
+                                        >
+                                            <RxTrash className="text-base text-red-700"/>
+                                        </AppCustomButton>
+                                </AppTooltip>
+                            </div>
+
+                        </div>
+                    </td>
                 </TableRow>
             ))}
-            <TableEmpty
-                totalItems={employees.length}
-                colSpan={6}
-                message={t("main:content.employees.no_employee_found")}
-            />
+            {employees.length === 0 && (
+                <tr>
+                    <td colSpan={6} className="px-4 py-8 text-center text-slate-400 text-sm">{t('main:content.employees.no_employee_found')}</td>
+                </tr>
+            )}
         </tbody>
     )
 }

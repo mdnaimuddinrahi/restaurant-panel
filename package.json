@@ -14,6 +14,7 @@
     "@hookform/resolvers": "^5.4.0",
     "@reduxjs/toolkit": "^2.12.0",
     "axios": "^1.17.0",
+    "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
     "framer-motion": "^12.40.0",
     "i18next": "^26.3.3",
@@ -30,6 +31,7 @@
     "react-redux": "^9.3.0",
     "react-select": "^5.10.2",
     "react-toastify": "^11.1.0",
+    "tailwind-merge": "^3.6.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {

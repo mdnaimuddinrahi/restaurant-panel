@@ -1,5 +1,5 @@
 import { DEFAULT_TAG } from "@/store/commonConstants";
-import { CommonResponse, MetaData, RequestParams, ResourceOption, TableColumn } from "@/store/commonInterface";
+import { CommonResponse, MetaData, RequestParams, ResourceOption, TableColumn } from "@/store/common.types";
 import { FieldValues, SubmitHandler, UseFormReturn } from "react-hook-form";
 import { Dispatch, SetStateAction } from "react";
 

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTheme } from "@/theme";
-import { AppInputProps } from "@/store/commonInterface";
+import { AppInputProps } from "@/store/common.types";
 import Label from "../Label";
 
 

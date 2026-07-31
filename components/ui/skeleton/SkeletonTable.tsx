@@ -1,7 +1,6 @@
 import SkeletonTableFooter from "./SkeletonTableFooter";
 import SkeletonTableHeader from "./SkeletonTableHeader";
 import SkeletonTableRow from "./SkeletonTableRow";
-
 interface SkeletonTableProps {
   columns?: number;
   rows?: number;

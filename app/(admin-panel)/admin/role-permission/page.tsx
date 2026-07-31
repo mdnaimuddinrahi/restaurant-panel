@@ -2,7 +2,6 @@
 import React, { useMemo, useState } from "react";
 import { useTheme } from "@/theme";
 import { hexToRgba } from "@/utils/colorUtils";
-import { Role } from "@/features/rolepermission/roleInterface";
 import { groupBy, PERMISSIONS_SOURCE, ROLES_SOURCE, SEED_ASSIGNMENTS } from "@/features/rolepermission/rolePermissionConstant";
 import { Assignments, GroupedPermissions, Permission } from "@/features/rolepermission/permissionInterface";
 import Heading from "@/components/ui/Heading";
@@ -13,10 +12,11 @@ import { FiChevronDown } from "react-icons/fi";
 import { FaArrowRotateLeft, FaCheck } from "react-icons/fa6";
 import { CiSearch } from "react-icons/ci";
 import useNumberFormatter from '@/hooks/useNumberFormatter';
+import { Role } from "@/features/rolepermission/rolepermission.types";
 
 export default function page() {
   const { accentColor } = useTheme();
-  const [roles] = useState<Role[]>(ROLES_SOURCE);
+  const [roles] = useState<Role[]>(ROLES_SOURCE); 
   const [permissions] = useState<Permission[]>(PERMISSIONS_SOURCE);
   const [selectedRoleId, setSelectedRoleId] = useState<number>(roles[0].id);
   const [roleQuery, setRoleQuery] = useState<string>("");

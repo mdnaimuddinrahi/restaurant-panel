@@ -3,7 +3,7 @@ import { useGetEmployeeResourcesQuery } from '@/features/employee/employeeApi';
 import AppInput from '@/components/ui/input/AppInput';
 import AppButton from '@/components/ui/button/AppButton';
 import { EmployeeFIlterPanelProps } from '@/features/employee/employee.types';
-import { ResourceOption } from '@/store/commonInterface';
+import { ResourceOption } from '@/store/common.types';
 import { useState } from 'react';
 import { hexToRgba, useTheme } from "@/theme";  
 import AppSelect from '@/components/ui/input/AppSelect';

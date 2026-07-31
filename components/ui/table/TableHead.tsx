@@ -1,4 +1,4 @@
-import { SortState, TableColumn } from "@/store/commonInterface";
+import { SortState, TableColumn } from "@/store/common.types";
 import { FaFilter } from "react-icons/fa6";
 import { HiDotsHorizontal } from "react-icons/hi";
 import { IoMdArrowRoundDown, IoMdArrowRoundUp } from "react-icons/io";

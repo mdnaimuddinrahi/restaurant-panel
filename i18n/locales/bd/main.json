@@ -1,20 +1,145 @@
 {
   "title": {
-
+    "roles": "ভূমিকা",
+    "role_and_page_permission": "ভূমিকা ও পৃষ্ঠা অনুমতি",
+    "admin_dashboard": "অ্যাডমিন ড্যাশবোর্ড",
+    "employees": "কর্মচারী",
+    "employement_information": "চাকরির তথ্য",
+    "identity_information": "পরিচয় সংক্রান্ত তথ্য",
+    "emergency_contact": "জরুরি যোগাযোগ",
+    "documents": "ডকুমেন্টসমূহ",
+    "personal_information": "ব্যক্তিগত তথ্য"
   },
-  "subtitle": {
 
-  },
   "placeholder": {
+    "select_time": "সময় নির্বাচন করুন",
+    "search_permission": "অনুমতি অনুসন্ধান করুন",
+    "search_roles": "ভূমিকা অনুসন্ধান করুন",
+    "date": "বছর-মাস-দিন",
+    "role_name": "ভূমিকার নাম লিখুন",
+    "uploaded": "আপলোড হয়েছে",
+    "drag_drop": "{{fileType}} এখানে টেনে এনে ছেড়ে দিন।",
+    "file": "একটি ফাইল",
+    "files": "ফাইলসমূহ",
+    "click_to_browse": "অথবা ব্রাউজ করতে ক্লিক করুন",
+    "search": "অনুসন্ধান করুন...",
 
+    "employee": {
+      "employee_name": "কর্মচারীর নাম লিখুন",
+      "email_address": "ইমেইল ঠিকানা লিখুন",
+      "phone_number": "মোবাইল নম্বর লিখুন",
+      "date_of_birth": "জন্ম তারিখ নির্বাচন করুন",
+      "gender": "লিঙ্গ নির্বাচন করুন",
+      "national_id": "জাতীয় পরিচয়পত্র নম্বর লিখুন",
+      "passport_number": "পাসপোর্ট নম্বর লিখুন",
+      "address": "সম্পূর্ণ ঠিকানা লিখুন",
+      "blood_group": "রক্তের গ্রুপ নির্বাচন করুন",
+      "marital_status": "বৈবাহিক অবস্থা নির্বাচন করুন",
+      "contact_person_name": "যোগাযোগ ব্যক্তির নাম লিখুন",
+      "enter_contact_person_phone": "যোগাযোগ ব্যক্তির মোবাইল নম্বর লিখুন",
+      "contact_person_email": "যোগাযোগ ব্যক্তির ইমেইল লিখুন",
+      "contact_person_relation": "যোগাযোগ ব্যক্তির সম্পর্ক লিখুন",
+      "employee_designation": "কর্মচারীর পদবি নির্বাচন করুন",
+      "employee_type": "কর্মচারীর ধরন নির্বাচন করুন"
+    },
+
+    "role": {
+      "name": "ভূমিকার নাম"
+    }
   },
+
   "validation": {
+    "employee": {
+      "name_invalid_character": "কর্মচারীর নামে অবৈধ অক্ষর রয়েছে।",
+      "resume_invalid": "আপলোড করা জীবনবৃত্তান্তের ফাইলটি অবৈধ।",
+      "basic_salary_min": "মূল বেতন অবশ্যই ০-এর বেশি হতে হবে।",
+      "role_name_maxium_100": "ভূমিকার নাম ১০০ অক্ষরের বেশি হতে পারবে না।",
+      "employee_name_required": "কর্মচারীর নাম আবশ্যক।",
+      "email_required": "ইমেইল ঠিকানা আবশ্যক।",
+      "phone_required": "মোবাইল নম্বর আবশ্যক।",
+      "gender_required": "লিঙ্গ নির্বাচন করা আবশ্যক।",
+      "name_contain_must_2_characters": "কর্মচারীর নাম কমপক্ষে ২ অক্ষরের হতে হবে।",
+      "name_maximum_100": "কর্মচারীর নাম ১০০ অক্ষরের বেশি হতে পারবে না।",
+      "invalid_email": "অনুগ্রহ করে একটি বৈধ ইমেইল ঠিকানা লিখুন।",
+      "valid_phone": "অনুগ্রহ করে একটি বৈধ মোবাইল নম্বর লিখুন।",
+      "blood_group_required": "রক্তের গ্রুপ নির্বাচন করা আবশ্যক।",
+      "marital_status_required": "বৈবাহিক অবস্থা নির্বাচন করা আবশ্যক।",
+      "date_of_birth_required": "জন্ম তারিখ নির্বাচন করা আবশ্যক।",
+      "address_required": "ঠিকানা আবশ্যক।",
+      "address_max_500": "ঠিকানা ৫০০ অক্ষরের বেশি হতে পারবে না।",
+      "date_of_birth_cannot_be_future": "ভবিষ্যতের তারিখ নির্বাচন করা যাবে না।",
+      "minimum_age_18": "ন্যূনতম বয়স ১৮ বছর হতে হবে।",
+      "invalid_date_of_birth": "জন্ম তারিখটি অবৈধ।",
+      "basic_salary_required": "মূল বেতন আবশ্যক।",
+      "basic_salary_max": "মূল বেতনের পরিমাণ অত্যন্ত বেশি।",
+      "basic_salary_2_decimal": "মূল বেতনে সর্বোচ্চ ২টি দশমিক সংখ্যা থাকতে পারবে।",
+      "date_of_join_requrired": "যোগদানের তারিখ আবশ্যক।",
+      "invalid_date_of_join": "অনুগ্রহ করে একটি বৈধ যোগদানের তারিখ লিখুন।",
+      "designation_required": "কর্মচারীর পদবি আবশ্যক।",
+      "employee_type_required": "কর্মচারীর ধরন আবশ্যক।",
+      "employee_type_invalid": "কর্মচারীর ধরনটি অবৈধ।",
+      "employee_designation_invalid": "কর্মচারীর পদবিটি অবৈধ।",
+      "shift_start_required": "শিফট শুরুর সময় আবশ্যক।",
+      "shift_start_invalid": "শিফট শুরুর সময়টি অবৈধ।",
+      "shift_end_required": "শিফট শেষের সময় আবশ্যক।",
+      "shift_end_invalid": "শিফট শেষের সময়টি অবৈধ।",
+      "nid_invalid": "জাতীয় পরিচয়পত্র নম্বর অবশ্যই ১০, ১৩ অথবা ১৭ সংখ্যার হতে হবে।",
+      "passport_required": "পাসপোর্ট নম্বর আবশ্যক।",
+      "passport_minimum": "পাসপোর্ট নম্বর কমপক্ষে ৫ অক্ষরের হতে হবে।",
+      "passport_max": "পাসপোর্ট নম্বর ২০ অক্ষরের বেশি হতে পারবে না।",
+      "passport_invalid": "পাসপোর্ট নম্বরে শুধুমাত্র অক্ষর ও সংখ্যা ব্যবহার করা যাবে।",
+      "emergency_contact_name_required": "জরুরি যোগাযোগ ব্যক্তির নাম আবশ্যক।",
+      "emergency_contact_name_max": "জরুরি যোগাযোগ ব্যক্তির নাম ১০০ অক্ষরের বেশি হতে পারবে না।",
+      "emergency_contact_phone_required": "জরুরি যোগাযোগের মোবাইল নম্বর আবশ্যক।",
+      "emergency_contact_phone_invalid": "অনুগ্রহ করে একটি বৈধ জরুরি যোগাযোগের মোবাইল নম্বর লিখুন।",
+      "emergency_contact_email_required": "জরুরি যোগাযোগের ইমেইল ঠিকানা আবশ্যক।",
+      "emergency_contact_email_invalid": "জরুরি যোগাযোগের ইমেইল ঠিকানাটি অবৈধ।",
+      "emergency_contact_relation_max": "সম্পর্কের তথ্য ৫০ অক্ষরের বেশি হতে পারবে না।",
+      "documents_required": "কমপক্ষে একটি কর্মচারীর ডকুমেন্ট আবশ্যক।",
+      "invalid_documents": "অবৈধ ডকুমেন্ট।",
+      "profile_image_invalid": "প্রোফাইল ছবির ফাইলটি অবৈধ।",
+      "profile_image_only_one": "একটির বেশি প্রোফাইল ছবি আপলোড করা যাবে না।",
+      "resume_only_one": "একটির বেশি জীবনবৃত্তান্ত আপলোড করা যাবে না।"
+    },
 
+    "role": {
+      "role_name": "ভূমিকার নাম আবশ্যক।"
+    }
   },
+
   "message": {
-
+    "something_went_wrong": "কিছু একটা ভুল হয়েছে।",
+    "created": "{{name}} সফলভাবে তৈরি হয়েছে।",
+    "updated": "{{name}} সফলভাবে হালনাগাদ হয়েছে।",
+    "deleted": "{{name}} সফলভাবে মুছে ফেলা হয়েছে।"
   },
-  "button_text": {
-    
+
+  "tooltip": {
+    "cancel": "বাতিল",
+    "delete": "মুছে ফেলুন",
+    "edit": "সম্পাদনা",
+    "copy_email": "ইমেইল কপি করুন",
+    "copied": "কপি হয়েছে!"
+  },
+
+  "button": {
+    "add_role": "নতুন ভূমিকা",
+    "previous": "পূর্ববর্তী",
+    "next": "পরবর্তী",
+    "showing": "প্রদর্শিত হচ্ছে",
+    "select_all": "সব নির্বাচন করুন",
+    "clear_all": "সব অপসারণ করুন",
+    "assigned": "বরাদ্দ হয়েছে ✓",
+    "assign_to_role": "ভূমিকায় বরাদ্দ করুন",
+    "updating": "হালনাগাদ করা হচ্ছে...",
+    "edit": "সম্পাদনা",
+    "search": "অনুসন্ধান",
+    "cancel": "বাতিল",
+    "delete": "মুছে ফেলুন",
+    "reset": "রিসেট করুন",
+    "add_employee": "কর্মচারী যোগ করুন",
+    "creating": "তৈরি করা হচ্ছে...",
+    "create_employee": "কর্মচারী তৈরি করুন",
+    "update_employee": "কর্মচারীর তথ্য হালনাগাদ করুন"
   }
 }

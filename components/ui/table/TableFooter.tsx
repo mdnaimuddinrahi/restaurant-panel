@@ -1,9 +1,11 @@
 import { FiChevronsLeft, FiChevronsRight } from 'react-icons/fi';
-import AppCustomButton from './button/AppCustomButton';
-import { PaginationProps } from '@/store/commonInterface';
-import AppSelect from './input/AppSelect';
+// import AppCustomButton from './button/AppCustomButton';
+import { PaginationProps } from '@/store/common.types';
+// import AppSelect from './input/AppSelect';
 import { t } from 'i18next';
 import useNumberFormatter from '@/hooks/useNumberFormatter';
+import AppSelect from '../input/AppSelect';
+import AppCustomButton from '../button/AppCustomButton';
 
 export default function TableFooter({
     totalDataCount,

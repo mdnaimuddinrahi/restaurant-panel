@@ -16,6 +16,7 @@ export const employeeApi = baseApi.injectEndpoints({
     getEmployees: builder.query<GetEmployeesResponse, GetEmployeesRequests>({
       query: (params) => ({
         url: routes.employee.list,
+        method: DEFAULT_METHOD.GET,
         params,
       }),
       providesTags: (result): EmployeeTag[] => {
