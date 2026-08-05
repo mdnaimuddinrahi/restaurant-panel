@@ -65,6 +65,6 @@ export type RoleFormProps<T extends FieldValues> = {
   oldData?: Role | null;
 }
 
-export interface GetRolesRequest extends RequestParams {
-  status: number | null;
-}
+// export interface GetRolesRequest extends RequestParams {
+//   // status: number | null;
+// }

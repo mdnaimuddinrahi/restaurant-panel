@@ -13,6 +13,7 @@ import EmployeeTableBody from './EmployeeTableBody';
 import ContentCard from '@/components/ui/ContentCard';
 import SkeletonTable from '@/components/ui/skeleton/SkeletonTable';
 import { useSortableData } from '@/hooks/useSortableData';
+import Table from '@/components/ui/table/Table';
 
 export default function EmployeeList() {
   const [sortState, setSortState] = useState<SortState<EmployeeTableHead>>({ col: "id", dir: "asc" });
@@ -123,27 +124,26 @@ export default function EmployeeList() {
               setCurrentPage(1);
               setSearchTerm(draftSearchTerm)
           }}
-          searchFields = {searchFields}
+          // searchFields = {searchFields}
+          searchFields={withPrefix(searchFields, "employees:")}
         />
         {isLoading ? <SkeletonTable/> :<div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <TableHead<EmployeeTableHead>
-                columns={columns}
-                sortState={sortState}
-                setSortState={setSortState}
-                setOpenColumnModal={setOpenColumnModal}
-              />
-              <EmployeeTableBody
-                bloodGroupOption={bloodGroupOption ?? []}
-                employeeDesignationOption={employeeDesignationOption ?? []}
-                employeeTypeOption={employeeTypeOption ?? []}
-                genderOption={genderOption ?? []}
-                maritalStatusOption={maritalStatusOption ?? []}
-                employees={employees}
-                columns={columns}/>
-            </table>
-          </div>
+          <Table>
+            <TableHead<EmployeeTableHead>
+              columns={columns}
+              sortState={sortState}
+              setSortState={setSortState}
+              setOpenColumnModal={setOpenColumnModal}
+            />
+            <EmployeeTableBody
+              bloodGroupOption={bloodGroupOption ?? []}
+              employeeDesignationOption={employeeDesignationOption ?? []}
+              employeeTypeOption={employeeTypeOption ?? []}
+              genderOption={genderOption ?? []}
+              maritalStatusOption={maritalStatusOption ?? []}
+              employees={employees}
+              columns={columns}/>
+          </Table>
           <TableFooter
             totalDataCount={total}
             tablePage={currentPage}

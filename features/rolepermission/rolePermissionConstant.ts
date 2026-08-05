@@ -1,7 +1,7 @@
 import { TableColumn } from "@/store/common.types";
 import { Assignments, Permission } from "./permissionInterface";
 import { Role, RoleTableHead } from "./rolepermission.types";
-import { TFunction } from "i18next";
+import { t, TFunction } from "i18next";
 import z from "zod";
 
 export const ROLE_CREATE_MODAL = 'role-create';
@@ -50,10 +50,10 @@ export const groupBy = <T, K extends keyof T>(list: T[], key: K): Record<string,
 
 
 export const ROLE_COLUMNS: TableColumn<RoleTableHead>[] = [
-  { isVisible: true, isSort:true, key: "name", label: "rolepermission:role_name"},
-  { isVisible: true, isSort:true, key: "status", label: "rolepermission:status"},
-  { isVisible: true, isSort:true, key: "created_at", label: "common:created_at"},
-  { isVisible: true, isSort:true, key: "updated_at", label: "common:updated_at"},
+  { isVisible: true, isSort:true, key: "name", label: "main:label.role.role_name"},
+  { isVisible: true, isSort:true, key: "status", label: "main:label.status"},
+  { isVisible: true, isSort:true, key: "created_at", label: "main:label.created_at"},
+  { isVisible: true, isSort:true, key: "updated_at", label: "main:label.updated_at"},
 ]
 
 const roleBaseSchema = (t: TFunction) =>

@@ -10,6 +10,7 @@ import AppSelect from '@/components/ui/input/AppSelect';
 import { SingleValue } from 'react-select';
 import { t } from 'i18next';
 import FilterSkeleton from '@/components/ui/skeleton/SkeletonFilter';
+import AppSearchInput from '@/components/ui/input/AppSearchInput';
 
 export default function EmployeeFilterPanel({
     resourceIsLoading,
@@ -33,8 +34,9 @@ export default function EmployeeFilterPanel({
     setSearchTerm,
     searchFields
 }: EmployeeFIlterPanelProps) {
-    const [showSearchHint, setShowSearchHint] = useState(false)
+    
     const { accentColor } = useTheme();
+    console.log('bloodGroupOption', bloodGroupOption)
       
     return (
         <>
@@ -87,49 +89,10 @@ export default function EmployeeFilterPanel({
                         value={maritalStatusOption?.find(o => o.value ===maritalStatus)}
                         onChange={(option: SingleValue<ResourceOption>) => setMaritalStatus(option?.value ?? -1)}
                     />
-                    <div
-                        className="relative w-full"
-                        onMouseEnter={() => setShowSearchHint(true)}
-                        onMouseLeave={() => setShowSearchHint(false)}
-                    >
-                        <AppInput
-                            placeholder={t('main:placeholder.search')}
-                            onFocus={() => setShowSearchHint(true)}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
-                        />
-
-                        {/* Tooltip */}
-                        <div
-                        
-                            style={{ background: hexToRgba(accentColor, 0.9) }}
-                            className={`
-                                absolute left-0 top-full mt-2
-                                z-50
-                                w-max max-w-xs
-                                rounded-lg
-                                text-white text-xs
-                                px-3 py-3
-                                shadow-xl
-                                transition-all duration-200
-                                ${showSearchHint ? "opacity-100 scale-100" : "opacity-0 scale-95"}
-                                pointer-events-none
-                            `}
-                        >
-                            <div className="font-medium mb-1">{t('main:content.search_enable_for')}:</div>
-
-                            <div className="flex flex-wrap gap-1 text-slate-300">
-                                {searchFields.map((field: string) => (
-                                    <span
-                                        key={field}
-                                        className="text-white px-2 py-0.5 rounded-md border border-gray-300"
-                                        style={{ backgroundColor: accentColor }}
-                                    >
-                                        {t(`main:content.employees.${field}`)}
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
+                    <AppSearchInput
+                        setSearchTerm={setSearchTerm}
+                        searchFields={searchFields}
+                    />
                     <AppButton onClick={onSearch}>
                         {t('main:button.search')}
                     </AppButton>

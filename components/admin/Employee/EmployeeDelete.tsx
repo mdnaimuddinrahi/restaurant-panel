@@ -10,6 +10,7 @@ import AppModal from "@/components/ui/modal/AppModal";
 import AppCustomButton from "@/components/ui/button/AppCustomButton";
 import { FiAlertTriangle } from "react-icons/fi";
 import { EmployeeDeletedProps } from "@/features/employee/employee.types";
+import ModalDelete from "@/components/ui/modal/ModalDelete";
 
 
 export default function EmployeeDelete({
@@ -17,7 +18,6 @@ export default function EmployeeDelete({
     onClose,
 }: EmployeeDeletedProps) {
     const { t } = useTranslation("main");
-    const { accentColor } = useButtonTheme();
     const [deleteEmployee, { isLoading }] =
         useDeleteEmployeeMutation();
     const handleDelete = async () => {
@@ -39,7 +39,14 @@ export default function EmployeeDelete({
             onClose={onClose}
             size="sm"
         >
-            <div className="py-1 px-3">
+            <ModalDelete
+                description={t("main:content.delete_employee_confirmation")}
+                //   accentColor={accentColor}
+                isLoading={isLoading}
+                onDelete={handleDelete}
+                onCancel={onClose}
+            />
+            {/* <div className="py-1 px-3">
 
                 <motion.div
                     initial={{ scale: 0 }}
@@ -96,7 +103,7 @@ export default function EmployeeDelete({
                         {t("main:button.delete")}
                     </AppCustomButton>
                 </div>
-            </div>
+            </div> */}
         </AppModal>
     );
 }

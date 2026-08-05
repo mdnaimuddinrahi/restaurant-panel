@@ -5,6 +5,8 @@ import { RoleFilterPanelProps } from '@/features/rolepermission/rolepermission.t
 import { hexToRgba, useTheme } from '@/theme';
 import { t } from 'i18next';
 import React, { useState } from 'react'
+import AppSelect from '@/components/ui/input/AppSelect';
+import AppSearchInput from '@/components/ui/input/AppSearchInput';
 
 export default function RoleFilterPanel({
   searchFields,
@@ -16,12 +18,17 @@ export default function RoleFilterPanel({
   const { accentColor } = useTheme();
     
   return (
-    <FilterSkeleton
-      fields={[
-        {type: "select", count: 1},
-        { type: "input", count: 1 },
-        { type: "button", count: 1},
-      ]}
-    />
+    <div className="grid grid-cols-3 md:grid-cols-4 xl:grid-cols-4 gap-3 mt-1 p-3">
+      <AppSelect
+        options={[{'value': 'assigned', 'label': 'Assgined'}, {'value': 'not_assigned', 'label': 'Not Assigned'}]}
+      />
+      <AppSearchInput
+        setSearchTerm={setSearchTerm}
+        searchFields={searchFields}
+      />
+      <AppButton onClick={onSearch}>
+          {t('main:button.search')}
+      </AppButton>
+    </div>
   )
 }

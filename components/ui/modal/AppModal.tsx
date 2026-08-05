@@ -62,7 +62,7 @@ export default function AppModal({
 
                     </AppCustomButton>
                     {modalTitle && (
-                        <div className="border-b border-slate-300 dark:border-slate-700 px-6 py-4">
+                        <div className="border-b border-slate-300 dark:border-slate-700 px-6 py-3">
                             <h2 className="text-lg">
                                 {modalTitle}
                             </h2>

@@ -82,15 +82,17 @@ console.log("Current values:", values);
 
     const handleSubmit: SubmitHandler<UpdateEmployeeFormData> = async (data) => {
         try {
-            await updateEmployee({
+            const response = await updateEmployee({
                 id: employeeId,
                 data: employeeToFormData(data),
             }).unwrap();
+            console.log('response', response)
 
             appToast.success(t("main:message.updated", {name: t("content.employee")}));
             methods.reset(); // Optional
             onClose();       // Close the modal
         } catch (error: any) {
+            console.log('error', error)
             const validationErrors = error?.data?.errors;
             setHasError(true)
             

@@ -18,9 +18,10 @@ export default function RoleForm<T extends FieldValues>({
     <AppForm
       methods={methods}
       onSubmit={onSubmit}
-      onReset={() => methods.reset()}
+      // onReset={() => methods.reset()}
       submitText={buttonText}
-      resetText={t("main:button.reset")}
+      showReset={false}
+      // resetText={t("main:button.reset")}
       submitLoading={loading}
       submitVariant={hasError ? "danger" : "solid"}
     >

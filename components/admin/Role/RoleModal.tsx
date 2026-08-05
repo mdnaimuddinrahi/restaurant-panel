@@ -34,9 +34,6 @@ export default function RoleModal() {
                     onClose={() => dispatch(closeModal())}
                 />
             )
+        default: return null;
     }
-
-    return (
-        <div>RoleModal</div>
-    )
 }

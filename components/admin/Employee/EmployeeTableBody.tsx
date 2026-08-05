@@ -22,7 +22,7 @@ export default function EmployeeTableBody<T>({
     genderOption,
     maritalStatusOption,
     }: EmployeeTableBodyProps<T>) {
-        employees = [];
+    
     const initials = 
         (name: string) => 
             name?.trim()

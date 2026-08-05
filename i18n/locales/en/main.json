@@ -134,7 +134,8 @@
     "add_employee": "Add Employee",
     "creating": "Creating...",
     "create_employee": "Create Employee",
-    "update_employee": "Update Employee"
+    "update_employee": "Update Employee",
+    "update_role": "Update Role"
   },
   "content": {
     "login": "Login",
@@ -163,18 +164,23 @@
     "are_you_sure": "Are you sure?",
     "role": "Role",
     "roles": {
-      "no_role_found": "No Role Found."
-    }
+      "no_role_found": "No Role Found.",
+      "name":"Role Name"
+    },
+    "delete_confirmation": "Are you sure you want to permanently delete?"
   },
   "modal_title": {
     "create_role": "Add New Role",
     "update_employee": "Update Employee",
     "add_new_employee": "Add New Employee",
-    "delete_employee": "Delete Employee"
+    "delete_employee": "Delete Employee",
+    "update_role": "Update Role",
+    "delete_role": "Delete Role"
   },
   "label": {
     "role": {
-      "name": "Role Name"
+      "name": "Role Name",
+      "role_name": "Role Name"
     },
     "employee": {
       "contact_person_name": "Contact Person Name",
@@ -202,7 +208,10 @@
       "blood_group": "Blood Group",
       "marital_status": "Marital Status",
       "address": "Address"
-    }
+    },
+    "status": "Status",
+    "created_at": "Created At",
+    "updated_at": "Updated At"
   },
   "section": {
     "employee": {

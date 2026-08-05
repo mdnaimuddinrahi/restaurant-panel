@@ -1,15 +1,14 @@
 import { baseApi } from '@/services/baseApi'
 import { DEFAULT_METHOD, DEFAULT_TAG, DEFAULT_TAG_SCOPE } from '@/store/commonConstants';
 import { routes } from '@/utils/apiRoutes';
-import { GetRolesRequest, RoleByIdResponse, RoleListResponse, RoleTag } from './rolepermission.types';
+import { RoleByIdResponse, RoleListResponse, RoleTag } from './rolepermission.types';
 
 export const rolePermissionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getRoles: builder.query<RoleListResponse, GetRolesRequest>({
-        query: (params) => ({
+    getRoles: builder.query<RoleListResponse, void>({
+        query: () => ({
             url: routes.role.list,
             method: DEFAULT_METHOD.GET,
-            params,
         }),
         providesTags: (result): RoleTag[] => {
             const listTag = {
@@ -73,4 +72,7 @@ export const rolePermissionApi = baseApi.injectEndpoints({
 export const {
     useGetRolesQuery,
     useCreateRoleMutation,
+    useUpdateRoleMutation,
+    useDeleteRoleMutation,
+    useGetRoleByIdQuery,
 } = rolePermissionApi;
