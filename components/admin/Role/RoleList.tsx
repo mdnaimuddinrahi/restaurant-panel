@@ -21,36 +21,31 @@ export default function RoleList() {
   ) => fields.map(field => `${prefix}${field}`);
   const [draftSearchTerm, setDraftSearchTerm] = useState(DEFAULT_SEARCH.SEARCH_TERM)
   const [columns, setColumns] = useState<TableColumn<RoleTableHead>[]>(ROLE_COLUMNS);
-  const [searchTerm, setSearchTerm] = useState(DEFAULT_SEARCH.SEARCH_TERM)
-  const [roleStatus, setRoleStatus] = useState(DEFAULT_SEARCH.NUMBER);
   const [searchFields, setSearchFields] = useState(["name"])
-  const [sortType, setSortType] = useState(DEFAULT_SEARCH.SORT_TYPE)
-  const [sortBy, setSortBy] = useState(DEFAULT_SEARCH.SORT_BY)
   const [sortState, setSortState] = useState<SortState<RoleTableHead>>({ col: "id", dir: "asc" });
+  const [searchStatus, setSearchStatus] = useState(DEFAULT_SEARCH.NUMBER)
     
-    
-  // const searchParams: GetRolesRequest = useMemo(
-  //   () => ({
-  //     status: roleStatus,
-  //     search_term: searchTerm,
-  //     search_fields: searchFields.join(','),
-  //     sort_type: sortType,
-  //     sort_by: sortBy,
-      
-  //   }), [
-  //     searchTerm,
-  //     searchFields,
-  //     sortType,
-  //     sortBy,
-  //     roleStatus,
-  //   ])
   const {data: roleResponse, isLoading} = useGetRolesQuery()
 
   const roleList = useSortableData(roleResponse?.data, sortState)
   const [openColumnModal, setOpenColumnModal] = useState(false);
-  const filterRoles = () => {
-    console.log('draftSearchTerm', draftSearchTerm)
-  }
+  
+  const filteredRoles = useMemo(() => {
+    return roleList.filter((role) => {
+      const matchesName =
+        !draftSearchTerm.trim() ||
+        role.name
+          .toLowerCase()
+          .includes(draftSearchTerm.trim().toLowerCase());
+
+      const matchesStatus =
+        searchStatus === DEFAULT_SEARCH.NUMBER ||
+        (searchStatus === 1 && role.status === "assigned") ||
+        (searchStatus === 2 && role.status === "not assigned");
+
+      return matchesName && matchesStatus;
+    });
+  }, [roleList, draftSearchTerm, searchStatus]);
 
   return (
 
@@ -59,10 +54,8 @@ export default function RoleList() {
           searchFields = {withPrefix(searchFields, "roles:")}
           searchTerm = {draftSearchTerm}
           setSearchTerm = {setDraftSearchTerm}
-          onSearch={() => {
-              // setSearchTerm(draftSearchTerm)
-              filterRoles()
-          }}
+          searchStatus={searchStatus}
+          setSearchStatus={setSearchStatus}
         />
         {isLoading ? <SkeletonTable columns={4}/> : 
         <div>
@@ -74,7 +67,7 @@ export default function RoleList() {
               setOpenColumnModal={setOpenColumnModal}
             />
             <RoleTableBody
-              roleList={roleList}
+              roleList={filteredRoles}
               columns={columns}/>
           </Table>
         </div>}

@@ -5,9 +5,10 @@ import { FieldValues, SubmitHandler, UseFormReturn } from "react-hook-form";
 
 export interface RoleFilterPanelProps {
   searchFields: string[];
-  onSearch: () => void;
   searchTerm: string;
-  setSearchTerm: (search: string) => void,
+  setSearchTerm: (search: string) => void;
+  searchStatus: number;
+  setSearchStatus: (searchStatus: number) => void;
 }
 
 export interface Role {
@@ -64,7 +65,3 @@ export type RoleFormProps<T extends FieldValues> = {
   buttonText: string;
   oldData?: Role | null;
 }
-
-// export interface GetRolesRequest extends RequestParams {
-//   // status: number | null;
-// }

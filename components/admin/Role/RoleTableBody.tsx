@@ -12,7 +12,7 @@ export default function RoleTableBody<T>({
   roleList,
   columns,
 }: RoleTableBodyProps<T>) {
-  console.log('roleList', roleList)
+  // console.log('roleList', roleList)
   return (
     <TableBody resource="role">
       <TableEmpty

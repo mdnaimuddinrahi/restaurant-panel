@@ -62,7 +62,7 @@ export default function ModalDelete({
         {description}
       </p>
 
-      <div className="mt-6 flex justify-end gap-3">
+      <div className="mt-6 flex justify-end gap-3 mb-4">
         <AppCustomButton
           variant="outline"
           onClick={onCancel}

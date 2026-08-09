@@ -11,6 +11,7 @@ import { SingleValue } from 'react-select';
 import { t } from 'i18next';
 import FilterSkeleton from '@/components/ui/skeleton/SkeletonFilter';
 import AppSearchInput from '@/components/ui/input/AppSearchInput';
+import { DEFAULT_SEARCH } from '@/store/commonConstants';
 
 export default function EmployeeFilterPanel({
     resourceIsLoading,
@@ -36,7 +37,7 @@ export default function EmployeeFilterPanel({
 }: EmployeeFIlterPanelProps) {
     
     const { accentColor } = useTheme();
-    console.log('bloodGroupOption', bloodGroupOption)
+    // console.log('bloodGroupOption', bloodGroupOption)
       
     return (
         <>
@@ -54,7 +55,7 @@ export default function EmployeeFilterPanel({
                         isClearable={true}
                         value={bloodGroupOption?.find(o => o.value === bloodGroup)}
                         onChange={(option: SingleValue<ResourceOption>) => {
-                            setBloodGroup(option?.value ?? -1);
+                            setBloodGroup(option?.value ?? DEFAULT_SEARCH.NUMBER);
                         }}
                     />
 

@@ -165,9 +165,10 @@
     "role": "Role",
     "roles": {
       "no_role_found": "No Role Found.",
-      "name":"Role Name"
+      "name": "Role Name"
     },
-    "delete_confirmation": "Are you sure you want to permanently delete?"
+    "delete_confirmation": "Are you sure you want to permanently delete?",
+    "delete_role_confirmation": "Are you sure you want to permanently delete this role?"
   },
   "modal_title": {
     "create_role": "Add New Role",
