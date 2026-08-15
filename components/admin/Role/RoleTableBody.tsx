@@ -70,13 +70,13 @@ export default function RoleTableBody<T>({
               
             })}
             <TableActions
-                  editModalType={ROLE_UPDATE_MODAL}
-                  editPayload={{ roleId: role.id }}
-                  deleteModalType={ROLE_DELETE_MODAL}
-                  deletePayload={{ roleId: role.id }}
-                  allowEdit={role.status != "assigned"}
-                  allowDelete={role.status != "assigned"}
-              />
+              editModalType={ROLE_UPDATE_MODAL}
+              editPayload={{ roleId: role.id }}
+              deleteModalType={ROLE_DELETE_MODAL}
+              deletePayload={{ roleId: role.id }}
+              allowEdit={role.status != "assigned"}
+              allowDelete={role.status != "assigned"}
+            />
         </TableRow>
       ))}
     </TableBody>

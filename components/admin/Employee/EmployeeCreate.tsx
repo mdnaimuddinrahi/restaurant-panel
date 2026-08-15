@@ -4,7 +4,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateEmployeeMutation } from "@/features/employee/employeeApi";
 import { createEmployeeSchema } from "@/features/employee/employeeConstant";
-import z, { boolean } from 'zod';
+import z from 'zod';
 import { formatDate } from '@/store/commonFunction';
 import { appToast } from '@/utils/toastUtils';
 import { buildFormData } from '@/utils/buildFormData';
@@ -68,7 +68,7 @@ export default function EmployeeCreate({onClose}: {
             <AppModal
                 onClose={onClose}
                 modalTitle={t("modal_title.add_new_employee")} 
-                size='full'
+                size="full"
             >
                 <EmployeeForm
                     mode="create"

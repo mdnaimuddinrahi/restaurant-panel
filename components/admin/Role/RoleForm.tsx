@@ -2,16 +2,13 @@ import AppForm from '@/components/ui/form/AppForm';
 import FormInput from '@/components/ui/form/FormInput';
 import { RoleFormProps } from '@/features/rolepermission/rolepermission.types'
 import { t } from 'i18next';
-import { FieldValues, FormProvider } from 'react-hook-form'
+import { FieldValues } from 'react-hook-form'
 
 export default function RoleForm<T extends FieldValues>({
     methods,
-    mode,
     onSubmit,
     loading,
-    oldData,
     hasError=false,
-    setHasError,
     buttonText,
 }: RoleFormProps<T>) {
   return (

@@ -18,7 +18,6 @@ export const routes = {
         ...createCrudRoutes("/employees"),
         resource: "/employee-resources",
     },
-    role: {
-        ...createCrudRoutes("/roles"),
-    },
+    role: {...createCrudRoutes("/roles")},
+    employee_type: {...createCrudRoutes('/employee-types')}
 };

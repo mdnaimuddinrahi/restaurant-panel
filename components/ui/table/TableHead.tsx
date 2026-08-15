@@ -36,7 +36,7 @@ export default function TableHead<T>({
   return (
     <thead>
       <tr className="bg-slate-50 dark:bg-slate-700/40 text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-        <th className="px-4 py-3 text-center font-semibold border-r border-gray-200 dark:border-gray-900">
+        <th className="w-0.5 px-1 py-3 text-center font-semibold border-r border-gray-200 dark:border-gray-900">
           <div className="relative inline-flex group overflow-visible">
             <button
               type="button"

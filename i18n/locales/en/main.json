@@ -8,7 +8,8 @@
     "identity_information": "Identity Information",
     "emergency_contact": "Emergency Contact",
     "documents": "Documents",
-    "personal_information": "Personal Information"
+    "personal_information": "Personal Information",
+    "employee_types": "Employee Types"
   },
   "placeholder": {
     "select_time": "Select time",
@@ -42,6 +43,11 @@
     },
     "role": {
       "name": "Role Name"
+    },
+    "employee_type": {
+      "name": "Enter Employee Type",
+      "code": "Enter Employee Code. e.g.: \"GM\"",
+      "description": "What this position for, please describe."
     }
   },
   "validation": {
@@ -101,6 +107,34 @@
       "role_name": "Role name is required.",
       "role_name_maximum_100": "Role name can't be exceed than 100.",
       "name_invalid_character": "Role name contains can't be invalid characters."
+    },
+    "employee_type": {
+      "name": {
+        "required": "Employee type name is required.",
+        "max": "Employee type name must not exceed 100 characters."
+      },
+      "code": {
+        "required": "Employee type code is required.",
+        "max": "Employee type code must not exceed 20 characters.",
+        "invalid": "Employee type code can only contain letters, numbers, underscores, and hyphens."
+      },
+      "description": {
+        "invalid": "Description must be a valid text.",
+        "max": "Description must not exceed 500 characters."
+      },
+      "shift_start": {
+        "required": "Shift start time is required.",
+        "invalid": "Please enter a valid shift start time."
+      },
+      "shift_end": {
+        "required": "Shift end time is required.",
+        "invalid": "Please enter a valid shift end time."
+      },
+      "working_hours": {
+        "required": "Working hours is required.",
+        "integer": "Working hours must be a whole number.",
+        "min": "Working hours must be greater than 0."
+      }
     }
   },
   "message": {
@@ -135,7 +169,10 @@
     "creating": "Creating...",
     "create_employee": "Create Employee",
     "update_employee": "Update Employee",
-    "update_role": "Update Role"
+    "update_role": "Update Role",
+    "add_employee_type": "Add Employee Type",
+    "create_employee_type": "Create Employee Type",
+    "update_employee_type": "Update Employee Type"
   },
   "content": {
     "login": "Login",
@@ -168,7 +205,14 @@
       "name": "Role Name"
     },
     "delete_confirmation": "Are you sure you want to permanently delete?",
-    "delete_role_confirmation": "Are you sure you want to permanently delete this role?"
+    "delete_role_confirmation": "Are you sure you want to permanently delete this role?",
+    "employee_types": {
+      "no_employee_type_found": "No Employee Type Found.",
+      "name": "Employee Type Name",
+      "code": "code"
+    },
+    "employee_type": "Employee Type",
+    "delete_employee_type_confirmation": "Are you sure you want to permanently delete this employee type?"
   },
   "modal_title": {
     "create_role": "Add New Role",
@@ -176,7 +220,10 @@
     "add_new_employee": "Add New Employee",
     "delete_employee": "Delete Employee",
     "update_role": "Update Role",
-    "delete_role": "Delete Role"
+    "delete_role": "Delete Role",
+    "add_new_employee_type": "Add New Employee Type",
+    "update_employee_type": "Update Employee Type",
+    "delete_employee_type": "Delete Employee Type"
   },
   "label": {
     "role": {
@@ -212,7 +259,15 @@
     },
     "status": "Status",
     "created_at": "Created At",
-    "updated_at": "Updated At"
+    "updated_at": "Updated At",
+    "employee_type": {
+      "name": "Employee Type",
+      "code": "Code",
+      "description": "Description",
+      "shift_start": "Shift Start",
+      "shift_end": "Shift end",
+      "working_hours": "Working Hours"
+    }
   },
   "section": {
     "employee": {
@@ -253,5 +308,9 @@
         "description": "Internal system settings"
       }
     }
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
   }
 }

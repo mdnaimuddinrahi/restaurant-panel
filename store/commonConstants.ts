@@ -29,6 +29,7 @@ export const DEFAULT_TAG_SCOPE = {
 export const DEFAULT_TAG = {
   EMPLOYEE: 'Employee',
   ROLE: 'Role',
+  EMPLOYEE_TYPE: 'EmployeeType'
 } as const;
 
 export const TAG_VALUES = Object.values(DEFAULT_TAG);
@@ -40,3 +41,6 @@ export const DEFAULT_METHOD  = {
 }
 
 export const INVALID_NUMBER = -1
+
+export const STATUS_ACTIVE = 1
+export const STATUS_INACTIVE = 0

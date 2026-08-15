@@ -57,11 +57,10 @@ export interface RoleDeleteProps {
 
 export type RoleFormProps<T extends FieldValues> = {
   methods: UseFormReturn<T>;
-  mode: "create" | "update" | "delete";
+  // mode: "create" | "update" | "delete";
   loading?: boolean;
   onSubmit: SubmitHandler<T>;
   hasError: boolean;
-  setHasError: Dispatch<SetStateAction<boolean>>;
+  // setHasError: Dispatch<SetStateAction<boolean>>;
   buttonText: string;
-  oldData?: Role | null;
 }

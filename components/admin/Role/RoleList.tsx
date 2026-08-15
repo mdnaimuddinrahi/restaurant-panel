@@ -1,7 +1,7 @@
 import ContentCard from '@/components/ui/ContentCard'
-import React, { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import RoleFilterPanel from './RoleFilterPanel'
-import { DEFAULT_PAGINATION, DEFAULT_SEARCH } from '@/store/commonConstants';
+import { DEFAULT_SEARCH } from '@/store/commonConstants';
 import { SortState, TableColumn } from '@/store/common.types';
 import { ROLE_COLUMNS } from '@/features/rolepermission/rolePermissionConstant';
 import {RoleTableHead } from '@/features/rolepermission/rolepermission.types';
@@ -11,7 +11,6 @@ import { useSortableData } from '@/hooks/useSortableData';
 import TableHead from '@/components/ui/table/TableHead';
 import RoleTableBody from './RoleTableBody';
 import Table from '@/components/ui/table/Table';
-import TableFooter from '@/components/ui/table/TableFooter';
 import ColumnSelectorModal from '@/components/ui/modal/ColumnSelectorModal';
 
 export default function RoleList() {

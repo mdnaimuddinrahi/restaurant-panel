@@ -75,12 +75,11 @@ export default function RoleUpdate({
         size='sm'
     >
     <RoleForm
-        mode="update"
         onSubmit={handleSubmit}
         loading={isLoading}
         methods={methods}
         hasError={hasError}
-        setHasError={setHasError}
+        // setHasError={setHasError}
         buttonText={isLoading ? t("main:button.updating") : t("main:button.update_role")}
     /></AppModal>
 )
