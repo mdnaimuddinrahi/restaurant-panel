@@ -9,7 +9,8 @@
     "emergency_contact": "Emergency Contact",
     "documents": "Documents",
     "personal_information": "Personal Information",
-    "employee_types": "Employee Types"
+    "employee_types": "Employee Types",
+    "employee_designation": "Employee Designation"
   },
   "placeholder": {
     "select_time": "Select time",
@@ -172,7 +173,8 @@
     "update_role": "Update Role",
     "add_employee_type": "Add Employee Type",
     "create_employee_type": "Create Employee Type",
-    "update_employee_type": "Update Employee Type"
+    "update_employee_type": "Update Employee Type",
+    "add_employee_designation": "Add Employee Designation"
   },
   "content": {
     "login": "Login",
@@ -212,7 +214,12 @@
       "code": "code"
     },
     "employee_type": "Employee Type",
-    "delete_employee_type_confirmation": "Are you sure you want to permanently delete this employee type?"
+    "delete_employee_type_confirmation": "Are you sure you want to permanently delete this employee type?",
+    "employee_designation": "Employee Designation",
+    "delete_employee_designation_confirmation": "Are you sure you want to permanently delete this employee designation?",
+    "employee_designations": {
+      "no_employee_designation_found": "No Employee Designation Found."
+    }
   },
   "modal_title": {
     "create_role": "Add New Role",
@@ -223,7 +230,9 @@
     "delete_role": "Delete Role",
     "add_new_employee_type": "Add New Employee Type",
     "update_employee_type": "Update Employee Type",
-    "delete_employee_type": "Delete Employee Type"
+    "delete_employee_type": "Delete Employee Type",
+    "add_new_employee_designation": "Add New Employee Designation",
+    "delete_employee_designation": "Delete Employee Designation"
   },
   "label": {
     "role": {

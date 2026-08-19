@@ -27,22 +27,22 @@ export default function EmployeeTypeList() {
   const [openColumnModal, setOpenColumnModal] = useState(false);
   const [searchStatus, setSearchStatus] = useState(DEFAULT_SEARCH.NUMBER); 
 
-const filteredEmployeeTypes = useMemo(() => {
-    const search = draftSearchTerm.trim().toLowerCase();
+  const filteredEmployeeTypes = useMemo(() => {
+      const search = draftSearchTerm.trim().toLowerCase();
 
-    return employeeTypeList.filter((eachData) => {
-        const matchesSearch =
-            !search ||
-            eachData.name.toLowerCase().includes(search) ||
-            eachData.code.toLowerCase().includes(search);
+      return employeeTypeList.filter((eachData) => {
+          const matchesSearch =
+              !search ||
+              eachData.name.toLowerCase().includes(search) ||
+              eachData.code.toLowerCase().includes(search);
 
-        const matchesStatus =
-            searchStatus == DEFAULT_SEARCH.NUMBER ||
-            eachData.status == searchStatus;
+          const matchesStatus =
+              searchStatus == DEFAULT_SEARCH.NUMBER ||
+              eachData.status == searchStatus;
 
-        return matchesSearch && matchesStatus;
-    });
-}, [employeeTypeList, draftSearchTerm, searchStatus]);
+          return matchesSearch && matchesStatus;
+      });
+  }, [employeeTypeList, draftSearchTerm, searchStatus]);
 
   return (
     <ContentCard>

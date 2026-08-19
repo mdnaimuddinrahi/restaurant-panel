@@ -37,7 +37,7 @@ export const NAV_SECTIONS: NavSection[] = [
           { key: "employees", label: "Employees", route: "/admin/user/employees" },
           // { key: "roles", label: "Roles & Permissions", route: "/admin/user/roles" },
           {key: "employee_types", label: "Employee Types", route: "/admin/user/employee-types"},
-          { key: "activity", label: "Activity Log", route: "/admin/users/activity" },
+          { key: "employee_designations", label: "Employee Designation", route: "/admin/user/employee-designations" },
         ],
       },
       {

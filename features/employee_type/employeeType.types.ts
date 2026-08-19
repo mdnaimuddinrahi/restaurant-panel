@@ -3,7 +3,7 @@
 // import { FieldValues, SubmitHandler, UseFormReturn } from "react-hook-form";
 // import { Dispatch, SetStateAction } from "react";
 
-import { CommonResponse, MetaData, TableColumn } from "@/store/common.types";
+import { MetaData, TableColumn } from "@/store/common.types";
 import { DEFAULT_TAG } from "@/store/commonConstants";
 import { Dispatch, SetStateAction } from "react";
 import { FieldValues, SubmitHandler, UseFormReturn } from "react-hook-form";
