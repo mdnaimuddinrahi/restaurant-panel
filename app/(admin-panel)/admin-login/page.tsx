@@ -8,7 +8,8 @@ import { setCredentials } from '@/features/auth/authSlice';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
 
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+// const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function page() {
   const [email, setEmail] = useState('admin@gmail.com')

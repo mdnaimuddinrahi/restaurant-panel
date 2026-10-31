@@ -1,5 +1,7 @@
 import { CommonResponse, MetaData, TableColumn } from "@/store/common.types";
 import { DEFAULT_TAG } from "@/store/commonConstants";
+import { Dispatch, SetStateAction } from "react";
+import { FieldValues, SubmitHandler, UseFormReturn } from "react-hook-form";
 
 export type EmployeeDesignation = {
   id: number;
@@ -18,6 +20,19 @@ export interface GetEmployeeDesignationsResponse {
   meta: MetaData;
 }
 
+export interface EmployeeDesignationByIdResponse {
+  data: EmployeeDesignation;
+}
+
+export type EmployeeDesignationUpdatedProps = {
+  onClose: () => void;
+  employeeDesignationId: number;
+};
+
+export type EmployeeDesignationDeletedProps = {
+  employeeDesignationId: number;
+  onClose: () => void;
+};
 
 export type EmployeeDesignationTag = {
   type: typeof DEFAULT_TAG.EMPLOYEE_DESIGNATION;
@@ -37,3 +52,14 @@ export interface EmployeeDesignationBodyProps<T> {
   columns: TableColumn<T>[];
   dataList: EmployeeDesignation[];
 }
+
+export type EmployeeDesignationFormProps<T extends FieldValues> = {
+  methods: UseFormReturn<T>;
+  // mode: "create" | "update" | "delete";
+  loading?: boolean;
+  onSubmit: SubmitHandler<T>;
+  oldData?: EmployeeDesignation | null;
+  hasError: boolean;
+  setHasError: Dispatch<SetStateAction<boolean>>;
+  buttonText: string;
+};

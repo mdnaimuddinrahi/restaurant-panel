@@ -26,6 +26,7 @@ export default function EmployeeDesignationModal() {
         case EMPLOYEE_DESIGNATION_UPDATE_MODAL:
             return (
                 <EmployeeDesignationUpdate
+                    employeeDesignationId={payload.employeeDesignationId}
                     onClose={() => dispatch(closeModal())}
                 />
             )

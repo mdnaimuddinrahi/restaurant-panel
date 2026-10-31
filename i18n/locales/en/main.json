@@ -49,6 +49,10 @@
       "name": "Enter Employee Type",
       "code": "Enter Employee Code. e.g.: \"GM\"",
       "description": "What this position for, please describe."
+    },
+    "employee_designation": {
+      "name": "Enter Designation Name",
+      "description": "Enter Designation Description"
     }
   },
   "validation": {
@@ -174,7 +178,9 @@
     "add_employee_type": "Add Employee Type",
     "create_employee_type": "Create Employee Type",
     "update_employee_type": "Update Employee Type",
-    "add_employee_designation": "Add Employee Designation"
+    "add_employee_designation": "Add Employee Designation",
+    "create_employee_designation": "Create Designation",
+    "update_employee_designation": "Update Employee Designation"
   },
   "content": {
     "login": "Login",
@@ -232,7 +238,8 @@
     "update_employee_type": "Update Employee Type",
     "delete_employee_type": "Delete Employee Type",
     "add_new_employee_designation": "Add New Employee Designation",
-    "delete_employee_designation": "Delete Employee Designation"
+    "delete_employee_designation": "Delete Employee Designation",
+    "update_employee_designation": "Update Employee Designation"
   },
   "label": {
     "role": {
@@ -276,6 +283,10 @@
       "shift_start": "Shift Start",
       "shift_end": "Shift end",
       "working_hours": "Working Hours"
+    },
+    "employee_designation": {
+      "name": "Employee Designation",
+      "description": "Description"
     }
   },
   "section": {

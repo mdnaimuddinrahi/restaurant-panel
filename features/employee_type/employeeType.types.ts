@@ -67,7 +67,6 @@ export type EmployeeTypeFormProps<T extends FieldValues> = {
   buttonText: string;
 };
 
-
 export interface EmployeeTypeBodyProps<T> {
   columns: TableColumn<T>[];
   dataList: EmployeeType[];

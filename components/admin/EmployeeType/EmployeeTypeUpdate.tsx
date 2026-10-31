@@ -82,13 +82,14 @@ export default function EmployeeUpdate({
         modalTitle={t("main:modal_title.update_employee_type")}
         size="lg"
       >
+        
       <EmployeeTypeForm
         onSubmit={handleSubmit}
         loading={isLoading}
         methods={methods}
         hasError={hasError}
         setHasError={setHasError}
-        buttonText={isLoading ? t("main:button.creating") : t("main:button.update_employee_type")}
+        buttonText={isLoading ? t("main:button.updating") : t("main:button.update_employee_type")}
       />
     </AppModal>
   </>

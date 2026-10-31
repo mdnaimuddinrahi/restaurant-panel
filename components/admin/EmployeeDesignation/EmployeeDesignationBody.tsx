@@ -32,6 +32,10 @@ export default function EmployeeDesignationBody<T>({
                             return (<TableCell key={column.key}>{eachData.name}</TableCell>)
                         }
 
+                        if (column.key == 'description') {
+                            return (<TableCell key={column.key}>{eachData.description}</TableCell>)
+                        }
+
                         if (column.key == 'status') {
                             const isActive = eachData.status == STATUS_ACTIVE;
                             
@@ -83,11 +87,12 @@ export default function EmployeeDesignationBody<T>({
                     })}
                     <TableActions
                         editModalType={EMPLOYEE_DESIGNATION_UPDATE_MODAL}
-                        editPayload={payLoadData}
+                        editPayload={{ employeeDesignationId: eachData.id }}
                         deleteModalType={EMPLOYEE_DESIGNATION_DELETE_MODAL}
-                        deletePayload={payLoadData}
+                        deletePayload={{ employeeDesignationId: eachData.id }}
                         allowEdit={true}
                         allowDelete={eachData.status == STATUS_INACTIVE}
+
                     />
                 </TableRow>}
             

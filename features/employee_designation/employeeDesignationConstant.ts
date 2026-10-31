@@ -12,13 +12,13 @@ export const EMPLOYEE_DESIGNATION_COLUMNS: TableColumn<EmployeeDesignationTableH
         isVisible: true,
         isSort: true,
         key: "name",
-        label: "main:label.employee_type.name",
+        label: "main:label.employee_designation.name",
     },
     {
         isVisible: false,
         isSort: false,
         key: "description",
-        label: "main:label.employee_type.description",
+        label: "main:label.employee_designation.description",
     },
     {
         isVisible: true,

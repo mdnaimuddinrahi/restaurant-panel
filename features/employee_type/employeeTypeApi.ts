@@ -62,6 +62,7 @@ export const employeeTypeApi = baseApi.injectEndpoints({
       ],
       
     }),
+    
     deleteEmployeeType: builder.mutation<{ success: boolean }, number>({
       query: (id) => ({
         url: routes.employee_type.delete(id),

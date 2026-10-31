@@ -1,9 +1,14 @@
+import AppModal from '@/components/ui/modal/AppModal';
+import { useCreateEmployeeDesignationMutation } from '@/features/employee_designation/employeeDesignationApi';
 import { createEmployeeDesignationSchema } from '@/features/employee_designation/employeeDesignationConstant';
+import { buildFormData } from '@/utils/buildFormData';
+import { appToast } from '@/utils/toastUtils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState } from 'react'
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import z from 'zod';
+import EmployeeDesignationForm from './EmployeeDesignationForm';
 
 export default function EmployeeDesignationCreate({onClose}: {
   onClose: () => void;
@@ -15,7 +20,7 @@ export default function EmployeeDesignationCreate({onClose}: {
   const methods = useForm<EmployeeTypeFormData>({
       resolver: zodResolver(schema),
   });
-  const [createEmployeeType, { isLoading }] = usecrea();
+  const [createEmployeeDesignation, { isLoading }] = useCreateEmployeeDesignationMutation();
 
     const {
         setError,
@@ -23,8 +28,8 @@ export default function EmployeeDesignationCreate({onClose}: {
 
     const handleSubmit: SubmitHandler<EmployeeTypeFormData> = async (data) => {
         try {
-            await createEmployeeType(buildFormData(data)).unwrap();
-            appToast.success(t("main:message.created", {name: t('main:content.employee_type')}));
+            await createEmployeeDesignation(buildFormData(data)).unwrap();
+            appToast.success(t("main:message.created", {name: t('main:content.employee_designation')}));
             methods.reset(); // Optional
             onClose();       // Close the modal
         } catch (error: any) {
@@ -48,16 +53,16 @@ export default function EmployeeDesignationCreate({onClose}: {
         <>
             <AppModal
                 onClose={onClose}
-                modalTitle={t("modal_title.add_new_employee_type")}
+                modalTitle={t("modal_title.add_new_employee_designation")}
                 size="lg"
             >
-                <EmployeeTypeForm
+                <EmployeeDesignationForm
                     onSubmit={handleSubmit}
                     loading={isLoading}
                     methods={methods}
                     hasError={hasError}
                     setHasError={setHasError}
-                    buttonText={isLoading ? t("button.creating") : t("button.create_employee_type")}
+                    buttonText={isLoading ? t("button.creating") : t("button.create_employee_designation")}
                 />
             </AppModal>
         </>
