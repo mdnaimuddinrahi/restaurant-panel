@@ -30,7 +30,14 @@ export const DEFAULT_TAG = {
   EMPLOYEE: "Employee",
   ROLE: "Role",
   EMPLOYEE_TYPE: "EmployeeType",
-  EMPLOYEE_DESIGNATION: "EmployeeDesignation"
+  EMPLOYEE_DESIGNATION: "EmployeeDesignation",
+  GROCERYCATEGORY: "GroceryCategory",
+  GROCERY: "Grocery",
+  GROCERYPURCHASE: "GroceryPurchase",
+  GROCERYPURCHASEITEM: "GroceryPurchaseItem",
+  GROCERYSTOCKLEDGER: "GroceryStockLedger",
+  GROCERYSUPPLIER: "GrocerySupplier",
+  GROCERYUNIT: "GroceryUnit"
 } as const;
 
 export const TAG_VALUES = Object.values(DEFAULT_TAG);

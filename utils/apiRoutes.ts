@@ -20,5 +20,12 @@ export const routes = {
     },
     role: {...createCrudRoutes("/roles")},
     employee_type: {...createCrudRoutes('/employee-types')},
-    employee_designation: {...createCrudRoutes('/employee-designations')}
+    employee_designation: {...createCrudRoutes('/employee-designations')},
+    grocery_category: {...createCrudRoutes('/grocery-categories')},
+    grocery: {...createCrudRoutes('/groceries')},
+    grocery_purchase: {...createCrudRoutes('/grocery-purchases')},
+    grocery_purchase_item: {...createCrudRoutes('/grocery-purchase-items')},
+    grocery_stock_ledger: {...createCrudRoutes('/grocery-stock-ledgers')},
+    grocery_supplier: {...createCrudRoutes('/grocery-suppliers')},
+    grocery_unit: {...createCrudRoutes('/grocery-units')}
 };
