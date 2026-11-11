@@ -1,10 +1,16 @@
 "use client";
 
 import GroceryList from "@/components/admin/Grocery/Grocery/GroceryList";
+import GroceryModal from "@/components/admin/Grocery/Grocery/GroceryModal";
 import Heading from "@/components/ui/Heading";
 import { useTranslation } from "react-i18next";
 
 export default function GroceryPage() {
   const { t } = useTranslation("main");
-  return <><Heading title={t("title.grocery")} /><GroceryList /></>;
+  return (
+    <>
+      <Heading title={t("title.grocery")} />
+      <GroceryList />
+      <GroceryModal />
+    </>);
 }
