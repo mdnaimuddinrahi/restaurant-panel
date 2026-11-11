@@ -42,7 +42,14 @@
     "identity_information": "পরিচয় সংক্রান্ত তথ্য",
     "emergency_contact": "জরুরি যোগাযোগ",
     "documents": "ডকুমেন্টসমূহ",
-    "personal_information": "ব্যক্তিগত তথ্য"
+    "personal_information": "ব্যক্তিগত তথ্য",
+    "grocery": "মুদি",
+    "grocery_category": "মুদির ক্যাটাগরি",
+    "grocery_purchase": "মুদি ক্রয়",
+    "grocery_purchase_item": "মুদি ক্রয়ের পণ্য",
+    "grocery_stock_ledger": "মুদির মজুত খতিয়ান",
+    "grocery_supplier": "মুদি সরবরাহকারী",
+    "grocery_unit": "মুদির একক"
   },
 
   "placeholder": {
