@@ -42,7 +42,6 @@ export default function NavSection({
                             }}
                             onMouseEnter={() => collapsed && setFlyoutKey(item.key)}
                             onMouseLeave={() => collapsed && setFlyoutKey(null)}
-                            onChildClick={(route) => onNavigate(route)}
                             isRouteActive={isRouteActive}
                         />
                     ))}

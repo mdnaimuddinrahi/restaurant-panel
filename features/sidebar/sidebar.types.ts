@@ -22,14 +22,13 @@ export type SidebarProps = {
   onHeaderClick: () => void;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
-  onChildClick: (route: string) => void;
   isRouteActive: (route: string) => boolean;
 }
 
 export type SubmenuLinkProps = {
   label: string;
+  route: string;
   active: boolean;
-  onClick: () => void;
   flyout?: boolean;
   accentColor?: string;
 }

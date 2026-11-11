@@ -19,7 +19,6 @@ export const NavRow = ({
   onHeaderClick,
   onMouseEnter,
   onMouseLeave,
-  onChildClick,
   isRouteActive,
 }: SidebarProps) => {
     const triggerRef = useRef<HTMLDivElement>(null);
@@ -126,8 +125,8 @@ export const NavRow = ({
                         <SubmenuLink
                             key={child.key}
                             label={child.label}
+                            route={child.route}
                             active={isRouteActive(child.route)}
-                            onClick={() => onChildClick(child.route)}
                         />
                     ))}
                 </div>
@@ -161,8 +160,8 @@ export const NavRow = ({
                         <SubmenuLink
                             key={child.key}
                             label={child.label}
+                            route={child.route}
                             active={isRouteActive(child.route)}
-                            onClick={() => onChildClick(child.route)}
                             accentColor={accentColor}
                             flyout
                         />
