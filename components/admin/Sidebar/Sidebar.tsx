@@ -7,13 +7,15 @@ import { useTheme } from "@/theme";
 import { hexToRgba } from "@/utils/colorUtils";
 import { useSidebarCollapsed } from "@/hooks/useSidebarCollapsed";
 import { NavItem } from "../../../features/sidebar/sidebar.types";
-import { COLLAPSED_WIDTH, EXPANDED_WIDTH, NAV_SECTIONS } from "./SidebarConstants";
+import useNavSections from "@/hooks/useNavSections";
+import { COLLAPSED_WIDTH, EXPANDED_WIDTH } from "@/features/sidebar/sidebar.constants";
 import Footer from "./Footer";
 import NavSection from "./NavSection";
 
 export default function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
+  const navSections = useNavSections();
   const { accentColor } = useTheme();
   const collapsed = useSidebarCollapsed();
   const [openKey, setOpenKey] = useState<string | null>(null); // accordion, expanded mode
@@ -59,7 +61,7 @@ export default function Sidebar() {
                  border-r border-slate-200 dark:border-slate-800"
     >
       <NavSection
-        sections={NAV_SECTIONS}
+        sections={navSections}
         collapsed={collapsed}
         openKey={openKey}
         flyoutKey={flyoutKey}

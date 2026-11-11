@@ -3,7 +3,7 @@ import SkeletonSidebarFooter from "./SkeletonSidebarFooter";
 import { motion } from "framer-motion";
 import { useSidebarCollapsed } from "@/hooks/useSidebarCollapsed";
 import { useEffect, useState } from "react";
-import { COLLAPSED_WIDTH, EXPANDED_WIDTH } from "@/components/admin/Sidebar/SidebarConstants";
+import { COLLAPSED_WIDTH, EXPANDED_WIDTH } from "@/features/sidebar/sidebar.constants";
 
 
 export default function SkeletonSidebar() {

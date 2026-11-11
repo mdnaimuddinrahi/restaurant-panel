@@ -1,48 +1,67 @@
-import { FaUserShield } from "react-icons/fa6";
-import { BsHouse } from "react-icons/bs";
-import { NavSection } from "../../../features/sidebar/sidebar.types";
+
+import { NavSection } from "@/features/sidebar/sidebar.types";
+import { useTranslation } from "react-i18next";
 import { RiShieldKeyholeLine } from "react-icons/ri";
 import { PiUsersDuotone } from "react-icons/pi";
 import { BsHouseDoor } from "react-icons/bs";
 
-export const EXPANDED_WIDTH = 264;
-export const COLLAPSED_WIDTH = 50;
+export default function useNavSections(): NavSection[] {
+  const { t } = useTranslation("main");
 
-export const NAV_SECTIONS: NavSection[] = [
+  return [
   {
     key: "main",
-    label: "Main",
+    label: t("sidebar.main"),
     items: [
       {
         key: "dashboard",
-        label: "Dashboard",
+        label: t("sidebar.dashboard"),
         route: "/admin/dashboard",
         icon: (<BsHouseDoor />),
       },
       {
         key: "roles",
-        label: "Roles & Permissions",
+        label: t("sidebar.roles_permissions"),
         route: "/admin/role-permission",
         icon: (<RiShieldKeyholeLine />),
         children: [
-          { key: "role", label: "Roles", route: "/admin/role-permission/roles" },
+          { key: "role", label: t("sidebar.roles"), route: "/admin/role-permission/roles" },
         ]
       },
       {
         key: "users",
-        label: "Users",
+        label: t("sidebar.users"),
         route: "/admin/user",
         icon: (<PiUsersDuotone />),
         children: [
-          { key: "employees", label: "Employees", route: "/admin/user/employees" },
+          { key: "employees", label: t("sidebar.employees"), route: "/admin/user/employees" },
           // { key: "roles", label: "Roles & Permissions", route: "/admin/user/roles" },
-          {key: "employee_types", label: "Employee Types", route: "/admin/user/employee-types"},
-          { key: "employee_designations", label: "Employee Designation", route: "/admin/user/employee-designations" },
+          {key: "employee_types", label: t("sidebar.employee_types"), route: "/admin/user/employee-types"},
+          { key: "employee_designations", label: t("sidebar.employee_designations"), route: "/admin/user/employee-designations" },
+        ],
+      },
+      {
+        key: "grocery",
+        label: t("sidebar.grocery"),
+        route: "/admin/grocery",
+        icon: (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7h18l-2 13H5L3 7zM8 7l4-4 4 4M9 11v5m6-5v5" />
+          </svg>
+        ),
+        children: [
+          { key: "grocery_category", label: t("sidebar.grocery_category"), route: "/admin/grocery/grocery-category" },
+          { key: "grocery_items", label: t("sidebar.grocery_items"), route: "/admin/grocery/grocery" },
+          { key: "grocery_purchase", label: t("sidebar.grocery_purchase"), route: "/admin/grocery/grocery-purchase" },
+          { key: "grocery_purchase_item", label: t("sidebar.grocery_purchase_item"), route: "/admin/grocery/grocery-purchase-item" },
+          { key: "grocery_stock_ledger", label: t("sidebar.grocery_stock_ledger"), route: "/admin/grocery/grocery-stock-ledger" },
+          { key: "grocery_supplier", label: t("sidebar.grocery_supplier"), route: "/admin/grocery/grocery-supplier" },
+          { key: "grocery_unit", label: t("sidebar.grocery_unit"), route: "/admin/grocery/grocery-unit" },
         ],
       },
       {
         key: "jobs",
-        label: "Jobs",
+        label: t("sidebar.jobs"),
         route: "#/jobs",
         icon: (
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -50,20 +69,20 @@ export const NAV_SECTIONS: NavSection[] = [
           </svg>
         ),
         children: [
-          { key: "queue", label: "Job Queue", route: "#/jobs" },
-          { key: "scheduler", label: "Scheduler", route: "#/jobs/scheduler" },
-          { key: "history", label: "Job History", route: "#/jobs/history" },
+          { key: "queue", label: t("sidebar.job_queue"), route: "#/jobs" },
+          { key: "scheduler", label: t("sidebar.scheduler"), route: "#/jobs/scheduler" },
+          { key: "history", label: t("sidebar.job_history"), route: "#/jobs/history" },
         ],
       },
     ],
   },
   {
     key: "communication",
-    label: "Communication",
+    label: t("sidebar.communication"),
     items: [
       {
         key: "email",
-        label: "Email",
+        label: t("sidebar.email"),
         route: "#/email",
         icon: (
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -73,7 +92,7 @@ export const NAV_SECTIONS: NavSection[] = [
       },
       {
         key: "chat",
-        label: "Chat",
+        label: t("sidebar.chat"),
         route: "#/chat",
         badge: 5,
         icon: (
@@ -86,11 +105,11 @@ export const NAV_SECTIONS: NavSection[] = [
   },
   {
     key: "account",
-    label: "Account",
+    label: t("sidebar.account"),
     items: [
       {
         key: "profile",
-        label: "Profile",
+        label: t("sidebar.profile"),
         route: "#/profile",
         icon: (
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -100,7 +119,7 @@ export const NAV_SECTIONS: NavSection[] = [
       },
       {
         key: "security",
-        label: "Security",
+        label: t("sidebar.security"),
         route: "#/security",
         icon: (
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -112,11 +131,11 @@ export const NAV_SECTIONS: NavSection[] = [
   },
   {
     key: "system",
-    label: "System",
+    label: t("sidebar.system"),
     items: [
       {
         key: "settings",
-        label: "Settings",
+        label: t("sidebar.settings"),
         route: "#/settings",
         icon: (
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -125,12 +144,13 @@ export const NAV_SECTIONS: NavSection[] = [
           </svg>
         ),
         children: [
-          { key: "general", label: "General", route: "#/settings" },
-          { key: "billing", label: "Billing", route: "#/settings/billing" },
-          { key: "api", label: "API Keys", route: "#/settings/api" },
-          { key: "integrations", label: "Integrations", route: "#/settings/integrations" },
+          { key: "general", label: t("sidebar.general"), route: "#/settings" },
+          { key: "billing", label: t("sidebar.billing"), route: "#/settings/billing" },
+          { key: "api", label: t("sidebar.api_keys"), route: "#/settings/api" },
+          { key: "integrations", label: t("sidebar.integrations"), route: "#/settings/integrations" },
         ],
       },
     ],
   },
-];
+  ];
+}
